@@ -1,58 +1,56 @@
 //collection: gameId = socket.io session id
 const sidePanel = document.querySelector("#side-panel");
 const form = document.querySelector("#add-player-form");
-
-//rendering player
-const renderSidePanel = doc => {
-  let li = document.createElement("li");
-  let player = document.createElement("span");
-
-  li.setAttribute("data-id", doc.id);
-  player.textContent = doc
-    .data()
-    .players.forEach(player => console.log(player));
-
-  li.appendChild(player);
-  sidePanel.appendChild(li);
-};
-const game = db.collection("game");
-//get players
-game.get().then(snapshot => {
-  snapshot.docs.forEach(doc => {
-    renderSidePanel(doc);
-  });
-});
-
-//adding new player
-form.addEventListener("submit", event => {
-  event.preventDefault();
-    let name = form.name.value
-  db.collection("game").add({ players: {form.name.value: } });
-});
+const games = db.collection("games");
 
 const randomString = () => {
   const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-  const string_length = 5;
-  let randomstring = "";
-  for (let i = 0; i < string_length; i++) {
-    let rnum = Math.floor(Math.random() * chars.length);
-    randomstring += chars.substring(rnum, rnum + 1);
+  const codeLength = 5;
+  let randomCode = "";
+  for (let i = 0; i < codeLength; i++) {
+    let randoNum = Math.floor(Math.random() * chars.length);
+    randomCode += chars.substring(randoNum, randoNum + 1);
   }
-  return randomstring;
+  return randomCode;
 };
 
-const randomCode = randomString();
+// const code = randomString(); //game code to share with friends
+const code = "zsiMs";
+const newGame = games.doc(code);
 
-//creates new document and adds fields
-//should use randomly generated 4-digit code as documentID
-const newGame = game.doc(code);
+//rendering player
+const renderSidePanel = doc => {
+  if (doc.id == code) {
+    console.log(code);
+    let li = document.createElement("li");
+    let players = Object.keys(doc.data().players);
+    li.setAttribute("game-id", doc.id);
+    li.textContent = players;
+    sidePanel.appendChild(li);
+  }
+};
 
-newGame.set({
-  players: { sam: { score: 0 } }
+//adding new player to document
+
+form.addEventListener("submit", event => {
+  event.preventDefault();
+  let name = form.name.value;
+  let players = {};
+  players[name] = { score: 0 };
+  newGame.set({ players }, { merge: true });
+
+  form.name.value = "";
 });
 
-newGame.set({
-  players: { maggie: { score: 0 } }
+//real-time listner -> when database is changed, it will automatically render the update
+games.onSnapshot(snapshot => {
+  let changes = snapshot.docChanges();
+  changes.forEach(change => {
+    if (change.type == "added") {
+      renderSidePanel(change.doc);
+    } else if (change.type == "modified") {
+      renderSidePanel(change.doc);
+    }
+    //can also use this for real-time deleting data
+  });
 });
-
-//once code is generated and player 1 is added to the incremental

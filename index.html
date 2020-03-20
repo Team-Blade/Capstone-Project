@@ -10,7 +10,7 @@
     <div class="content">
       <div id="player-form">
         <form id="add-player-form">
-          <input type="text" name="name" placeholder="Your gamer name here" />
+          <input type="text" name="name" placeholder="Gamer name" />
           <button type="submit">submit</button>
         </form>
       </div>
@@ -37,12 +37,5 @@
       //   firebase.analytics(); // imported from firebase.com
     </script>
     <script src="app.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-      const socket = io.connect("http://10.1.220.19:8080");
-      socket.on("connect", function(data) {
-        socket.emit("join", "Hello World from client");
-      });
-    </script>
   </body>
 </html>
