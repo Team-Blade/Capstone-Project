@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-firestore.js"></script>
+    <!-- <link rel="stylesheet" href="styles.css" /> -->
+  </head>
+  <body>
+    <h1>Pac Man Battle Royal</h1>
+
+    <div class="content">
+      <div id="player-form">
+        <form id="add-player-form">
+          <input type="text" name="name" placeholder="Gamer name" />
+          <button type="submit">submit</button>
+        </form>
+      </div>
+
+      <ul id="side-panel"></ul>
+    </div>
+
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyB1_8QPCdenvQNLeOx8etmkb9Z4RNQ87Ks",
+        authDomain: "pac-man-clone.firebaseapp.com",
+        databaseURL: "https://pac-man-clone.firebaseio.com",
+        projectId: "pac-man-clone",
+        storageBucket: "pac-man-clone.appspot.com",
+        messagingSenderId: "860511261591",
+        appId: "1:860511261591:web:84a347757381be9b922ad2",
+        measurementId: "G-5MEJMS0CHY"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+      //   db.settings({ timestampsInSnapshots: true });
+      //   firebase.analytics(); // imported from firebase.com
+    </script>
+
+    <script src="/public/phaser.min.js"></script>
+    <script type="module" src="/public/game.js"></script>
+  </body>
+</html>
