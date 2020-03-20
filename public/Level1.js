@@ -3,32 +3,40 @@ export default class Level1 extends Phaser.Scene {
     super({ key: "Level1" });
   }
   preload() {
-    this.load.image("test", "/public/assets/extract/MapB4_Alpha.png");
+    //loads the images we will need for the game
+
+    //loads image for tileset
     this.load.image("pacmaptiles", "/public/assets/MapA4_neon.png");
+    //loads image of map
     this.load.tilemapTiledJSON("map", "/public/assets/pacmap4830.json");
+    //loads yellow pacman
     this.load.spritesheet("pacYellow", "/public/assets/royale.png", {
       frameWidth: 32,
       frameHeight: 28
     });
   }
+
   create() {
-    let map;
-    let layer;
-    map = this.make.tilemap({
+    //makes the tilemap and defines the height and width of the tiles
+    let map = this.make.tilemap({
       key: "map",
       tileWidth: 16,
       tileHeight: 16
     });
-
+    //adds the tileset to the map
     const tileset = map.addTilesetImage("pacmaptiles", "pacmaptiles");
-    layer = map.createStaticLayer("Level1Map", tileset, 0, 0);
+    //creates the map layer, key must match layer name in tiled
+    let layer = map.createStaticLayer("Level1Map", tileset, 0, 0);
 
-    this.player = this.physics.add.sprite(300, 200, "pacYellow", 7);
-    this.player.setScale(0.7, 0.7);
-    this.physics.add.collider(this.player, layer);
+    //adds a yellow pacman player and makes him smaller
+    this.yellowplayer = this.physics.add.sprite(300, 200, "pacYellow", 7);
+    // this.yellowplayer.setScale(1, 0.7);
+
+    //adds a collider for yellow pacman to run into layer when that tile has a collision property of true
+    this.physics.add.collider(this.yellowplayer, layer);
     layer.setCollisionByProperty({ collision: true });
 
-    //sprite movement
+    //sprite movement yellow pacman
     this.anims.create({
       key: "left",
       frames: this.anims.generateFrameNumbers("pacYellow", {
@@ -65,25 +73,27 @@ export default class Level1 extends Phaser.Scene {
       frameRate: 8,
       repeat: 0
     });
+
+    //processes DOM input events if true
     this.input.enabled = true;
   }
   update() {
     let cursors = this.input.keyboard.createCursorKeys();
     if (cursors.up.isDown) {
-      this.player.setVelocityY(-180);
-      this.player.anims.play("up", true);
+      this.yellowplayer.setVelocityY(-180);
+      this.yellowplayer.anims.play("up", true);
     }
     if (cursors.down.isDown) {
-      this.player.setVelocityY(180);
-      this.player.anims.play("down", true);
+      this.yellowplayer.setVelocityY(180);
+      this.yellowplayer.anims.play("down", true);
     }
     if (cursors.left.isDown) {
-      this.player.setVelocityX(-180);
-      this.player.anims.play("left", true);
+      this.yellowplayer.setVelocityX(-180);
+      this.yellowplayer.anims.play("left", true);
     }
     if (cursors.right.isDown) {
-      this.player.setVelocityX(180);
-      this.player.anims.play("right", true);
+      this.yellowplayer.setVelocityX(180);
+      this.yellowplayer.anims.play("right", true);
     }
   }
 }
