@@ -1,24 +1,13 @@
 <html>
   <head>
+    <title>Pac Man BR</title>
     <script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-firestore.js"></script>
     <!-- <link rel="stylesheet" href="styles.css" /> -->
+    <!-- <script defer src="/bundle.js"></script> -->
   </head>
   <body>
-    <h1>Pac Man Battle Royal</h1>
-
-    <div class="content">
-      <div id="player-form">
-        <form id="add-player-form">
-          <input type="text" name="name" placeholder="Gamer name" />
-          <button type="submit">submit</button>
-        </form>
-      </div>
-
-      <ul id="side-panel"></ul>
-    </div>
-
-    <script>
+    <!-- <script>
       // Your web app's Firebase configuration
       var firebaseConfig = {
         apiKey: "AIzaSyB1_8QPCdenvQNLeOx8etmkb9Z4RNQ87Ks",
@@ -35,9 +24,10 @@
       const db = firebase.firestore();
       //   db.settings({ timestampsInSnapshots: true });
       //   firebase.analytics(); // imported from firebase.com
-    </script>
+    </script> -->
 
+    <div id="app"></div>
     <script src="/public/phaser.min.js"></script>
-    <script type="module" src="/public/game.js"></script>
+    <!-- <script type="module" src="/public/game.js"></script> -->
   </body>
 </html>

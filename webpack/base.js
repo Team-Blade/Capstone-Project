@@ -6,14 +6,18 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 module.exports = {
   mode: "development",
   devtool: "eval-source-map",
-  entry: "./app",
+  entry: "./client/index",
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
+          loader: "babel-loader",
+          query: {
+            presets: ["@babel/react"],
+            plugins: ["@babel/proposal-class-properties"]
+          }
         }
       },
       {

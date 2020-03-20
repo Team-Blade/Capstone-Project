@@ -1,6 +1,3 @@
 node_modules
-<<<<<<< HEAD
-=======
 webpack/base.js
 webpack/prod.js
->>>>>>> AMfrontEndStart

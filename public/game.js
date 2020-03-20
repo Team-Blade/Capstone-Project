@@ -18,3 +18,5 @@ const config = {
   scene: [Level1]
 };
 const game = new Phaser.Game(config);
+
+export default game;
