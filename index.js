@@ -1,13 +1,14 @@
 const express = require("express");
 const app = express();
 const server = require("http").Server(app);
+const path = require("path");
 
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(path.join(__dirname, "dist")));
 
 app.get("/", function(req, res) {
-  res.sendFile(__dirname + "/public/index.html");
+  res.sendFile(path.join(__dirname, "dist/index.html"));
 });
-const PORT = 1337;
+const PORT = 8080;
 server.listen(PORT, () => {
   console.log(`Eating dots on port ${PORT}`);
 });
