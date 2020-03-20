@@ -4,6 +4,7 @@ export default class Level1 extends Phaser.Scene {
   }
   preload() {
     //loads the images we will need for the game
+    this.load.image("sky", "/public/assets/sky.png");
 
     //loads image for tileset
     this.load.image("pacmaptiles", "/public/assets/MapA4_neon.png");
@@ -17,6 +18,8 @@ export default class Level1 extends Phaser.Scene {
   }
 
   create() {
+    this.add.image(400, 300, "sky").setDepth(-1);
+
     //makes the tilemap and defines the height and width of the tiles
     let map = this.make.tilemap({
       key: "map",

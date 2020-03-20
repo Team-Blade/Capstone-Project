@@ -7,7 +7,7 @@ app.use(express.static(__dirname + "/public"));
 app.get("/", function(req, res) {
   res.sendFile(__dirname + "/public/index.html");
 });
-const PORT = 8080;
+const PORT = 1337;
 server.listen(PORT, () => {
   console.log(`Eating dots on port ${PORT}`);
 });
