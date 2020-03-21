@@ -3,9 +3,6 @@ export default class Level1 extends Phaser.Scene {
     super({ key: "Level1" });
   }
   preload() {
-    //loads the images we will need for the game
-    this.load.image("sky", "/public/assets/sky.png");
-
     //loads image for tileset
     this.load.image("pacmaptiles", "/public/assets/MapA4_neon.png");
     //loads image of map
