@@ -8,14 +8,16 @@
     "build": "webpack --config webpack/prod.js -w",
     "dev": "webpack --config webpack/base.js --open -w",
     "start": "npm run start-server & npm run dev ",
-    "start-server": "nodemon index.js -e html,js,scss --ignore public --ignore client"
+    "start-server": "nodemon index.js -e html,js,css --ignore public --ignore client"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "babel-preset-react": "^6.24.1",
     "express": "^4.17.1",
+    "firebase": "^7.12.0",
     "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.9.0",
     "nodemon": "^2.0.2",
     "phaser": "^3.22.0",
     "react": "^16.13.1",
