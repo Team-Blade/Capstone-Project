@@ -60,7 +60,7 @@ class App extends React.Component {
       <div id="main-wrapper">
         <main id="main">
           <h1>Pac Man Battle Royal</h1>
-          <div id="form">
+          {/* <div id="form">
             <form onSubmit={this.handleSubmit}>
               <input
                 type="text"
@@ -73,7 +73,8 @@ class App extends React.Component {
                 generate <br /> code
               </button>
             </form>
-          </div>
+          </div> */}
+          <Form />
           <div id="sidebard">
             <ul>
               players:
