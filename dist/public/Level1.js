@@ -121,6 +121,7 @@ export default class Level1 extends Phaser.Scene {
     this.collisionLayer.setScale(window.innerWidth/1920, window.innerHeight/972);
 
     if (this.pac) {
+      this.pac.setScale(0.91 * (window.innerWidth/window.innerHeight));
       if (this.cursors.up.isDown) {
         this.pac.setVelocityY(-180);
         this.pac.anims.play("up", true);
@@ -154,7 +155,7 @@ export default class Level1 extends Phaser.Scene {
 }
 function addPlayer(self, playerInfo) {
   self.pac = self.physics.add.sprite(playerInfo.x, playerInfo.y, "pacYellow");
-  self.pac.setScale(1.91);
+  self.pac.setScale(window.innerWidth/window.innerHeight);
   self.physics.add.collider(self.pac, self.collisionLayer);
   self.physics.add.collider(self.pac, self.otherPlayers);
 }
