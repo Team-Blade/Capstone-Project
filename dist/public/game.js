@@ -5,7 +5,9 @@ const config = {
   height: 600,
   scale: {
     scale: "SHOW_ALL",
-    orientation: "LANDSCAPE"
+    orientation: "LANDSCAPE",
+    mode: Phaser.Scale.RESIZE,
+    autoCenter: Phaser.Scale.CENTER_BOTH
   },
   resolution: window.deviePixelRatio,
   pixelArt: true,

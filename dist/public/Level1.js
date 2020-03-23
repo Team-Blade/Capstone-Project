@@ -4,17 +4,19 @@ export default class Level1 extends Phaser.Scene {
   }
   preload() {
     //loads image for tileset
-    this.load.image("pacmaptiles", "/public/assets/MapA4_neon.png");
+    this.load.image("largepacmanmap", "/public/assets/largepacmanmap.png");
     //loads image of map
-    this.load.tilemapTiledJSON("map", "/public/assets/pacmap4830.json");
+    this.load.tilemapTiledJSON("map", "/public/assets/anothermap.json");
     //loads yellow pacman
     this.load.spritesheet("pacYellow", "/public/assets/royale.png", {
       frameWidth: 32,
       frameHeight: 28
     });
+    this.load.image("sky", "/public/assets/sky.png");
   }
 
   create() {
+    this.add.image(0, 0,"sky").setScale(5);
     const self = this;
     this.socket = io();
     this.otherPlayers = this.physics.add.group();
@@ -41,21 +43,28 @@ export default class Level1 extends Phaser.Scene {
     //makes the tilemap and defines the height and width of the tiles
     let map = this.make.tilemap({
       key: "map",
-      tileWidth: 16,
-      tileHeight: 16
+      tileWidth: 12,
+      tileHeight: 12
     });
+    // let map = this.add.tilemap("map");
     //adds the tileset to the map
-    const tileset = map.addTilesetImage("pacmaptiles", "pacmaptiles");
+    const tileset = map.addTilesetImage("largepacmanmap", "largepacmanmap");
     //creates the map layer, key must match layer name in tiled
-    this.layer = map.createStaticLayer("Level1Map", tileset, 0, 0);
+    this.layer = map.createStaticLayer("mapBaseLayer", tileset, 0, 0);
+    this.collisionLayer = map.createStaticLayer("collisions layer", tileset, 0, 0);
 
     //adds a yellow pacman player and makes him smaller
-    this.yellowplayer = this.physics.add.sprite(300, 200, "pacYellow", 7);
+    // this.yellowplayer = this.physics.add.sprite(300, 200, "pacYellow", 7);
     // this.yellowplayer.setScale(1, 0.7);
 
     //adds a collider for yellow pacman to run into layer when that tile has a collision property of true
-    this.physics.add.collider(this.yellowplayer, this.layer);
-    this.layer.setCollisionByProperty({ collision: true });
+    // this.physics.add.collider(this.yellowplayer, this.collisionLayer);
+    this.collisionLayer.setCollisionByProperty({ collision: true });
+
+    this.layer.setScale(window.innerWidth/1920, window.innerHeight/972);
+    this.collisionLayer.setScale(window.innerWidth/1920, window.innerHeight/972);
+    // this.yellowplayer.setScale(window.innerWidth/window.innerHeight);
+
 
     //sprite movement yellow pacman
     this.anims.create({
@@ -107,6 +116,10 @@ export default class Level1 extends Phaser.Scene {
     });
   }
   update() {
+
+    this.layer.setScale(window.innerWidth/1920, window.innerHeight/972);
+    this.collisionLayer.setScale(window.innerWidth/1920, window.innerHeight/972);
+
     if (this.pac) {
       if (this.cursors.up.isDown) {
         this.pac.setVelocityY(-180);
@@ -141,7 +154,8 @@ export default class Level1 extends Phaser.Scene {
 }
 function addPlayer(self, playerInfo) {
   self.pac = self.physics.add.sprite(playerInfo.x, playerInfo.y, "pacYellow");
-  self.physics.add.collider(self.pac, self.layer);
+  self.pac.setScale(1.91);
+  self.physics.add.collider(self.pac, self.collisionLayer);
   self.physics.add.collider(self.pac, self.otherPlayers);
 }
 function addOtherPlayers(self, playerInfo) {
