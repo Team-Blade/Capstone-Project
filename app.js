@@ -1,6 +1,7 @@
 //collection: gameId = socket.io session id
-const sidePanel = document.querySelector("#side-panel");
-const form = document.querySelector("#add-player-form");
+import db from "./src/firebase";
+// const sidePanel = document.querySelector("#side-panel");
+// const form = document.querySelector("#add-player-form");
 const games = db.collection("games");
 
 const randomString = () => {
