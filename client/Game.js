@@ -1,3 +1,4 @@
+import React from "react";
 import game from "../dist/public/game";
 
 const Game = props => {

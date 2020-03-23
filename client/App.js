@@ -1,6 +1,7 @@
 import React from "react";
 import Form from "./Form";
 import SideBar from "./SideBar";
+import Game from "./Game";
 import db from "../src/firebase";
 
 // import Footer from "./components/Footer";
