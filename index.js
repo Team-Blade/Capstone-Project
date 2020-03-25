@@ -12,12 +12,13 @@ app.get("/", function(req, res) {
 });
 
 io.on("connection", socket => {
-  console.log("a user connected");
+  console.log("a user connected", socket.id);
   players[socket.id] = {
     rotation: 0,
-    x: 700,
-    y: 450,
-    playerId: socket.id
+    x: 0,
+    y: 0,
+    playerId: socket.id,
+    playerNumber: 0
   };
   socket.emit("currentPlayers", players);
   socket.broadcast.emit("newPlayer", players[socket.id]);
