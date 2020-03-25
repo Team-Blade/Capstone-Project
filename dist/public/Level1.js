@@ -14,10 +14,20 @@ export default class Level1 extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 28
     });
-    this.load.spritesheet("pacYellow", "/public/assets/royale.png", {
-      frameWidth: 32,
-      frameHeight: 28
-    });
+    // this.load.spritesheet("pacYellow", "/public/assets/royale.png", {
+    //   frameWidth: 32,
+    //   frameHeight: 28
+    // });
+    this.load.image("ysclosed", "/public/assets/yellowSmall/GameMain020.png");
+    this.load.image("ysleft1", "/public/assets/yellowSmall/GameMain023.png");
+    this.load.image("ysleft2", "/public/assets/yellowSmall/GameMain024.png");
+    this.load.image("ysright1", "/public/assets/yellowSmall/GameMain025.png");
+    this.load.image("ysright2", "/public/assets/yellowSmall/GameMain026.png");
+    this.load.image("ysup1", "/public/assets/yellowSmall/GameMain027.png");
+    this.load.image("ysup2", "/public/assets/yellowSmall/GameMain028.png");
+    this.load.image("ysdown1", "/public/assets/yellowSmall/GameMain021.png");
+    this.load.image("ysdown2", "/public/assets/yellowSmall/GameMain022.png");
+
     this.load.image("sky", "/public/assets/sky.png");
   }
 
@@ -78,39 +88,27 @@ export default class Level1 extends Phaser.Scene {
     //sprite movement yellow pacman
     this.anims.create({
       key: "left",
-      frames: this.anims.generateFrameNumbers("pacYellow", {
-        start: 4,
-        end: 6
-      }),
-      frameRate: 8,
-      repeat: 0
+      frames: [{ key: "ysclosed" }, { key: "ysleft1" }, { key: "ysleft2" }],
+      frameRate: 10,
+      repeat: -1
     });
     this.anims.create({
       key: "right",
-      frames: this.anims.generateFrameNumbers("pacYellow", {
-        start: 7,
-        end: 9
-      }),
-      frameRate: 8,
-      repeat: 0
+      frames: [{ key: "ysclosed" }, { key: "ysright1" }, { key: "ysright2" }],
+      frameRate: 10,
+      repeat: -1
     });
     this.anims.create({
       key: "up",
-      frames: this.anims.generateFrameNumbers("pacYellow", {
-        start: 9,
-        end: 11
-      }),
-      frameRate: 8,
-      repeat: 0
+      frameRate: 10,
+      frames: [{ key: "ysclosed" }, { key: "ysup1" }, { key: "ysup2" }],
+      repeat: -1
     });
     this.anims.create({
       key: "down",
-      frames: this.anims.generateFrameNumbers("pacYellow", {
-        start: 0,
-        end: 3
-      }),
-      frameRate: 8,
-      repeat: 0
+      frames: [{ key: "ysclosed" }, { key: "ysdown1" }, { key: "ysdown2" }],
+      frameRate: 10,
+      repeat: -1
     });
 
     //processes DOM input events if true
@@ -212,7 +210,7 @@ export default class Level1 extends Phaser.Scene {
 }
 function addPlayer(self, playerInfo) {
   self.pac = self.physics.add
-    .sprite(self.map.tileToWorldX(12), self.map.tileToWorldY(5), "pacYellow")
+    .sprite(self.map.tileToWorldX(12), self.map.tileToWorldY(5), "ysclosed")
     .setSize(60, 60)
     .setOrigin(0, 0);
 
