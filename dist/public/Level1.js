@@ -140,6 +140,7 @@ export default class Level1 extends Phaser.Scene {
         this.pac.setVelocityX(180);
         this.pac.anims.play("right", true);
       }
+
       let x = this.pac.x;
       let y = this.pac.y;
       if (
@@ -156,9 +157,16 @@ export default class Level1 extends Phaser.Scene {
         this.directions[Phaser.LEFT] = this.map.getTileAt(this.pac.tilePositionX - 1, this.pac.tilePositionY);
         this.directions[Phaser.RIGHT] = this.map.getTileAt(this.pac.tilePositionX + 1, this.pac.tilePositionY);
 
-        console.log('hi', this.directions);
-        
+        if(this.pac.tilePositionY > 15 && this.pac.body.velocity.y > 0) {
+          this.pac.y = this.map.tileToWorldY(-1);
+        }
+  
+        if(this.pac.tilePositionY < 0 && this.pac.body.velocity.y < 0) {
+          this.pac.y = this.map.tileToWorldY(15);
+        }
+      
       }
+
       this.pac.oldPosition = {
         x: this.pac.x,
         y: this.pac.y
@@ -182,7 +190,6 @@ function addPlayer(self, playerInfo) {
   self.directions[Phaser.DOWN] = self.map.getTileAt(self.pac.tilePositionX, self.pac.tilePositionY + 1);
   self.directions[Phaser.LEFT] = self.map.getTileAt(self.pac.tilePositionX - 1, self.pac.tilePositionY);
   self.directions[Phaser.RIGHT] = self.map.getTileAt(self.pac.tilePositionX + 1, self.pac.tilePositionY);
-
 }
 function addOtherPlayers(self, playerInfo) {
   const otherPlayer = self.add.sprite(playerInfo.x, playerInfo.y, "pacYellow");
