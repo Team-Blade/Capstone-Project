@@ -16,7 +16,7 @@ io.on("connection", socket => {
   players[socket.id] = {
     rotation: 0,
     x: 700,
-    y: 500,
+    y: 450,
     playerId: socket.id
   };
   socket.emit("currentPlayers", players);
