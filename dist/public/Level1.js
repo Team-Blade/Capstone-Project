@@ -1,3 +1,4 @@
+import { socket } from "../../client/App";
 export default class Level1 extends Phaser.Scene {
   constructor() {
     super({ key: "Level1" });
@@ -21,7 +22,7 @@ export default class Level1 extends Phaser.Scene {
     this.directions = {};
     this.add.image(0, 0, "sky").setScale(5);
     const self = this;
-    this.socket = io();
+    this.socket = socket;
     this.otherPlayers = this.physics.add.group();
     this.socket.on("currentPlayers", players => {
       Object.keys(players).forEach(id => {
@@ -122,7 +123,6 @@ export default class Level1 extends Phaser.Scene {
   }
   update() {
     this.collisionLayer.setScale(window.innerWidth / 1860);
-
     if (this.pac) {
       this.pac.setScale(window.innerWidth / 1861);
 
@@ -207,6 +207,7 @@ export default class Level1 extends Phaser.Scene {
   }
 }
 function addPlayer(self, playerInfo) {
+  console.log("addplayer");
   self.pac = self.physics.add
     .sprite(self.map.tileToWorldX(12), self.map.tileToWorldY(5), "pacYellow")
     .setOrigin(0, 0);
@@ -235,6 +236,7 @@ function addPlayer(self, playerInfo) {
   );
 }
 function addOtherPlayers(self, playerInfo) {
+  console.log("inside addotherplayers");
   const otherPlayer = self.add.sprite(playerInfo.x, playerInfo.y, "pacYellow");
   otherPlayer.playerId = playerInfo.playerId;
   self.otherPlayers.add(otherPlayer);

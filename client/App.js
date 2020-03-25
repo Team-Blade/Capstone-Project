@@ -2,7 +2,7 @@ import React from "react";
 import Game from "./Game";
 import db from "../src/firebase";
 
-let socket = io();
+export const socket = io();
 const games = db.collection("games");
 
 const randomString = () => {
@@ -47,8 +47,8 @@ class App extends React.Component {
     players[name] = { score: 0 };
     games.doc(code).set({ players }, { merge: true });
 
+    console.log(socket.id);
     socket.emit("createRoom", code);
-
     alert(`Share your game code: ${code}`);
   }
 
@@ -60,6 +60,7 @@ class App extends React.Component {
     games.doc(code).set({ players }, { merge: true });
 
     socket.emit("joinRoom", code);
+    // socket.emit("startGame", this.state.code);
   }
 
   render() {
