@@ -16,12 +16,12 @@ export default class Level1 extends Phaser.Scene {
   }
 
   create() {
-    this.add.image(0, 0,"sky").setScale(5);
+    this.add.image(0, 0, "sky").setScale(5);
     const self = this;
     this.socket = io();
     this.otherPlayers = this.physics.add.group();
     this.socket.on("currentPlayers", players => {
-      Object.keys(players).forEach(id => {
+      players.forEach(id => {
         if (players[id].playerId === self.socket.id) {
           addPlayer(self, players[id]);
         } else {
@@ -51,7 +51,12 @@ export default class Level1 extends Phaser.Scene {
     const tileset = map.addTilesetImage("largepacmanmap", "largepacmanmap");
     //creates the map layer, key must match layer name in tiled
     this.layer = map.createStaticLayer("mapBaseLayer", tileset, 0, 0);
-    this.collisionLayer = map.createStaticLayer("collisions layer", tileset, 0, 0);
+    this.collisionLayer = map.createStaticLayer(
+      "collisions layer",
+      tileset,
+      0,
+      0
+    );
 
     //adds a yellow pacman player and makes him smaller
     // this.yellowplayer = this.physics.add.sprite(300, 200, "pacYellow", 7);
@@ -61,10 +66,12 @@ export default class Level1 extends Phaser.Scene {
     // this.physics.add.collider(this.yellowplayer, this.collisionLayer);
     this.collisionLayer.setCollisionByProperty({ collision: true });
 
-    this.layer.setScale(window.innerWidth/1920, window.innerHeight/972);
-    this.collisionLayer.setScale(window.innerWidth/1920, window.innerHeight/972);
+    this.layer.setScale(window.innerWidth / 1920, window.innerHeight / 972);
+    this.collisionLayer.setScale(
+      window.innerWidth / 1920,
+      window.innerHeight / 972
+    );
     // this.yellowplayer.setScale(window.innerWidth/window.innerHeight);
-
 
     //sprite movement yellow pacman
     this.anims.create({
@@ -116,12 +123,14 @@ export default class Level1 extends Phaser.Scene {
     });
   }
   update() {
-
-    this.layer.setScale(window.innerWidth/1920, window.innerHeight/972);
-    this.collisionLayer.setScale(window.innerWidth/1920, window.innerHeight/972);
+    this.layer.setScale(window.innerWidth / 1920, window.innerHeight / 972);
+    this.collisionLayer.setScale(
+      window.innerWidth / 1920,
+      window.innerHeight / 972
+    );
 
     if (this.pac) {
-      this.pac.setScale(0.91 * (window.innerWidth/window.innerHeight));
+      this.pac.setScale(0.91 * (window.innerWidth / window.innerHeight));
       if (this.cursors.up.isDown) {
         this.pac.setVelocityY(-180);
         this.pac.anims.play("up", true);
@@ -155,7 +164,7 @@ export default class Level1 extends Phaser.Scene {
 }
 function addPlayer(self, playerInfo) {
   self.pac = self.physics.add.sprite(playerInfo.x, playerInfo.y, "pacYellow");
-  self.pac.setScale(window.innerWidth/window.innerHeight);
+  self.pac.setScale(window.innerWidth / window.innerHeight);
   self.physics.add.collider(self.pac, self.collisionLayer);
   self.physics.add.collider(self.pac, self.otherPlayers);
 }
