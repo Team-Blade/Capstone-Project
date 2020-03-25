@@ -67,7 +67,13 @@ class App extends React.Component {
     return (
       <div id="main-wrapper">
         <main id="main">
-          <h1>Pac Man Battle Royal</h1>
+          <nav>
+            <img
+              className="logo"
+              src="../dist/public/assets/extract/Icon.png"
+            ></img>
+            <h1>Pac Man Battle Royal</h1>
+          </nav>
 
           {!this.state.buttonClicked ? (
             <div>
