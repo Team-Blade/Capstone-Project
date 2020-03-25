@@ -121,7 +121,6 @@ export default class Level1 extends Phaser.Scene {
     this.collisionLayer.setScale(window.innerWidth/1860);
     
     if (this.pac) {
-
       this.pac.setScale(window.innerWidth/1861);
 
       if (this.cursors.up.isDown) {
@@ -167,11 +166,19 @@ export default class Level1 extends Phaser.Scene {
       
       }
 
+      if (this.pac.oldPosition && this.pac.oldPosition.scale !== this.pac.scale){
+        this.pac.x = this.map.tileToWorldX(this.pac.oldPosition.tileX);
+        this.pac.y = this.map.tileToWorldY(this.pac.oldPosition.tileY);
+      }
+
       this.pac.oldPosition = {
         x: this.pac.x,
-        y: this.pac.y
+        y: this.pac.y,
+        tileX: this.map.worldToTileX(this.pac.x),
+        tileY: this.map.worldToTileY(this.pac.y),
+        scale: this.pac.scale
       };
-    
+
     }
   }
 }
@@ -185,11 +192,11 @@ function addPlayer(self, playerInfo) {
   self.physics.add.collider(self.pac, self.collisionLayer);
   self.physics.add.collider(self.pac, self.otherPlayers);
 
-
   self.directions[Phaser.UP] = self.map.getTileAt(self.pac.tilePositionX, self.pac.tilePositionY - 1);
   self.directions[Phaser.DOWN] = self.map.getTileAt(self.pac.tilePositionX, self.pac.tilePositionY + 1);
   self.directions[Phaser.LEFT] = self.map.getTileAt(self.pac.tilePositionX - 1, self.pac.tilePositionY);
   self.directions[Phaser.RIGHT] = self.map.getTileAt(self.pac.tilePositionX + 1, self.pac.tilePositionY);
+
 }
 function addOtherPlayers(self, playerInfo) {
   const otherPlayer = self.add.sprite(playerInfo.x, playerInfo.y, "pacYellow");
