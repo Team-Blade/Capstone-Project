@@ -131,11 +131,11 @@ export default class Level1 extends Phaser.Scene {
         this.pac.setVelocityY(180);
         this.pac.anims.play("down", true);
       }
-      if (this.cursors.left.isDown) {
+      if (this.cursors.left.isDown && this.pac.tilePositionY >= 0 && this.pac.tilePositionY < 14) {
         this.pac.setVelocityX(-180);
         this.pac.anims.play("left", true);
       }
-      if (this.cursors.right.isDown) {
+      if (this.cursors.right.isDown && this.pac.tilePositionY >= 0 && this.pac.tilePositionY < 14) {
         this.pac.setVelocityX(180);
         this.pac.anims.play("right", true);
       }
@@ -156,7 +156,7 @@ export default class Level1 extends Phaser.Scene {
         this.directions[Phaser.LEFT] = this.map.getTileAt(this.pac.tilePositionX - 1, this.pac.tilePositionY);
         this.directions[Phaser.RIGHT] = this.map.getTileAt(this.pac.tilePositionX + 1, this.pac.tilePositionY);
 
-        if(this.pac.tilePositionY > 15 && this.pac.body.velocity.y > 0) {
+        if(this.pac.tilePositionY >= 15 && this.pac.body.velocity.y > 0) {
           this.pac.y = this.map.tileToWorldY(-1);
         }
   
