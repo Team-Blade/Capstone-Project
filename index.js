@@ -53,22 +53,24 @@ io.on("connection", socket => {
       console.log("Sorry, this game is full");
     }
   });
-  if (rooms[socket.roomId]) {
-    let players = rooms[socket.roomId].sockets;
+
+  socket.on("startGame", roomId => {
+    let players = rooms[roomId].sockets;
+    console.log(rooms[roomId].sockets[socket.id]);
 
     socket.emit("currentPlayers", players);
     socket.broadcast.emit("newPlayer", players[socket.id]);
-    socket.on("disconnect", () => {
-      console.log("user disconnected");
-      delete players[socket.id];
-      io.emit("disconnect", socket.id);
-    });
-    socket.on("playerMovement", movementData => {
-      players[socket.id].x = movementData.x;
-      players[socket.id].y = movementData.y;
-      socket.broadcast.emit("playerMoved", players[socket.id]);
-    });
-  }
+    // socket.on("disconnect", () => {
+    //   console.log("user disconnected");
+    //   delete players[socket.id];
+    //   io.emit("disconnect", socket.id);
+    // });
+    // socket.on("playerMovement", movementData => {
+    //   players[socket.id].x = movementData.x;
+    //   players[socket.id].y = movementData.y;
+    //   socket.broadcast.emit("playerMoved", players[socket.id]);
+    // });
+  });
 });
 
 const PORT = 8080;

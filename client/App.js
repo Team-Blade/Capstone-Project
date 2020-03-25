@@ -55,7 +55,6 @@ class App extends React.Component {
   joinGame() {
     let name = this.state.name;
     let code = this.state.code;
-    console.log(this.state);
     let players = {};
     players[name] = { score: 0 };
     games.doc(code).set({ players }, { merge: true });
@@ -102,7 +101,14 @@ class App extends React.Component {
 
           {this.state.buttonClickedName === "create" ? (
             <div className="init-game">
-              <button type="button">Start Game</button>
+              <button
+                type="submit"
+                onClick={() => {
+                  socket.emit("startGame", this.state.code);
+                }}
+              >
+                Start Game
+              </button>
             </div>
           ) : null}
 
