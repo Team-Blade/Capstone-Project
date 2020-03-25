@@ -1,11 +1,9 @@
 import React from "react";
-import Form from "./Form";
-import SideBar from "./SideBar";
 import Game from "./Game";
 import db from "../src/firebase";
 
-// import Footer from "./components/Footer";
-import "../dist/public/style.css";
+export const socket = io();
+const games = db.collection("games");
 
 const randomString = () => {
   const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
@@ -22,66 +20,116 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      players: [],
-      name: ""
+      buttonClicked: false,
+      name: "",
+      buttonClickedName: "",
+      code: ""
     };
-    this.handleChange = this.handleChange.bind(this);
+    this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleCodeChange = this.handleCodeChange.bind(this);
+    this.createGame = this.createGame.bind(this);
+    this.joinGame = this.joinGame.bind(this);
   }
-  handleChange = event => {
-    this.setState({
-      [event.target.name]: event.target.value
-    });
-  };
+  handleNameChange(event) {
+    this.setState({ name: event.target.value });
+  }
 
-  handleSubmit = event => {
-    event.preventDefault();
-    const name = this.state.name;
-    const games = db.collection("games");
-    // const code = randomString();
-    const code = "12345";
+  handleCodeChange(event) {
+    this.setState({ code: event.target.value });
+  }
 
-    const newGame = games.doc(code);
+  createGame() {
+    const code = randomString();
+    this.setState({ buttonClicked: true, buttonClickedName: "create", code });
+
+    let name = this.state.name;
     let players = {};
     players[name] = { score: 0 };
-    newGame.set({ players }, { merge: true });
+    games.doc(code).set({ players }, { merge: true });
 
-    if (!this.state.players.includes(name)) {
-      this.setState({
-        players: [...this.state.players, name],
-        name: ""
-      });
-    } else {
-      alert(`${name} already exists. Please use another gamer name`);
-    }
-  };
+    console.log(socket.id);
+    socket.emit("createRoom", code);
+    alert(`Share your game code: ${code}`);
+  }
+
+  joinGame() {
+    let name = this.state.name;
+    let code = this.state.code;
+    let players = {};
+    players[name] = { score: 0 };
+    games.doc(code).set({ players }, { merge: true });
+
+    socket.emit("joinRoom", code);
+    // socket.emit("startGame", this.state.code);
+  }
 
   render() {
     return (
       <div id="main-wrapper">
         <main id="main">
-          <h1>Pac Man Battle Royal</h1>
-          <div id="form">
-            <form onSubmit={this.handleSubmit}>
+          <nav>
+            <img
+              className="logo"
+              src="../dist/public/assets/extract/Icon.png"
+            ></img>
+            <h1>Pac Man Battle Royal</h1>
+          </nav>
+
+          {!this.state.buttonClicked ? (
+            <div>
               <input
                 type="text"
                 name="name"
-                placeholder="pac-er-man"
-                onChange={this.handleChange}
-                value={this.state.name}
+                placeholder="Player Name"
+                onChange={this.handleNameChange}
+                required
               />
-              <button type="submit">
-                generate <br /> code
+              <button
+                type="button"
+                name="create"
+                onClick={() => this.createGame()}
+              >
+                Create Game
               </button>
-            </form>
-          </div>
-          <div id="sidebard">
-            <ul>
-              players:
-              {this.state.players.map(player => {
-                return <li key={player}>{player}</li>;
-              })}
-            </ul>
-          </div>
+              <button
+                type="button"
+                name="join"
+                onClick={() =>
+                  this.setState({
+                    buttonClicked: true,
+                    buttonClickedName: "join"
+                  })
+                }
+              >
+                Join Game
+              </button>
+            </div>
+          ) : null}
+
+          {this.state.buttonClickedName === "create" ? (
+            <div className="init-game">
+              <button
+                type="submit"
+                onClick={() => {
+                  socket.emit("startGame", this.state.code);
+                }}
+              >
+                Start Game
+              </button>
+            </div>
+          ) : null}
+
+          {this.state.buttonClickedName === "join" ? (
+            <div className="init-game">
+              <input
+                type="text"
+                placeholder="Game Code Here"
+                onChange={() => this.handleCodeChange(event)}
+              />
+              <button onClick={() => this.joinGame()}>Enter Game</button>
+            </div>
+          ) : null}
+          <div id="score-board"></div>
         </main>
       </div>
     );

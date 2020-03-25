@@ -1,3 +1,4 @@
+import { socket } from "../../client/App";
 export default class Level1 extends Phaser.Scene {
   constructor() {
     super({ key: "Level1" });
@@ -19,9 +20,9 @@ export default class Level1 extends Phaser.Scene {
 
   create() {
     this.directions = {};
-    this.add.image(0, 0,"sky").setScale(5);
+    this.add.image(0, 0, "sky").setScale(5);
     const self = this;
-    this.socket = io();
+    this.socket = socket;
     this.otherPlayers = this.physics.add.group();
     this.socket.on("currentPlayers", players => {
       Object.keys(players).forEach(id => {
@@ -57,14 +58,19 @@ export default class Level1 extends Phaser.Scene {
     const pinkTileset = map.addTilesetImage("pinksquare", "pinksquare");
     const blackTileset = map.addTilesetImage("blacksquare", "blacksquare");
     //creates the map layer, key must match layer name in tiled
-    this.collisionLayer = map.createStaticLayer("mapBaseLayer", [pinkTileset, blackTileset], 0, 0);
+    this.collisionLayer = map.createStaticLayer(
+      "mapBaseLayer",
+      [pinkTileset, blackTileset],
+      0,
+      0
+    );
     // this.collisionLayer = map.createStaticLayer("collisions layer", tileset, 0, 0);
 
     //adds a collider for yellow pacman to run into layer when that tile has a collision property of true
     // this.physics.add.collider(this.yellowplayer, this.collisionLayer);
     this.collisionLayer.setCollisionByProperty({ collision: true });
 
-    this.collisionLayer.setScale(window.innerWidth/1860);
+    this.collisionLayer.setScale(window.innerWidth / 1860);
 
     //sprite movement yellow pacman
     this.anims.create({
@@ -114,14 +120,11 @@ export default class Level1 extends Phaser.Scene {
         }
       });
     });
-
   }
   update() {
-
-    this.collisionLayer.setScale(window.innerWidth/1860);
-    
+    this.collisionLayer.setScale(window.innerWidth / 1860);
     if (this.pac) {
-      this.pac.setScale(window.innerWidth/1861);
+      this.pac.setScale(window.innerWidth / 1861);
 
       if (this.cursors.up.isDown) {
         this.pac.setVelocityY(-180);
@@ -131,11 +134,19 @@ export default class Level1 extends Phaser.Scene {
         this.pac.setVelocityY(180);
         this.pac.anims.play("down", true);
       }
-      if (this.cursors.left.isDown && this.pac.tilePositionY >= 0 && this.pac.tilePositionY < 14) {
+      if (
+        this.cursors.left.isDown &&
+        this.pac.tilePositionY >= 0 &&
+        this.pac.tilePositionY < 14
+      ) {
         this.pac.setVelocityX(-180);
         this.pac.anims.play("left", true);
       }
-      if (this.cursors.right.isDown && this.pac.tilePositionY >= 0 && this.pac.tilePositionY < 14) {
+      if (
+        this.cursors.right.isDown &&
+        this.pac.tilePositionY >= 0 &&
+        this.pac.tilePositionY < 14
+      ) {
         this.pac.setVelocityX(180);
         this.pac.anims.play("right", true);
       }
@@ -151,22 +162,36 @@ export default class Level1 extends Phaser.Scene {
         this.pac.tilePositionX = this.map.worldToTileX(this.pac.x);
         this.pac.tilePositionY = this.map.worldToTileY(this.pac.y);
 
-        this.directions[Phaser.UP] = this.map.getTileAt(this.pac.tilePositionX, this.pac.tilePositionY - 1);
-        this.directions[Phaser.DOWN] = this.map.getTileAt(this.pac.tilePositionX, this.pac.tilePositionY + 1);
-        this.directions[Phaser.LEFT] = this.map.getTileAt(this.pac.tilePositionX - 1, this.pac.tilePositionY);
-        this.directions[Phaser.RIGHT] = this.map.getTileAt(this.pac.tilePositionX + 1, this.pac.tilePositionY);
+        this.directions[Phaser.UP] = this.map.getTileAt(
+          this.pac.tilePositionX,
+          this.pac.tilePositionY - 1
+        );
+        this.directions[Phaser.DOWN] = this.map.getTileAt(
+          this.pac.tilePositionX,
+          this.pac.tilePositionY + 1
+        );
+        this.directions[Phaser.LEFT] = this.map.getTileAt(
+          this.pac.tilePositionX - 1,
+          this.pac.tilePositionY
+        );
+        this.directions[Phaser.RIGHT] = this.map.getTileAt(
+          this.pac.tilePositionX + 1,
+          this.pac.tilePositionY
+        );
 
-        if(this.pac.tilePositionY >= 15 && this.pac.body.velocity.y > 0) {
+        if (this.pac.tilePositionY >= 15 && this.pac.body.velocity.y > 0) {
           this.pac.y = this.map.tileToWorldY(-1);
         }
-  
-        if(this.pac.tilePositionY < 0 && this.pac.body.velocity.y < 0) {
+
+        if (this.pac.tilePositionY < 0 && this.pac.body.velocity.y < 0) {
           this.pac.y = this.map.tileToWorldY(15);
         }
-      
       }
 
-      if (this.pac.oldPosition && this.pac.oldPosition.scale !== this.pac.scale){
+      if (
+        this.pac.oldPosition &&
+        this.pac.oldPosition.scale !== this.pac.scale
+      ) {
         this.pac.x = this.map.tileToWorldX(this.pac.oldPosition.tileX);
         this.pac.y = this.map.tileToWorldY(this.pac.oldPosition.tileY);
       }
@@ -178,13 +203,14 @@ export default class Level1 extends Phaser.Scene {
         tileY: this.map.worldToTileY(this.pac.y),
         scale: this.pac.scale
       };
-
     }
   }
 }
 function addPlayer(self, playerInfo) {
-
-  self.pac = self.physics.add.sprite(self.map.tileToWorldX(12), self.map.tileToWorldY(5), "pacYellow").setOrigin(0, 0);
+  console.log("addplayer");
+  self.pac = self.physics.add
+    .sprite(self.map.tileToWorldX(12), self.map.tileToWorldY(5), "pacYellow")
+    .setOrigin(0, 0);
 
   self.pac.tilePositionX = self.map.worldToTileX(self.pac.x);
   self.pac.tilePositionY = self.map.worldToTileY(self.pac.y);
@@ -192,13 +218,25 @@ function addPlayer(self, playerInfo) {
   self.physics.add.collider(self.pac, self.collisionLayer);
   self.physics.add.collider(self.pac, self.otherPlayers);
 
-  self.directions[Phaser.UP] = self.map.getTileAt(self.pac.tilePositionX, self.pac.tilePositionY - 1);
-  self.directions[Phaser.DOWN] = self.map.getTileAt(self.pac.tilePositionX, self.pac.tilePositionY + 1);
-  self.directions[Phaser.LEFT] = self.map.getTileAt(self.pac.tilePositionX - 1, self.pac.tilePositionY);
-  self.directions[Phaser.RIGHT] = self.map.getTileAt(self.pac.tilePositionX + 1, self.pac.tilePositionY);
-
+  self.directions[Phaser.UP] = self.map.getTileAt(
+    self.pac.tilePositionX,
+    self.pac.tilePositionY - 1
+  );
+  self.directions[Phaser.DOWN] = self.map.getTileAt(
+    self.pac.tilePositionX,
+    self.pac.tilePositionY + 1
+  );
+  self.directions[Phaser.LEFT] = self.map.getTileAt(
+    self.pac.tilePositionX - 1,
+    self.pac.tilePositionY
+  );
+  self.directions[Phaser.RIGHT] = self.map.getTileAt(
+    self.pac.tilePositionX + 1,
+    self.pac.tilePositionY
+  );
 }
 function addOtherPlayers(self, playerInfo) {
+  console.log("inside addotherplayers");
   const otherPlayer = self.add.sprite(playerInfo.x, playerInfo.y, "pacYellow");
   otherPlayer.playerId = playerInfo.playerId;
   self.otherPlayers.add(otherPlayer);
