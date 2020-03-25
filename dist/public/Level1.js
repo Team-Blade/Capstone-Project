@@ -4,18 +4,21 @@ export default class Level1 extends Phaser.Scene {
   }
   preload() {
     //loads image for tileset
-    this.load.image("largepacmanmap", "/public/assets/largepacmanmap.png");
+    // this.load.image("largepacmanmap", "/public/assets/largepacmanmap.png");
+    this.load.image("pinksquare", "/public/assets/pinksquare.jpeg");
+    this.load.image("blacksquare", "public/assets/blacksquare.png");
     //loads image of map
-    this.load.tilemapTiledJSON("map", "/public/assets/anothermap.json");
+    this.load.tilemapTiledJSON("map", "/public/assets/newmap.json");
     //loads yellow pacman
     this.load.spritesheet("pacYellow", "/public/assets/royale.png", {
-      frameWidth: 32,
-      frameHeight: 28
+      frameWidth: 60,
+      frameHeight: 60
     });
     this.load.image("sky", "/public/assets/sky.png");
   }
 
   create() {
+    this.directions = {};
     this.add.image(0, 0, "sky").setScale(5);
     const self = this;
     this.socket = io();
@@ -41,37 +44,32 @@ export default class Level1 extends Phaser.Scene {
     });
 
     //makes the tilemap and defines the height and width of the tiles
-    let map = this.make.tilemap({
+    this.map = this.make.tilemap({
       key: "map",
-      tileWidth: 12,
-      tileHeight: 12
+      tileWidth: 60,
+      tileHeight: 60
     });
     // let map = this.add.tilemap("map");
     //adds the tileset to the map
-    const tileset = map.addTilesetImage("largepacmanmap", "largepacmanmap");
+
+    let map = this.map;
+
+    const pinkTileset = map.addTilesetImage("pinksquare", "pinksquare");
+    const blackTileset = map.addTilesetImage("blacksquare", "blacksquare");
     //creates the map layer, key must match layer name in tiled
-    this.layer = map.createStaticLayer("mapBaseLayer", tileset, 0, 0);
     this.collisionLayer = map.createStaticLayer(
-      "collisions layer",
-      tileset,
+      "mapBaseLayer",
+      [pinkTileset, blackTileset],
       0,
       0
     );
-
-    //adds a yellow pacman player and makes him smaller
-    // this.yellowplayer = this.physics.add.sprite(300, 200, "pacYellow", 7);
-    // this.yellowplayer.setScale(1, 0.7);
+    // this.collisionLayer = map.createStaticLayer("collisions layer", tileset, 0, 0);
 
     //adds a collider for yellow pacman to run into layer when that tile has a collision property of true
     // this.physics.add.collider(this.yellowplayer, this.collisionLayer);
     this.collisionLayer.setCollisionByProperty({ collision: true });
 
-    this.layer.setScale(window.innerWidth / 1920, window.innerHeight / 972);
-    this.collisionLayer.setScale(
-      window.innerWidth / 1920,
-      window.innerHeight / 972
-    );
-    // this.yellowplayer.setScale(window.innerWidth/window.innerHeight);
+    this.collisionLayer.setScale(window.innerWidth / 1860);
 
     //sprite movement yellow pacman
     this.anims.create({
@@ -123,14 +121,11 @@ export default class Level1 extends Phaser.Scene {
     });
   }
   update() {
-    this.layer.setScale(window.innerWidth / 1920, window.innerHeight / 972);
-    this.collisionLayer.setScale(
-      window.innerWidth / 1920,
-      window.innerHeight / 972
-    );
+    this.collisionLayer.setScale(window.innerWidth / 1860);
 
     if (this.pac) {
-      this.pac.setScale(0.91 * (window.innerWidth / window.innerHeight));
+      this.pac.setScale(window.innerWidth / 1861);
+
       if (this.cursors.up.isDown) {
         this.pac.setVelocityY(-180);
         this.pac.anims.play("up", true);
@@ -139,14 +134,23 @@ export default class Level1 extends Phaser.Scene {
         this.pac.setVelocityY(180);
         this.pac.anims.play("down", true);
       }
-      if (this.cursors.left.isDown) {
+      if (
+        this.cursors.left.isDown &&
+        this.pac.tilePositionY >= 0 &&
+        this.pac.tilePositionY < 14
+      ) {
         this.pac.setVelocityX(-180);
         this.pac.anims.play("left", true);
       }
-      if (this.cursors.right.isDown) {
+      if (
+        this.cursors.right.isDown &&
+        this.pac.tilePositionY >= 0 &&
+        this.pac.tilePositionY < 14
+      ) {
         this.pac.setVelocityX(180);
         this.pac.anims.play("right", true);
       }
+
       let x = this.pac.x;
       let y = this.pac.y;
       if (
@@ -154,19 +158,81 @@ export default class Level1 extends Phaser.Scene {
         (x !== this.pac.oldPosition.x || y !== this.pac.oldPosition.y)
       ) {
         this.socket.emit("playerMovement", { x: this.pac.x, y: this.pac.y });
+
+        this.pac.tilePositionX = this.map.worldToTileX(this.pac.x);
+        this.pac.tilePositionY = this.map.worldToTileY(this.pac.y);
+
+        this.directions[Phaser.UP] = this.map.getTileAt(
+          this.pac.tilePositionX,
+          this.pac.tilePositionY - 1
+        );
+        this.directions[Phaser.DOWN] = this.map.getTileAt(
+          this.pac.tilePositionX,
+          this.pac.tilePositionY + 1
+        );
+        this.directions[Phaser.LEFT] = this.map.getTileAt(
+          this.pac.tilePositionX - 1,
+          this.pac.tilePositionY
+        );
+        this.directions[Phaser.RIGHT] = this.map.getTileAt(
+          this.pac.tilePositionX + 1,
+          this.pac.tilePositionY
+        );
+
+        if (this.pac.tilePositionY >= 15 && this.pac.body.velocity.y > 0) {
+          this.pac.y = this.map.tileToWorldY(-1);
+        }
+
+        if (this.pac.tilePositionY < 0 && this.pac.body.velocity.y < 0) {
+          this.pac.y = this.map.tileToWorldY(15);
+        }
       }
+
+      if (
+        this.pac.oldPosition &&
+        this.pac.oldPosition.scale !== this.pac.scale
+      ) {
+        this.pac.x = this.map.tileToWorldX(this.pac.oldPosition.tileX);
+        this.pac.y = this.map.tileToWorldY(this.pac.oldPosition.tileY);
+      }
+
       this.pac.oldPosition = {
         x: this.pac.x,
-        y: this.pac.y
+        y: this.pac.y,
+        tileX: this.map.worldToTileX(this.pac.x),
+        tileY: this.map.worldToTileY(this.pac.y),
+        scale: this.pac.scale
       };
     }
   }
 }
 function addPlayer(self, playerInfo) {
-  self.pac = self.physics.add.sprite(playerInfo.x, playerInfo.y, "pacYellow");
-  self.pac.setScale(window.innerWidth / window.innerHeight);
+  self.pac = self.physics.add
+    .sprite(self.map.tileToWorldX(12), self.map.tileToWorldY(5), "pacYellow")
+    .setOrigin(0, 0);
+
+  self.pac.tilePositionX = self.map.worldToTileX(self.pac.x);
+  self.pac.tilePositionY = self.map.worldToTileY(self.pac.y);
+
   self.physics.add.collider(self.pac, self.collisionLayer);
   self.physics.add.collider(self.pac, self.otherPlayers);
+
+  self.directions[Phaser.UP] = self.map.getTileAt(
+    self.pac.tilePositionX,
+    self.pac.tilePositionY - 1
+  );
+  self.directions[Phaser.DOWN] = self.map.getTileAt(
+    self.pac.tilePositionX,
+    self.pac.tilePositionY + 1
+  );
+  self.directions[Phaser.LEFT] = self.map.getTileAt(
+    self.pac.tilePositionX - 1,
+    self.pac.tilePositionY
+  );
+  self.directions[Phaser.RIGHT] = self.map.getTileAt(
+    self.pac.tilePositionX + 1,
+    self.pac.tilePositionY
+  );
 }
 function addOtherPlayers(self, playerInfo) {
   const otherPlayer = self.add.sprite(playerInfo.x, playerInfo.y, "pacYellow");
