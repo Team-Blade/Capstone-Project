@@ -5,6 +5,7 @@ const path = require("path");
 const io = require("socket.io").listen(server);
 const uuid = require("uuid/v1");
 const rooms = {};
+const players = {};
 
 app.use(express.static(path.join(__dirname, "dist")));
 
@@ -17,6 +18,12 @@ const joinRoom = (socket, room) => {
   socket.join(room.id, () => {
     // store the room id in the socket for future use
     socket.roomId = room.id;
+    players[socket.id] = {
+      rotation: 0,
+      x: 700,
+      y: 450,
+      playerId: socket.id
+    };
     console.log(socket.id, "Joined", room.id);
   });
 };
@@ -24,13 +31,6 @@ const joinRoom = (socket, room) => {
 io.on("connection", socket => {
   socket.id = uuid();
   console.log("a user connected");
-
-  // players[socket.id] = {
-  //   rotation: 0,
-  //   x: 700,
-  //   y: 500,
-  //   playerId: socket.id
-  // };
 
   socket.on("createRoom", roomId => {
     const room = {
@@ -55,21 +55,20 @@ io.on("connection", socket => {
   });
 
   socket.on("startGame", roomId => {
-    let players = rooms[roomId].sockets;
-    console.log(rooms[roomId].sockets[socket.id]);
-
-    socket.emit("currentPlayers", players);
-    socket.broadcast.emit("newPlayer", players[socket.id]);
-    // socket.on("disconnect", () => {
-    //   console.log("user disconnected");
-    //   delete players[socket.id];
-    //   io.emit("disconnect", socket.id);
-    // });
-    // socket.on("playerMovement", movementData => {
-    //   players[socket.id].x = movementData.x;
-    //   players[socket.id].y = movementData.y;
-    //   socket.broadcast.emit("playerMoved", players[socket.id]);
-    // });
+    while (rooms[roomId]) {
+      socket.emit("currentPlayers", players);
+      socket.broadcast.emit("newPlayer", players[socket.id]);
+      socket.on("disconnect", () => {
+        console.log("user disconnected");
+        delete players[socket.id];
+        io.emit("disconnect", socket.id);
+      });
+      socket.on("playerMovement", movementData => {
+        players[socket.id].x = movementData.x;
+        players[socket.id].y = movementData.y;
+        socket.broadcast.emit("playerMoved", players[socket.id]);
+      });
+    }
   });
 });
 

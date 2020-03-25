@@ -24,7 +24,7 @@ export default class Level1 extends Phaser.Scene {
     this.socket = io();
     this.otherPlayers = this.physics.add.group();
     this.socket.on("currentPlayers", players => {
-      players.forEach(id => {
+      Object.keys(players).forEach(id => {
         if (players[id].playerId === self.socket.id) {
           addPlayer(self, players[id]);
         } else {
