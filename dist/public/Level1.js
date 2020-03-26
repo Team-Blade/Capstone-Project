@@ -18,6 +18,8 @@ export default class Level1 extends Phaser.Scene {
     //   frameWidth: 32,
     //   frameHeight: 28
     // });
+
+    //pacman yellow small pre-load images
     this.load.image("ysclosed", "/public/assets/yellowSmall/GameMain020.png");
     this.load.image("ysleft1", "/public/assets/yellowSmall/GameMain023.png");
     this.load.image("ysleft2", "/public/assets/yellowSmall/GameMain024.png");
@@ -28,6 +30,50 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("ysdown1", "/public/assets/yellowSmall/GameMain021.png");
     this.load.image("ysdown2", "/public/assets/yellowSmall/GameMain022.png");
 
+    //pacman blue small preload images
+    this.load.image("bsclosed", "/public/assets/blueSmall/GameMain038.png");
+    this.load.image("bsleft1", "/public/assets/blueSmall/GameMain041.png");
+    this.load.image("bsleft2", "/public/assets/blueSmall/GameMain042.png");
+    this.load.image("bsright1", "/public/assets/blueSmall/GameMain043.png");
+    this.load.image("bsright2", "/public/assets/blueSmall/GameMain044.png");
+    this.load.image("bsup1", "/public/assets/blueSmall/GameMain045.png");
+    this.load.image("bsup2", "/public/assets/blueSmall/GameMain046.png");
+    this.load.image("bsdown1", "/public/assets/blueSmall/GameMain039.png");
+    this.load.image("bsdown2", "/public/assets/blueSmall/GameMain040.png");
+
+    //pacman pink small preload images
+    this.load.image("psclosed", "/public/assets/pinkSmall/GameMain029.png");
+    this.load.image("psleft1", "/public/assets/pinkSmall/GameMain032.png");
+    this.load.image("psleft2", "/public/assets/pinkSmall/GameMain033.png");
+    this.load.image("psright1", "/public/assets/pinkSmall/GameMain034.png");
+    this.load.image("psright2", "/public/assets/pinkSmall/GameMain035.png");
+    this.load.image("psup1", "/public/assets/pinkSmall/GameMain036.png");
+    this.load.image("psup2", "/public/assets/pinkSmall/GameMain037.png");
+    this.load.image("psdown1", "/public/assets/pinkSmall/GameMain030.png");
+    this.load.image("psdown2", "/public/assets/pinkSmall/GameMain031.png");
+
+    //pacman red small preload images
+    this.load.image("rsclosed", "/public/assets/redSmall/GameMain047.png");
+    this.load.image("rsleft1", "/public/assets/redSmall/GameMain050.png");
+    this.load.image("rsleft2", "/public/assets/redSmall/GameMain051.png");
+    this.load.image("rsright1", "/public/assets/redSmall/GameMain052.png");
+    this.load.image("rsright2", "/public/assets/redSmall/GameMain053.png");
+    this.load.image("rsup1", "/public/assets/redSmall/GameMain054.png");
+    this.load.image("rsup2", "/public/assets/redSmall/GameMain055.png");
+    this.load.image("rsdown1", "/public/assets/redSmall/GameMain048.png");
+    this.load.image("rsdown2", "/public/assets/redSmall/GameMain049.png");
+
+    //pacman orange ghost preload images
+    this.load.image("og1", "/public/assets/ghosts/GameMain178.png");
+    this.load.image("og2", "/public/assets/ghosts/GameMain179.png");
+    this.load.image("og3", "/public/assets/ghosts/GameMain180.png");
+    this.load.image("og4", "/public/assets/ghosts/GameMain181.png");
+    this.load.image("og5", "/public/assets/ghosts/GameMain182.png");
+    this.load.image("og3", "/public/assets/ghosts/GameMain183.png");
+    this.load.image("og4", "/public/assets/ghosts/GameMain184.png");
+    this.load.image("og5", "/public/assets/ghosts/GameMain185.png");
+    this.load.image("og6", "/public/assets/ghosts/GameMain186.png");
+
     this.load.image("sky", "/public/assets/sky.png");
   }
 
@@ -37,6 +83,7 @@ export default class Level1 extends Phaser.Scene {
     const self = this;
     this.socket = io();
     this.otherPlayers = this.physics.add.group();
+    this.ghosts = this.physics.add.group();
     this.socket.on("currentPlayers", players => {
       Object.keys(players).forEach(id => {
         if (players[id].playerId === self.socket.id) {
@@ -87,29 +134,49 @@ export default class Level1 extends Phaser.Scene {
 
     //sprite movement yellow pacman
     this.anims.create({
-      key: "left",
+      key: "ysleft",
       frames: [{ key: "ysclosed" }, { key: "ysleft1" }, { key: "ysleft2" }],
       frameRate: 10,
       repeat: -1
     });
     this.anims.create({
-      key: "right",
+      key: "ysright",
       frames: [{ key: "ysclosed" }, { key: "ysright1" }, { key: "ysright2" }],
       frameRate: 10,
       repeat: -1
     });
     this.anims.create({
-      key: "up",
+      key: "ysup",
       frameRate: 10,
       frames: [{ key: "ysclosed" }, { key: "ysup1" }, { key: "ysup2" }],
       repeat: -1
     });
     this.anims.create({
-      key: "down",
+      key: "ysdown",
       frames: [{ key: "ysclosed" }, { key: "ysdown1" }, { key: "ysdown2" }],
       frameRate: 10,
       repeat: -1
     });
+
+    this.anims.create({
+      key: "ogMove",
+      frames: [
+        { key: "og1" },
+        { key: "og2" },
+        { key: "og3" },
+        { key: "og4" },
+        { key: "og5" },
+        { key: "og6" }
+      ],
+      frameRate: 10,
+      repeat: -1
+    });
+    this.og = this.add.sprite(
+      self.map.tileToWorldX(15),
+      self.map.tileToWorldY(7.5),
+      "og1"
+    );
+    this.ghosts.add("og1");
 
     //processes DOM input events if true
     this.input.enabled = true;
@@ -123,6 +190,7 @@ export default class Level1 extends Phaser.Scene {
     });
   }
   update() {
+    this.og.anims.play("ogMove");
     this.collisionLayer.setScale(window.innerWidth / 1860);
 
     if (this.pac) {
@@ -130,11 +198,11 @@ export default class Level1 extends Phaser.Scene {
 
       if (this.cursors.up.isDown) {
         this.pac.setVelocityY(-180);
-        this.pac.anims.play("up", true);
+        this.pac.anims.play("ysup", true);
       }
       if (this.cursors.down.isDown) {
         this.pac.setVelocityY(180);
-        this.pac.anims.play("down", true);
+        this.pac.anims.play("ysdown", true);
       }
       if (
         this.cursors.left.isDown &&
@@ -142,7 +210,7 @@ export default class Level1 extends Phaser.Scene {
         this.pac.tilePositionY < 14
       ) {
         this.pac.setVelocityX(-180);
-        this.pac.anims.play("left", true);
+        this.pac.anims.play("ysleft", true);
       }
       if (
         this.cursors.right.isDown &&
@@ -150,7 +218,7 @@ export default class Level1 extends Phaser.Scene {
         this.pac.tilePositionY < 14
       ) {
         this.pac.setVelocityX(180);
-        this.pac.anims.play("right", true);
+        this.pac.anims.play("ysright", true);
       }
 
       let x = this.pac.x;
@@ -210,8 +278,12 @@ export default class Level1 extends Phaser.Scene {
 }
 function addPlayer(self, playerInfo) {
   self.pac = self.physics.add
-    .sprite(self.map.tileToWorldX(12), self.map.tileToWorldY(5), "ysclosed")
-    .setSize(60, 60)
+    .sprite(
+      self.map.tileToWorldX(12) + 11,
+      self.map.tileToWorldY(5) + 9,
+      "ysclosed"
+    )
+    .setSize(60, 60, true)
     .setOrigin(0, 0);
 
   self.pac.tilePositionX = self.map.worldToTileX(self.pac.x);
