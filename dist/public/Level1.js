@@ -89,7 +89,7 @@ export default class Level1 extends Phaser.Scene {
     const scene = this;
     this.socket = socket;
     this.otherPlayers = this.physics.add.group();
-
+    this.otherPlayersArray = [];
     this.socket.on("currentPlayers", players => {
       Object.keys(players).forEach(playerId => {
         if (playerId === scene.socket.id) {
@@ -162,6 +162,12 @@ export default class Level1 extends Phaser.Scene {
     this.collisionLayer.setScale(window.innerWidth / 1860);
     if (this.pac) {
       this.pac.setScale(window.innerWidth / 1861);
+
+      if (this.otherPlayersArray.length > 0) {
+        this.otherPlayersArray.forEach(otherPlayer => {
+          otherPlayer.setScale(window.innerWidth / 1861);
+        });
+      }
 
       if (this.cursors.up.isDown) {
         // this.pac.setVelocityY(-180);
@@ -249,8 +255,7 @@ function addPlayer(scene, player) {
     y: scene.map.tileToWorldY(y),
     key: "ysclosed"
   });
-  console.log(scene.pac.x);
-  console.log(scene.pac.y);
+
   scene.pac.tilePositionX = scene.map.worldToTileX(scene.pac.x);
   scene.pac.tilePositionY = scene.map.worldToTileY(scene.pac.y);
 
@@ -273,7 +278,7 @@ function addOtherPlayers(scene, player) {
     key: "ysclosed"
   });
 
-  // const otherPlayer = scene.add.sprite(playerInfo.x, playerInfo.y, "pacYellow");
+  scene.otherPlayersArray.push(otherPlayer);
   otherPlayer.playerId = player.playerId;
   scene.otherPlayers.add(otherPlayer);
 }
