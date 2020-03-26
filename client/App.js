@@ -1,4 +1,5 @@
 import React from "react";
+import Popup from "reactjs-popup";
 import Game from "./Game";
 import db from "../src/firebase";
 
@@ -6,7 +7,7 @@ export const socket = io();
 const games = db.collection("games");
 
 const randomString = () => {
-  const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+  const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZ";
   const codeLength = 5;
   let randomCode = "";
   for (let i = 0; i < codeLength; i++) {
@@ -68,53 +69,75 @@ class App extends React.Component {
       <div id="main-wrapper">
         <main id="main">
           <nav>
-            <img
-              className="logo"
-              src="../dist/public/assets/extract/Icon.png"
-            ></img>
-            <h1>Pac Man Battle Royal</h1>
+            <img className="logo" src="/public/assets/extract/Menu_rogo.png" />
           </nav>
-
-          {!this.state.buttonClicked ? (
-            <div>
-              <input
-                type="text"
-                name="name"
-                placeholder="Player Name"
-                onChange={this.handleNameChange}
-                required
-              />
-              <button
-                type="button"
-                name="create"
-                onClick={() => this.createGame()}
-              >
-                Create Game
-              </button>
-              <button
-                type="button"
-                name="join"
-                onClick={() =>
-                  this.setState({
-                    buttonClicked: true,
-                    buttonClickedName: "join"
-                  })
+          <div>
+            {!this.state.buttonClicked ? (
+              <Popup
+                trigger={
+                  <div id="container-start">
+                    <button className="start-button"> CLICK TO BEGIN </button>
+                  </div>
                 }
+                modal
               >
-                Join Game
-              </button>
-            </div>
-          ) : null}
+                {close => (
+                  <div className="modal">
+                    <a className="close" onClick={close}>
+                      &times;
+                    </a>
+                    <div className="actions"></div>
+                  </div>
+                )}
+                <div className="input-buttons">
+                  <div>
+                    <h4>Enter Name:</h4>
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Player Name"
+                      onChange={this.handleNameChange}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <button
+                      type="button"
+                      name="create"
+                      onClick={() => this.createGame()}
+                    >
+                      Create A Game
+                    </button>
+                    <button
+                      type="button"
+                      name="join"
+                      onClick={() =>
+                        this.setState({
+                          buttonClicked: true,
+                          buttonClickedName: "join"
+                        })
+                      }
+                    >
+                      Join A Game
+                    </button>
+                  </div>
+                </div>
+              </Popup>
+            ) : null}
+          </div>
 
           {this.state.buttonClickedName === "create" ? (
             <div className="init-game">
               <button
+                className="start-button"
                 type="submit"
                 onClick={() => {
-                  socket.emit("startGame", this.state.code);
+                  socket.emit("startGame");
                 }}
               >
-                Start Game
+                START!
               </button>
             </div>
           ) : null}

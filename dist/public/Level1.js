@@ -15,7 +15,6 @@ export default class Level1 extends Phaser.Scene {
       frameWidth: 60,
       frameHeight: 60
     });
-    this.load.image("sky", "/public/assets/sky.png");
   }
 
   create() {

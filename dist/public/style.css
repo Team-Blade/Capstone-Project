@@ -1,22 +1,90 @@
-#main {
-  /* display: flex; */
+@import "~@feizheng/react-modal-manager/dist/style.scss";
+
+body {
+  background-color: #000000;
+  border: black solid;
 }
+nav {
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+main {
+  font-family: "Press Start 2P", cursive;
+}
+
+.popup-overlay {
+  color: black;
+}
+
+.start-button {
+  width: 200px;
+  height: 40px;
+  margin-top: 0px;
+  margin-bottom: 20px;
+}
+
+#container-start {
+  display: flex;
+  justify-content: center;
+}
+
+.input-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: black;
+  border: black;
+  align-items: center;
+  padding: 50px;
+  color: gold;
+}
+.init-game {
+  display: flex;
+  justify-content: center;
+  margin: 50px;
+}
+
+input {
+  display: inline-block;
+  padding: 0.35em 1.2em;
+  border: 0.1em solid gold;
+  margin: 0 0.3em 0.3em 0;
+  border-radius: 0.12em;
+  box-sizing: border-box;
+  font-family: "Press Start 2P", cursive;
+  height: 40px;
+  width: 150px;
+  font-weight: bolder;
+  /* font-size: larger; */
+  color: 1919a6;
+  text-align: center;
+  transition: all 0.2s;
+  background-color: gold;
+  margin-bottom: 10px;
+}
+
 button {
   display: inline-block;
   padding: 0.35em 1.2em;
-  border: 0.1em solid #ffffff;
+  border: 0.1em solid gold;
   margin: 0 0.3em 0.3em 0;
   border-radius: 0.12em;
   box-sizing: border-box;
   text-decoration: none;
-  font-family: "Roboto", sans-serif;
-  font-weight: 300;
-  color: #ffffff;
+  font-family: "Press Start 2P", cursive;
+  height: 40px;
+  width: 125px;
+  font-weight: bolder;
+  /* font-size: larger; */
+  color: 1919a6;
   text-align: center;
   transition: all 0.2s;
+  background-color: gold;
 }
 
 button:hover {
-  color: #000000;
-  background-color: #ffffff;
+  color: gold;
+  background-color: 1919a6;
 }

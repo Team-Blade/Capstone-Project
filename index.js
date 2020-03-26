@@ -49,7 +49,7 @@ io.on("connection", socket => {
     }
   });
 
-  socket.on("startGame", roomId => {
+  socket.on("startGame", () => {
     socket.emit("currentPlayers", players);
     socket.broadcast.emit("newPlayer", players[socket.id]);
   });
