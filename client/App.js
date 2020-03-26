@@ -104,6 +104,7 @@ class App extends React.Component {
                     <button
                       type="button"
                       name="create"
+                      disabled={!this.state.name}
                       onClick={() => this.createGame()}
                     >
                       Create A Game
@@ -112,6 +113,7 @@ class App extends React.Component {
                     <button
                       type="button"
                       name="join"
+                      disabled={!this.state.name}
                       onClick={() =>
                         this.setState({
                           buttonClicked: true,

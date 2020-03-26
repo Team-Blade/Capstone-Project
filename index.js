@@ -89,7 +89,7 @@ io.on("connection", socket => {
     player = rooms[roomId].players[socketId];
     player.x = x;
     player.y = y;
-    socket.broadcast.emit("playerMoved", players[socket.id]);
+    socket.broadcast.emit("playerMoved", player);
   });
 });
 
