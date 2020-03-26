@@ -1,49 +1,24 @@
-// import React from "react";
+import React from "react";
+import { useForm } from "react-hook-form";
+import db from "../src/firebase";
 
-// class Form extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       players: [],
-//       name: ""
-//     };
-//     this.addPlayer = this.addPlayer.bind(this);
-//     this.handleChange = this.handleChange.bind(this);
-//   }
+export default function Form() {
+  const { register, handleSubmit } = useForm();
+  const onSubmit = data => {
+    const games = db.collection("games");
+    // const code = randomString();
+    const code = "12345";
 
-//   addPlayer(event) {
-//     event.preventDefault();
+    const newGame = games.doc(code);
+    let players = {};
+    players[data.name] = { score: 0 };
+    newGame.set({ players }, { merge: true });
+  };
 
-//     if (this.state.players.length < 4) {
-//       let submittedName = event.target.value;
-//       let players = {};
-//       players[submittedName] = { score: 0 };
-//       this.setState({ players: [...submittedName] });
-//       props.newGame.set({ players }, { merge: true });
-//     }
-//   }
-
-//   handleChange(event) {
-//     this.setState({ currName: event.target.value });
-//   }
-
-//   render() {
-//     return (
-//       <div>
-//         <h3>Ready to Play?</h3>
-//         <form>
-//           <input
-//             onSubmit={this.addPlayer}
-//             type="text"
-//             name="name"
-//             value={this.state.currName}
-//             onChange={this.handleChange}
-//             placeholder="packer-man"
-//           />
-//         </form>
-//       </div>
-//     );
-//   }
-// }
-
-// export default Form;
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input name="playerName" placeholder="Player Name" ref={register} />
+      <input type="submit" />
+    </form>
+  );
+}
