@@ -41,13 +41,17 @@ class App extends React.Component {
 
   createGame() {
     const code = randomString();
-    this.setState({ buttonClicked: true, name: "", buttonClickedName: "create", code });
+    this.setState({
+      buttonClicked: true,
+      name: "",
+      buttonClickedName: "create",
+      code
+    });
 
     let name = this.state.name;
     let players = {};
     players[name] = { score: 0 };
     games.doc(code).set({ players }, { merge: true });
-
     socket.emit("createRoom", code);
     alert(`Share your game code: ${code}`);
     // store the room id in the socket for future use
@@ -62,7 +66,7 @@ class App extends React.Component {
     games.doc(code).set({ players }, { merge: true });
 
     socket.emit("joinRoom", code);
-    // socket.emit("startGame", this.state.code);
+    // io.emit("startGame", this.state.code);
     // store the room id in the socket for future use
     socket.roomId = code;
   }
@@ -98,25 +102,14 @@ class App extends React.Component {
                     />
                   </div>
                   <div>
-                  <Popup trigger={<button
+                    <button
                       type="button"
                       name="create"
                       onClick={() => this.createGame()}
                     >
                       Create A Game
-                    </button>}>
-              <div className="init-game">
-                <button
-                  className="start-button"
-                  type="submit"
-                  onClick={() => {
-                    socket.emit("startGame");
-                  }}
-                >
-                  START!
-                </button>
-              </div>
-            </Popup>
+                    </button>
+
                     <button
                       type="button"
                       name="join"
@@ -136,7 +129,17 @@ class App extends React.Component {
           </div>
 
           {this.state.buttonClickedName === "create" ? (
-            
+            <div className="init-game">
+              <button
+                className="start-button"
+                type="submit"
+                onClick={() => {
+                  socket.emit("startGame", this.state.code);
+                }}
+              >
+                START!
+              </button>
+            </div>
           ) : null}
 
           {this.state.buttonClickedName === "join" ? (

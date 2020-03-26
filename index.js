@@ -72,7 +72,8 @@ io.on("connection", socket => {
   });
 
   socket.on("startGame", roomId => {
-    socket.emit("currentPlayers", rooms[roomId].players);
+    console.log(rooms[roomId]);
+    io.emit("currentPlayers", rooms[roomId].players);
     socket.broadcast.emit("newPlayer", rooms[roomId].players[socket.id]);
   });
 

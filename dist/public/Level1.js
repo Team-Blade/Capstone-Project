@@ -5,11 +5,11 @@ export default class Level1 extends Phaser.Scene {
   constructor() {
     super({ key: "Level1" });
     this.startPositions = {
-      '1' : {x: 12, y: 5},
-      '2' : {x: 18, y: 5},
-      '3' : {x: 12, y: 9},
-      '4' : {x: 18, y: 9}
-    }
+      "1": { x: 12, y: 5 },
+      "2": { x: 18, y: 5 },
+      "3": { x: 12, y: 9 },
+      "4": { x: 18, y: 9 }
+    };
   }
   preload() {
     //loads image for tileset
@@ -89,7 +89,7 @@ export default class Level1 extends Phaser.Scene {
     const scene = this;
     this.socket = socket;
     this.otherPlayers = this.physics.add.group();
-    
+
     this.socket.on("currentPlayers", players => {
       Object.keys(players).forEach(playerId => {
         if (playerId === scene.socket.id) {
@@ -123,9 +123,14 @@ export default class Level1 extends Phaser.Scene {
 
     const pinkTileset = map.addTilesetImage("pinksquare", "pinksquare");
     const blackTileset = map.addTilesetImage("blacksquare", "blacksquare");
-    
+
     //creates the map layer, key must match layer name in tiled
-    this.collisionLayer = map.createStaticLayer("mapBaseLayer", [pinkTileset, blackTileset], 0, 0);
+    this.collisionLayer = map.createStaticLayer(
+      "mapBaseLayer",
+      [pinkTileset, blackTileset],
+      0,
+      0
+    );
 
     this.collisionLayer.setCollisionByProperty({ collision: true });
 
@@ -189,9 +194,16 @@ export default class Level1 extends Phaser.Scene {
 
       let x = this.pac.x;
       let y = this.pac.y;
-      const moving = this.pac.oldPosition && (x !== this.pac.oldPosition.x || y !== this.pac.oldPosition.y)
+      const moving =
+        this.pac.oldPosition &&
+        (x !== this.pac.oldPosition.x || y !== this.pac.oldPosition.y);
       if (moving) {
-        this.socket.emit("playerMovement", { roomId: socket.roomId, socketId: socket.id, x: this.pac.x, y: this.pac.y });
+        this.socket.emit("playerMovement", {
+          roomId: socket.roomId,
+          socketId: socket.id,
+          x: this.pac.x,
+          y: this.pac.y
+        });
         this.pac.tilePositionX = this.map.worldToTileX(this.pac.x);
         this.pac.tilePositionY = this.map.worldToTileY(this.pac.y);
 
@@ -200,7 +212,7 @@ export default class Level1 extends Phaser.Scene {
         // this.directions[Phaser.LEFT] = this.map.getTileAt(this.pac.tilePositionX - 1, this.pac.tilePositionY);
         // this.directions[Phaser.RIGHT] = this.map.getTileAt(this.pac.tilePositionX + 1, this.pac.tilePositionY);
 
-        if(this.pac.tilePositionY >= 15 && this.pac.body.velocity.y > 0) {
+        if (this.pac.tilePositionY >= 15 && this.pac.body.velocity.y > 0) {
           this.pac.y = this.map.tileToWorldY(-1);
         }
 
@@ -209,9 +221,10 @@ export default class Level1 extends Phaser.Scene {
         }
       }
 
-      const resized = this.pac.oldPosition && this.pac.oldPosition.scale !== this.pac.scale
+      const resized =
+        this.pac.oldPosition && this.pac.oldPosition.scale !== this.pac.scale;
 
-      if (resized){
+      if (resized) {
         this.pac.x = this.map.tileToWorldX(this.pac.oldPosition.tileX);
         this.pac.y = this.map.tileToWorldY(this.pac.oldPosition.tileY);
       }
@@ -236,7 +249,8 @@ function addPlayer(scene, player) {
     y: scene.map.tileToWorldY(y),
     key: "ysclosed"
   });
-
+  console.log(scene.pac.x);
+  console.log(scene.pac.y);
   scene.pac.tilePositionX = scene.map.worldToTileX(scene.pac.x);
   scene.pac.tilePositionY = scene.map.worldToTileY(scene.pac.y);
 
@@ -247,11 +261,19 @@ function addPlayer(scene, player) {
   // scene.directions[Phaser.DOWN] = scene.map.getTileAt(scene.pac.tilePositionX, scene.pac.tilePositionY + 1);
   // scene.directions[Phaser.LEFT] = scene.map.getTileAt(scene.pac.tilePositionX - 1, scene.pac.tilePositionY);
   // scene.directions[Phaser.RIGHT] = scene.map.getTileAt(scene.pac.tilePositionX + 1, scene.pac.tilePositionY);
-
 }
-function addOtherPlayers(scene, playerInfo) {
-  console.log("inside addotherplayers");
-  const otherPlayer = scene.add.sprite(playerInfo.x, playerInfo.y, "pacYellow");
-  otherPlayer.playerId = playerInfo.playerId;
+function addOtherPlayers(scene, player) {
+  const x = scene.startPositions[player.playerNumber].x;
+  const y = scene.startPositions[player.playerNumber].y;
+
+  const otherPlayer = new SmallPac({
+    scene: scene,
+    x: scene.map.tileToWorldX(x),
+    y: scene.map.tileToWorldY(y),
+    key: "ysclosed"
+  });
+
+  // const otherPlayer = scene.add.sprite(playerInfo.x, playerInfo.y, "pacYellow");
+  otherPlayer.playerId = player.playerId;
   scene.otherPlayers.add(otherPlayer);
 }
