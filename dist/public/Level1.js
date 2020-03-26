@@ -150,7 +150,9 @@ export default class Level1 extends Phaser.Scene {
     this.og.anims.play("moveUp");
     this.ghosts.add(this.og);
     console.log(this.ghosts);
-    this.physics.add.collider(this.ghosts, this.collisionLayer);
+    this.physics.add.collider(this.ghosts, this.collisionLayer, () => {
+      this.ghosts.setBounce(1);
+    });
     this.og.move("right");
 
     //processes DOM input events if true
