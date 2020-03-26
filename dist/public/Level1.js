@@ -1,3 +1,5 @@
+import Ghost from "./Ghost.js";
+import SmallPac from "./SmallPac.js";
 export default class Level1 extends Phaser.Scene {
   constructor() {
     super({ key: "Level1" });
@@ -83,7 +85,6 @@ export default class Level1 extends Phaser.Scene {
     const self = this;
     this.socket = io();
     this.otherPlayers = this.physics.add.group();
-    this.ghosts = this.physics.add.group();
     this.socket.on("currentPlayers", players => {
       Object.keys(players).forEach(id => {
         if (players[id].playerId === self.socket.id) {
@@ -133,50 +134,15 @@ export default class Level1 extends Phaser.Scene {
     this.collisionLayer.setScale(window.innerWidth / 1860);
 
     //sprite movement yellow pacman
-    this.anims.create({
-      key: "ysleft",
-      frames: [{ key: "ysclosed" }, { key: "ysleft1" }, { key: "ysleft2" }],
-      frameRate: 10,
-      repeat: -1
-    });
-    this.anims.create({
-      key: "ysright",
-      frames: [{ key: "ysclosed" }, { key: "ysright1" }, { key: "ysright2" }],
-      frameRate: 10,
-      repeat: -1
-    });
-    this.anims.create({
-      key: "ysup",
-      frameRate: 10,
-      frames: [{ key: "ysclosed" }, { key: "ysup1" }, { key: "ysup2" }],
-      repeat: -1
-    });
-    this.anims.create({
-      key: "ysdown",
-      frames: [{ key: "ysclosed" }, { key: "ysdown1" }, { key: "ysdown2" }],
-      frameRate: 10,
-      repeat: -1
-    });
 
-    this.anims.create({
-      key: "ogMove",
-      frames: [
-        { key: "og1" },
-        { key: "og2" },
-        { key: "og3" },
-        { key: "og4" },
-        { key: "og5" },
-        { key: "og6" }
-      ],
-      frameRate: 10,
-      repeat: -1
+    this.og = new Ghost({
+      scene: self,
+      key: "og1",
+      x: self.map.tileToWorldX(15),
+      y: self.map.tileToWorldY(7.5)
     });
-    this.og = this.add.sprite(
-      self.map.tileToWorldX(15),
-      self.map.tileToWorldY(7.5),
-      "og1"
-    );
-    this.ghosts.add("og1");
+    this.og.createAnimation();
+    this.og.anims.play("move");
 
     //processes DOM input events if true
     this.input.enabled = true;
@@ -190,7 +156,6 @@ export default class Level1 extends Phaser.Scene {
     });
   }
   update() {
-    this.og.anims.play("ogMove");
     this.collisionLayer.setScale(window.innerWidth / 1860);
 
     if (this.pac) {
@@ -277,14 +242,17 @@ export default class Level1 extends Phaser.Scene {
   }
 }
 function addPlayer(self, playerInfo) {
-  self.pac = self.physics.add
-    .sprite(
-      self.map.tileToWorldX(12) + 11,
-      self.map.tileToWorldY(5) + 9,
-      "ysclosed"
-    )
-    .setSize(60, 60, true)
-    .setOrigin(0, 0);
+  self.pac = new SmallPac({
+    scene: self,
+    x: self.map.tileToWorldX(12),
+    y: self.map.tileToWorldY(5),
+    key: "ysclosed"
+  });
+  consple.log(self.pac);
+  // self.physics.add
+  // .sprite(self.map.tileToWorldX(12), self.map.tileToWorldY(5), "ysclosed")
+  // .setSize(60, 60, true)
+  // .setOrigin(0, 0);
 
   self.pac.tilePositionX = self.map.worldToTileX(self.pac.x);
   self.pac.tilePositionY = self.map.worldToTileY(self.pac.y);
