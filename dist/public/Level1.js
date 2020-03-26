@@ -76,8 +76,6 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("og4", "/public/assets/ghosts/GameMain184.png");
     this.load.image("og5", "/public/assets/ghosts/GameMain185.png");
     this.load.image("og6", "/public/assets/ghosts/GameMain186.png");
-
-    this.load.image("sky", "/public/assets/sky.png");
   }
 
   create() {

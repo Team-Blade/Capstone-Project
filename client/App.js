@@ -81,14 +81,6 @@ class App extends React.Component {
                 }
                 modal
               >
-                {close => (
-                  <div className="modal">
-                    <a className="close" onClick={close}>
-                      &times;
-                    </a>
-                    <div className="actions"></div>
-                  </div>
-                )}
                 <div className="input-buttons">
                   <div>
                     <h4>Enter Name:</h4>
@@ -103,13 +95,25 @@ class App extends React.Component {
                     />
                   </div>
                   <div>
-                    <button
+                  <Popup trigger={<button
                       type="button"
                       name="create"
                       onClick={() => this.createGame()}
                     >
                       Create A Game
-                    </button>
+                    </button>}>
+              <div className="init-game">
+                <button
+                  className="start-button"
+                  type="submit"
+                  onClick={() => {
+                    socket.emit("startGame");
+                  }}
+                >
+                  START!
+                </button>
+              </div>
+            </Popup>
                     <button
                       type="button"
                       name="join"
@@ -129,17 +133,7 @@ class App extends React.Component {
           </div>
 
           {this.state.buttonClickedName === "create" ? (
-            <div className="init-game">
-              <button
-                className="start-button"
-                type="submit"
-                onClick={() => {
-                  socket.emit("startGame");
-                }}
-              >
-                START!
-              </button>
-            </div>
+            
           ) : null}
 
           {this.state.buttonClickedName === "join" ? (
