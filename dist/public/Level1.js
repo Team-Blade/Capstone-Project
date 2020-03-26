@@ -162,28 +162,32 @@ export default class Level1 extends Phaser.Scene {
       this.pac.setScale(window.innerWidth / 1861);
 
       if (this.cursors.up.isDown) {
-        this.pac.setVelocityY(-180);
-        this.pac.anims.play("ysup", true);
+        // this.pac.setVelocityY(-180);
+        // this.pac.anims.play("ysup", true);
+        this.pac.move("up");
       }
       if (this.cursors.down.isDown) {
-        this.pac.setVelocityY(180);
-        this.pac.anims.play("ysdown", true);
+        // this.pac.setVelocityY(180);
+        // this.pac.anims.play("ysdown", true);
+        this.pac.move("down");
       }
       if (
         this.cursors.left.isDown &&
         this.pac.tilePositionY >= 0 &&
         this.pac.tilePositionY < 14
       ) {
-        this.pac.setVelocityX(-180);
-        this.pac.anims.play("ysleft", true);
+        // this.pac.setVelocityX(-180);
+        // this.pac.anims.play("ysleft", true);
+        this.pac.move("left");
       }
       if (
         this.cursors.right.isDown &&
         this.pac.tilePositionY >= 0 &&
         this.pac.tilePositionY < 14
       ) {
-        this.pac.setVelocityX(180);
-        this.pac.anims.play("ysright", true);
+        this.pac.move("right");
+        // this.pac.setVelocityX(180);
+        // this.pac.anims.play("ysright", true);
       }
 
       let x = this.pac.x;
@@ -248,11 +252,6 @@ function addPlayer(self, playerInfo) {
     y: self.map.tileToWorldY(5),
     key: "ysclosed"
   });
-  consple.log(self.pac);
-  // self.physics.add
-  // .sprite(self.map.tileToWorldX(12), self.map.tileToWorldY(5), "ysclosed")
-  // .setSize(60, 60, true)
-  // .setOrigin(0, 0);
 
   self.pac.tilePositionX = self.map.worldToTileX(self.pac.x);
   self.pac.tilePositionY = self.map.worldToTileY(self.pac.y);

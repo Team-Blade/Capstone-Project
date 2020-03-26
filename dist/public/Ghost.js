@@ -2,8 +2,8 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   constructor(config) {
     super(config.scene, config.x, config.y, config.key);
     config.scene.add.existing(this);
+    config.scene.physics.world.enable(this);
     this.key = config.key.slice(0, -1);
-    console.log(this.key);
     this.scene = config.scene;
   }
 

@@ -2,6 +2,9 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   constructor(config) {
     super(config.scene, config.x, config.y, config.key);
     config.scene.add.existing(this);
+    config.scene.physics.world.enable(this);
+    this.setSize(60, 60, true);
+    this.setOrigin(0, 0);
     this.scene = config.scene;
     this.key = config.key;
   }
@@ -30,5 +33,29 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       frameRate: 10,
       repeat: -1
     });
+  }
+  move(direction) {
+    this.createAnimations();
+    console.log(direction);
+    switch (direction) {
+      case "up": {
+        this.setVelocityY(-180);
+        this.anims.play("ysup", true);
+      }
+      case "down": {
+        this.setVelocityY(180);
+        this.anims.play("ysdown", true);
+      }
+      case "left": {
+        this.setVelocityX(-180);
+        this.anims.play("ysleft", true);
+      }
+      case "right": {
+        this.setVelocityX(180);
+        this.anims.play("ysright", true);
+      }
+      default:
+        console.log("no direction provided");
+    }
   }
 }
