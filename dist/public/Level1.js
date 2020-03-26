@@ -4,11 +4,27 @@ import { socket } from "../../client/App";
 export default class Level1 extends Phaser.Scene {
   constructor() {
     super({ key: "Level1" });
-    this.startPositions = {
-      "1": { x: 12, y: 5 },
-      "2": { x: 18, y: 5 },
-      "3": { x: 12, y: 9 },
-      "4": { x: 18, y: 9 }
+    // this.startPositions = {
+    //   "1": { x: 12, y: 5 },
+    //   "2": { x: 18, y: 5 },
+    //   "3": { x: 12, y: 9 },
+    //   "4": { x: 18, y: 9 }
+    // };
+    this['1'] = {
+      startPositions: {x: 12, y: 5},
+      color: 'y'
+    };
+    this['2'] = {
+      startPositions: { x: 18, y: 5 },
+      color: 'r'
+    };
+    this['3'] = {
+      startPositions: { x: 12, y: 9 },
+      color: 'b'
+    };
+    this['4'] = {
+      startPositions: { x: 18, y: 9 },
+      color: 'p'
     };
   }
   preload() {
@@ -246,14 +262,15 @@ export default class Level1 extends Phaser.Scene {
   }
 }
 function addPlayer(scene, player) {
-  const x = scene.startPositions[player.playerNumber].x;
-  const y = scene.startPositions[player.playerNumber].y;
+  const playerNumber = player.playerNumber
+  const x = scene[playerNumber].startPositions.x;
+  const y = scene[playerNumber].startPositions.y;
 
   scene.pac = new SmallPac({
     scene: scene,
     x: scene.map.tileToWorldX(x),
     y: scene.map.tileToWorldY(y),
-    key: "ysclosed"
+    key: `${scene[player.playerNumber].color}sclosed`
   });
 
   scene.pac.tilePositionX = scene.map.worldToTileX(scene.pac.x);
@@ -268,15 +285,17 @@ function addPlayer(scene, player) {
   // scene.directions[Phaser.RIGHT] = scene.map.getTileAt(scene.pac.tilePositionX + 1, scene.pac.tilePositionY);
 }
 function addOtherPlayers(scene, player) {
-  const x = scene.startPositions[player.playerNumber].x;
-  const y = scene.startPositions[player.playerNumber].y;
+  const x = scene[player.playerNumber].startPositions.x;
+  const y = scene[player.playerNumber].startPositions.y;
 
   const otherPlayer = new SmallPac({
     scene: scene,
     x: scene.map.tileToWorldX(x),
     y: scene.map.tileToWorldY(y),
-    key: "ysclosed"
+    key: `${scene[player.playerNumber].color}sclosed`
   });
+
+  scene.physics.add.collider(otherPlayer, scene.collisionLayer);
 
   scene.otherPlayersArray.push(otherPlayer);
   otherPlayer.playerId = player.playerId;
