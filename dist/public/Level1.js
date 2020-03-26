@@ -1,3 +1,5 @@
+import Ghost from "./Ghost.js";
+import SmallPac from "./SmallPac.js";
 import { socket } from "../../client/App";
 export default class Level1 extends Phaser.Scene {
   constructor() {
@@ -12,9 +14,69 @@ export default class Level1 extends Phaser.Scene {
     this.load.tilemapTiledJSON("map", "/public/assets/newmap.json");
     //loads yellow pacman
     this.load.spritesheet("pacYellow", "/public/assets/royale.png", {
-      frameWidth: 60,
-      frameHeight: 60
+      frameWidth: 32,
+      frameHeight: 28
     });
+    // this.load.spritesheet("pacYellow", "/public/assets/royale.png", {
+    //   frameWidth: 32,
+    //   frameHeight: 28
+    // });
+
+    //pacman yellow small pre-load images
+    this.load.image("ysclosed", "/public/assets/yellowSmall/GameMain020.png");
+    this.load.image("ysleft1", "/public/assets/yellowSmall/GameMain023.png");
+    this.load.image("ysleft2", "/public/assets/yellowSmall/GameMain024.png");
+    this.load.image("ysright1", "/public/assets/yellowSmall/GameMain025.png");
+    this.load.image("ysright2", "/public/assets/yellowSmall/GameMain026.png");
+    this.load.image("ysup1", "/public/assets/yellowSmall/GameMain027.png");
+    this.load.image("ysup2", "/public/assets/yellowSmall/GameMain028.png");
+    this.load.image("ysdown1", "/public/assets/yellowSmall/GameMain021.png");
+    this.load.image("ysdown2", "/public/assets/yellowSmall/GameMain022.png");
+
+    //pacman blue small preload images
+    this.load.image("bsclosed", "/public/assets/blueSmall/GameMain038.png");
+    this.load.image("bsleft1", "/public/assets/blueSmall/GameMain041.png");
+    this.load.image("bsleft2", "/public/assets/blueSmall/GameMain042.png");
+    this.load.image("bsright1", "/public/assets/blueSmall/GameMain043.png");
+    this.load.image("bsright2", "/public/assets/blueSmall/GameMain044.png");
+    this.load.image("bsup1", "/public/assets/blueSmall/GameMain045.png");
+    this.load.image("bsup2", "/public/assets/blueSmall/GameMain046.png");
+    this.load.image("bsdown1", "/public/assets/blueSmall/GameMain039.png");
+    this.load.image("bsdown2", "/public/assets/blueSmall/GameMain040.png");
+
+    //pacman pink small preload images
+    this.load.image("psclosed", "/public/assets/pinkSmall/GameMain029.png");
+    this.load.image("psleft1", "/public/assets/pinkSmall/GameMain032.png");
+    this.load.image("psleft2", "/public/assets/pinkSmall/GameMain033.png");
+    this.load.image("psright1", "/public/assets/pinkSmall/GameMain034.png");
+    this.load.image("psright2", "/public/assets/pinkSmall/GameMain035.png");
+    this.load.image("psup1", "/public/assets/pinkSmall/GameMain036.png");
+    this.load.image("psup2", "/public/assets/pinkSmall/GameMain037.png");
+    this.load.image("psdown1", "/public/assets/pinkSmall/GameMain030.png");
+    this.load.image("psdown2", "/public/assets/pinkSmall/GameMain031.png");
+
+    //pacman red small preload images
+    this.load.image("rsclosed", "/public/assets/redSmall/GameMain047.png");
+    this.load.image("rsleft1", "/public/assets/redSmall/GameMain050.png");
+    this.load.image("rsleft2", "/public/assets/redSmall/GameMain051.png");
+    this.load.image("rsright1", "/public/assets/redSmall/GameMain052.png");
+    this.load.image("rsright2", "/public/assets/redSmall/GameMain053.png");
+    this.load.image("rsup1", "/public/assets/redSmall/GameMain054.png");
+    this.load.image("rsup2", "/public/assets/redSmall/GameMain055.png");
+    this.load.image("rsdown1", "/public/assets/redSmall/GameMain048.png");
+    this.load.image("rsdown2", "/public/assets/redSmall/GameMain049.png");
+
+    //pacman orange ghost preload images
+    this.load.image("og1", "/public/assets/ghosts/GameMain178.png");
+    this.load.image("og2", "/public/assets/ghosts/GameMain179.png");
+    this.load.image("og3", "/public/assets/ghosts/GameMain180.png");
+    this.load.image("og4", "/public/assets/ghosts/GameMain181.png");
+    this.load.image("og5", "/public/assets/ghosts/GameMain182.png");
+    this.load.image("og3", "/public/assets/ghosts/GameMain183.png");
+    this.load.image("og4", "/public/assets/ghosts/GameMain184.png");
+    this.load.image("og5", "/public/assets/ghosts/GameMain185.png");
+    this.load.image("og6", "/public/assets/ghosts/GameMain186.png");
+
     this.load.image("sky", "/public/assets/sky.png");
   }
 
@@ -73,42 +135,15 @@ export default class Level1 extends Phaser.Scene {
     this.collisionLayer.setScale(window.innerWidth / 1860);
 
     //sprite movement yellow pacman
-    this.anims.create({
-      key: "left",
-      frames: this.anims.generateFrameNumbers("pacYellow", {
-        start: 4,
-        end: 6
-      }),
-      frameRate: 8,
-      repeat: 0
+
+    this.og = new Ghost({
+      scene: self,
+      key: "og1",
+      x: self.map.tileToWorldX(15),
+      y: self.map.tileToWorldY(7.5)
     });
-    this.anims.create({
-      key: "right",
-      frames: this.anims.generateFrameNumbers("pacYellow", {
-        start: 7,
-        end: 9
-      }),
-      frameRate: 8,
-      repeat: 0
-    });
-    this.anims.create({
-      key: "up",
-      frames: this.anims.generateFrameNumbers("pacYellow", {
-        start: 9,
-        end: 11
-      }),
-      frameRate: 8,
-      repeat: 0
-    });
-    this.anims.create({
-      key: "down",
-      frames: this.anims.generateFrameNumbers("pacYellow", {
-        start: 0,
-        end: 3
-      }),
-      frameRate: 8,
-      repeat: 0
-    });
+    this.og.createAnimation();
+    this.og.anims.play("move");
 
     //processes DOM input events if true
     this.input.enabled = true;
@@ -127,28 +162,32 @@ export default class Level1 extends Phaser.Scene {
       this.pac.setScale(window.innerWidth / 1861);
 
       if (this.cursors.up.isDown) {
-        this.pac.setVelocityY(-180);
-        this.pac.anims.play("up", true);
+        // this.pac.setVelocityY(-180);
+        // this.pac.anims.play("ysup", true);
+        this.pac.move("up");
       }
       if (this.cursors.down.isDown) {
-        this.pac.setVelocityY(180);
-        this.pac.anims.play("down", true);
+        // this.pac.setVelocityY(180);
+        // this.pac.anims.play("ysdown", true);
+        this.pac.move("down");
       }
       if (
         this.cursors.left.isDown &&
         this.pac.tilePositionY >= 0 &&
         this.pac.tilePositionY < 14
       ) {
-        this.pac.setVelocityX(-180);
-        this.pac.anims.play("left", true);
+        // this.pac.setVelocityX(-180);
+        // this.pac.anims.play("ysleft", true);
+        this.pac.move("left");
       }
       if (
         this.cursors.right.isDown &&
         this.pac.tilePositionY >= 0 &&
         this.pac.tilePositionY < 14
       ) {
-        this.pac.setVelocityX(180);
-        this.pac.anims.play("right", true);
+        this.pac.move("right");
+        // this.pac.setVelocityX(180);
+        // this.pac.anims.play("ysright", true);
       }
 
       let x = this.pac.x;
@@ -207,10 +246,12 @@ export default class Level1 extends Phaser.Scene {
   }
 }
 function addPlayer(self, playerInfo) {
-  console.log("addplayer");
-  self.pac = self.physics.add
-    .sprite(self.map.tileToWorldX(12), self.map.tileToWorldY(5), "pacYellow")
-    .setOrigin(0, 0);
+  self.pac = new SmallPac({
+    scene: self,
+    x: self.map.tileToWorldX(12),
+    y: self.map.tileToWorldY(5),
+    key: "ysclosed"
+  });
 
   self.pac.tilePositionX = self.map.worldToTileX(self.pac.x);
   self.pac.tilePositionY = self.map.worldToTileY(self.pac.y);
