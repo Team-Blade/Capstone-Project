@@ -20,25 +20,30 @@ const joinRoom = (socket, room) => {
     //increase # of players in room by 1
     room.numberOfPlayers += 1;
     socket.join(room.id, () => {
-
       room.players[socket.id] = {
         rotation: 0,
         x: 0,
         y: 0,
         playerId: socket.id,
-        playerNumber: room.numberOfPlayers,
+        playerNumber: room.numberOfPlayers
       };
-      console.log(socket.id, `Player${room.players[socket.id].playerNumber}`, "Joined", room.id);
+      console.log(
+        socket.id,
+        `Player${room.players[socket.id].playerNumber}`,
+        "Joined",
+        room.id
+      );
     });
+  } else {
+    console.log(
+      "This room is at capacity. No. of players right now:",
+      room.numberOfPlayers
+    );
   }
-  else {
-    console.log('This room is at capacity. No. of players right now:', room.numberOfPlayers);
-  }
-  
 };
 
 class Room {
-  constructor (roomId) {
+  constructor(roomId) {
     this.id = roomId;
     this.numberOfPlayers = 0;
     this.sockets = [];
@@ -50,7 +55,6 @@ io.on("connection", socket => {
   console.log("a user connected", socket.id);
 
   socket.on("createRoom", roomId => {
-    
     room = new Room(roomId);
 
     rooms[roomId] = room;
@@ -68,7 +72,8 @@ io.on("connection", socket => {
   });
 
   socket.on("startGame", roomId => {
-    socket.emit("currentPlayers", rooms[roomId].players);
+    console.log(rooms[roomId]);
+    io.emit("currentPlayers", rooms[roomId].players);
     socket.broadcast.emit("newPlayer", rooms[roomId].players[socket.id]);
   });
 
@@ -79,9 +84,10 @@ io.on("connection", socket => {
     }
     io.emit("disconnect", socket.id);
   });
+
   socket.on("playerMovement", movementData => {
-    const {x, y, socketId, roomId} = movementData;
-    player = rooms[roomId].players[socketId]
+    const { x, y, socketId, roomId } = movementData;
+    player = rooms[roomId].players[socketId];
     player.x = x;
     player.y = y;
     socket.broadcast.emit("playerMoved", players[socket.id]);
