@@ -36,26 +36,19 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
   move(direction) {
     this.createAnimations();
-    console.log(direction);
-    switch (direction) {
-      case "up": {
-        this.setVelocityY(-180);
-        this.anims.play("ysup", true);
-      }
-      case "down": {
-        this.setVelocityY(180);
-        this.anims.play("ysdown", true);
-      }
-      case "left": {
-        this.setVelocityX(-180);
-        this.anims.play("ysleft", true);
-      }
-      case "right": {
-        this.setVelocityX(180);
-        this.anims.play("ysright", true);
-      }
-      default:
-        console.log("no direction provided");
+
+    if (direction === "up") {
+      this.setVelocityY(-180);
+      this.anims.play("ysup", true);
+    } else if (direction === "down") {
+      this.setVelocityY(180);
+      this.anims.play("ysdown", true);
+    } else if (direction === "left") {
+      this.setVelocityX(-180);
+      this.anims.play("ysleft", true);
+    } else if (direction === "right") {
+      this.setVelocityX(180);
+      this.anims.play("ysright", true);
     }
   }
 }
