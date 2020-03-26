@@ -13,55 +13,77 @@ app.get("/", function(req, res) {
 });
 
 const joinRoom = (socket, room) => {
-  room.sockets.push(socket);
-  socket.join(room.id, () => {
-    // store the room id in the socket for future use
-    socket.roomId = room.id;
-    players[socket.id] = {
-      rotation: 0,
-      x: 700,
-      y: 450,
-      playerId: socket.id
-    };
-    console.log(socket.id, "Joined", room.id);
-  });
+  //if it's not at capacity (Max 4)
+  if (room.numberOfPlayers < 4) {
+    //store the socket in a socket array
+    room.sockets.push(socket);
+    //increase # of players in room by 1
+    room.numberOfPlayers += 1;
+    socket.join(room.id, () => {
+
+      room.players[socket.id] = {
+        rotation: 0,
+        x: 0,
+        y: 0,
+        playerId: socket.id,
+        playerNumber: room.numberOfPlayers,
+      };
+      console.log(socket.id, `Player${room.players[socket.id].playerNumber}`, "Joined", room.id);
+    });
+  }
+  else {
+    console.log('This room is at capacity. No. of players right now:', room.numberOfPlayers);
+  }
+  
 };
+
+class Room {
+  constructor (roomId) {
+    this.id = roomId;
+    this.numberOfPlayers = 0;
+    this.sockets = [];
+    this.players = {};
+  }
+}
 
 io.on("connection", socket => {
   console.log("a user connected", socket.id);
 
   socket.on("createRoom", roomId => {
-    const room = {
-      id: roomId,
-      sockets: []
-    };
-    rooms[room.id] = room;
+    
+    room = new Room(roomId);
+
+    rooms[roomId] = room;
     // have the socket join the room they've just created.
     joinRoom(socket, room);
   });
 
   socket.on("joinRoom", roomId => {
     const room = rooms[roomId];
-    if (room.sockets.length <= 4) {
+    if (room) {
       joinRoom(socket, room);
     } else {
-      console.log("Sorry, this game is full");
+      console.log("Sorry, game room:", roomId, "not found");
     }
   });
 
   socket.on("startGame", roomId => {
-    socket.emit("currentPlayers", players);
-    socket.broadcast.emit("newPlayer", players[socket.id]);
+    socket.emit("currentPlayers", rooms[roomId].players);
+    socket.broadcast.emit("newPlayer", rooms[roomId].players[socket.id]);
   });
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
-    delete players[socket.id];
+    if (socket.roomId) {
+      delete rooms[socket.roomId].players[socket.id];
+    }
     io.emit("disconnect", socket.id);
   });
   socket.on("playerMovement", movementData => {
-    players[socket.id].x = movementData.x;
-    players[socket.id].y = movementData.y;
+    const {x, y, socketId, roomId} = movementData;
+    player = rooms[roomId].players[socketId]
+    player.x = x;
+    player.y = y;
     socket.broadcast.emit("playerMoved", players[socket.id]);
   });
 });
