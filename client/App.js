@@ -66,7 +66,6 @@ class App extends React.Component {
     games.doc(code).set({ players }, { merge: true });
 
     socket.emit("joinRoom", code);
-    // io.emit("startGame", this.state.code);
     // store the room id in the socket for future use
     socket.roomId = code;
   }

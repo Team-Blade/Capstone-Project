@@ -84,6 +84,7 @@ io.on("connection", socket => {
     }
     io.emit("disconnect", socket.id);
   });
+
   socket.on("playerMovement", movementData => {
     const { x, y, socketId, roomId } = movementData;
     player = rooms[roomId].players[socketId];
