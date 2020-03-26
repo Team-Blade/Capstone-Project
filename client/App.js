@@ -40,16 +40,17 @@ class App extends React.Component {
 
   createGame() {
     const code = randomString();
-    this.setState({ buttonClicked: true, buttonClickedName: "create", code });
+    this.setState({ buttonClicked: true, name: "", buttonClickedName: "create", code });
 
     let name = this.state.name;
     let players = {};
     players[name] = { score: 0 };
     games.doc(code).set({ players }, { merge: true });
 
-    console.log(socket.id);
     socket.emit("createRoom", code);
     alert(`Share your game code: ${code}`);
+    // store the room id in the socket for future use
+    socket.roomId = code;
   }
 
   joinGame() {
@@ -61,6 +62,8 @@ class App extends React.Component {
 
     socket.emit("joinRoom", code);
     // socket.emit("startGame", this.state.code);
+    // store the room id in the socket for future use
+    socket.roomId = code;
   }
 
   render() {
@@ -87,6 +90,7 @@ class App extends React.Component {
               <button
                 type="button"
                 name="create"
+                disabled = {this.state.name.trim().length === 0}
                 onClick={() => this.createGame()}
               >
                 Create Game
