@@ -72,15 +72,15 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("rsdown2", "/public/assets/redSmall/GameMain049.png");
 
     //pacman orange ghost preload images
-    this.load.image("og1", "/public/assets/ghosts/GameMain178.png");
-    this.load.image("og2", "/public/assets/ghosts/GameMain179.png");
-    this.load.image("og3", "/public/assets/ghosts/GameMain180.png");
-    this.load.image("og4", "/public/assets/ghosts/GameMain181.png");
-    this.load.image("og5", "/public/assets/ghosts/GameMain182.png");
-    this.load.image("og3", "/public/assets/ghosts/GameMain183.png");
-    this.load.image("og4", "/public/assets/ghosts/GameMain184.png");
-    this.load.image("og5", "/public/assets/ghosts/GameMain185.png");
-    this.load.image("og6", "/public/assets/ghosts/GameMain186.png");
+    this.load.image("og1", "/public/assets/ghosts/GameMain178.png"); //down
+    this.load.image("og2", "/public/assets/ghosts/GameMain179.png"); //down
+    this.load.image("og3", "/public/assets/ghosts/GameMain180.png"); //left
+    this.load.image("og4", "/public/assets/ghosts/GameMain181.png"); //left
+    this.load.image("og5", "/public/assets/ghosts/GameMain182.png"); //right
+    this.load.image("og6", "/public/assets/ghosts/GameMain183.png"); //right
+    this.load.image("og7", "/public/assets/ghosts/GameMain184.png"); //up
+    this.load.image("og8", "/public/assets/ghosts/GameMain185.png"); //up
+    this.load.image("og9", "/public/assets/ghosts/GameMain186.png"); //back
   }
 
   create() {
@@ -89,6 +89,7 @@ export default class Level1 extends Phaser.Scene {
     const scene = this;
     this.socket = socket;
     this.otherPlayers = this.physics.add.group();
+    this.ghosts = this.physics.add.group();
 
     this.socket.on("currentPlayers", players => {
       Object.keys(players).forEach(playerId => {
@@ -142,10 +143,15 @@ export default class Level1 extends Phaser.Scene {
       scene: scene,
       key: "og1",
       x: scene.map.tileToWorldX(15),
-      y: scene.map.tileToWorldY(7.5)
+      y: scene.map.tileToWorldY(7.5),
+      game: this.game
     });
     this.og.createAnimation();
-    this.og.anims.play("move");
+    this.og.anims.play("moveUp");
+    this.ghosts.add(this.og);
+    console.log(this.ghosts);
+    this.physics.add.collider(this.ghosts, this.collisionLayer);
+    this.og.move("right");
 
     //processes DOM input events if true
     this.input.enabled = true;
