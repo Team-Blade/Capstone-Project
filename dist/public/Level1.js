@@ -118,7 +118,6 @@ export default class Level1 extends Phaser.Scene {
 
   create() {
     // this.directions = {};
-
     const scene = this;
     this.socket = socket;
     this.otherPlayers = this.physics.add.group();
@@ -189,6 +188,16 @@ export default class Level1 extends Phaser.Scene {
 
     this.collisionLayer.setScale(window.innerWidth / 1860);
 
+    window.addEventListener("resize", resizeCanvas);
+    // const WIDTH = this.collisionLayer.displayWidth;
+    // const HEIGHT = this.collisionLayer.displayHeight;
+
+    function resizeCanvas () {
+      const canvas = document.querySelector("canvas");
+      canvas.style.width = `${(window.innerWidth/1860)*1860}px`;
+      canvas.style.height = `${(window.innerWidth/1860)*900}px`;
+    }
+
     //sprite movement yellow pacman
 
     this.og = new Ghost({
@@ -212,15 +221,8 @@ export default class Level1 extends Phaser.Scene {
     });
   }
   update() {
-    this.collisionLayer.setScale(window.innerWidth / 1860);
+    
     if (this.pac) {
-      this.pac.setScale(window.innerWidth / 1861);
-
-      if (this.otherPlayersArray.length > 0) {
-        this.otherPlayersArray.forEach(otherPlayer => {
-          otherPlayer.setScale(window.innerWidth / 1861);
-        });
-      }
 
       if (this.cursors.up.isDown) {
         // this.pac.setVelocityY(-180);
@@ -309,7 +311,7 @@ function addPlayer(scene, player) {
     y: scene.map.tileToWorldY(y),
     key: `${scene[player.playerNumber].color}sclosed`
   });
-
+  scene.pac.setScale(scene.collisionLayer.scale);
   scene.pac.tilePositionX = scene.map.worldToTileX(scene.pac.x);
   scene.pac.tilePositionY = scene.map.worldToTileY(scene.pac.y);
 
@@ -332,6 +334,7 @@ function addOtherPlayers(scene, player) {
     key: `${scene[player.playerNumber].color}sclosed`
   });
 
+  otherPlayer.setScale(scene.collisionLayer.scale);
   scene.physics.add.collider(otherPlayer, scene.collisionLayer);
 
   scene.otherPlayersArray.push(otherPlayer);

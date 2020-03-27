@@ -1,13 +1,12 @@
 import Level1 from "./Level1.js";
 const config = {
   type: Phaser.AUTO,
-  width: 900,
-  height: 600,
   scale: {
     scale: "SHOW_ALL",
     orientation: "LANDSCAPE",
-    mode: Phaser.Scale.RESIZE,
-    autoCenter: Phaser.Scale.CENTER_BOTH
+    // mode: Phaser.Scale.RESIZE
+    width: (window.innerWidth/1860)*1860,
+    height: (window.innerWidth/1860)*900
   },
   resolution: window.deviePixelRatio,
   pixelArt: true,
