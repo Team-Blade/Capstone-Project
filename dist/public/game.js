@@ -4,10 +4,9 @@ const config = {
   scale: {
     scale: "SHOW_ALL",
     orientation: "LANDSCAPE",
-    mode: Phaser.Scale.RESIZE,
-    autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: "100%",
-    height: "100%"
+    // mode: Phaser.Scale.RESIZE
+    width: (window.innerWidth/1860)*1860,
+    height: (window.innerWidth/1860)*900
   },
   resolution: window.deviePixelRatio,
   pixelArt: true,
