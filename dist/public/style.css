@@ -1,9 +1,11 @@
 body {
+  display: flex;
   background-color: #000000;
   border: black solid;
 }
 nav {
   padding: 30px;
+  padding-left: 0px;
   display: flex;
   justify-content: center;
 }
@@ -26,7 +28,8 @@ main {
 #container-start {
   display: flex;
   justify-content: center;
-  margin-bottom: 10px;
+  padding: 20px;
+  background-color: black;
 }
 
 .input-buttons {
@@ -111,9 +114,19 @@ h2 {
   padding: 5px;
 }
 
-div > .popup-content {
-  background: hotpink;
-}
 #player-container {
   color: gold;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background-color: black;
+}
+
+h3 {
+  padding-left: 30px;
+  text-decoration: underline;
+}
+
+.popup-overlay {
+  background: rgba(0, 0, 0, 0);
 }

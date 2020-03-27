@@ -1,17 +1,25 @@
 import React from "react";
-import db from "../src/firebase";
+import Popup from "reactjs-popup";
 
 const ScoreBoard = props => {
-  console.log(props.players);
+  let count = 0;
+  let players = props.players.reverse();
   return (
+    // <Popup open closeOnDocumentClick={false} position="right">
     <div id="player-container">
-      <h6>PLAYERS: </h6>
+      <h3>PLAYERS: </h3>
       <ul>
-        {props.players.map(player => {
-          <li>{player}</li>;
+        {players.map(player => {
+          count++;
+          return (
+            <li key={player}>
+              Player{count}: {player}
+            </li>
+          );
         })}
       </ul>
     </div>
+    // </Popup>
   );
 };
 

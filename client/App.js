@@ -73,6 +73,10 @@ class App extends React.Component {
     let players = {};
     players[name] = { score: 0 };
     games.doc(code).set({ players }, { merge: true });
+    games.doc(code).onSnapshot(doc => {
+      const players = Object.keys(doc.data().players);
+      this.setState({ players });
+    });
 
     socket.emit("joinRoom", code);
     // store the room id in the socket for future use
@@ -80,7 +84,6 @@ class App extends React.Component {
   }
 
   startGame() {
-    console.log("inside startGame", this.state.code);
     games.doc(this.state.code).onSnapshot(doc => {
       const players = Object.keys(doc.data().players);
       this.setState({ buttonClickedName: "", players });
@@ -94,9 +97,9 @@ class App extends React.Component {
         <main id="main">
           <nav>
             {/* <div></div> */}
-            {this.state.players.length > 0 ? (
+            {/* {this.state.players.length > 0 ? (
               <ScoreBoard players={this.state.players}></ScoreBoard>
-            ) : null}
+            ) : null} */}
           </nav>
           <div>
             {!this.state.beginGameButtonClicked ? (
