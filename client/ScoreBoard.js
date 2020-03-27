@@ -1,12 +1,18 @@
-// import React from "react";
-// import db from "../src/firebase";
+import React from "react";
+import db from "../src/firebase";
 
-// const SideBar = props => {
-//   return (
-//     <div>
-//       <h6>Players</h6>
-//     </div>
-//   );
-// };
+const ScoreBoard = props => {
+  console.log(props.players);
+  return (
+    <div id="player-container">
+      <h6>PLAYERS: </h6>
+      <ul>
+        {props.players.map(player => {
+          <li>{player}</li>;
+        })}
+      </ul>
+    </div>
+  );
+};
 
-// export default SideBar;
+export default ScoreBoard;

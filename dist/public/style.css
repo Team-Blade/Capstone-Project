@@ -114,7 +114,6 @@ h2 {
 div > .popup-content {
   background: hotpink;
 }
-
-Popup {
-  background: hotpink;
+#player-container {
+  color: gold;
 }
