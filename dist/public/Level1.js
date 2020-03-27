@@ -175,18 +175,21 @@ export default class Level1 extends Phaser.Scene {
       0
     );
 
-    this.collisionLayer = map.createStaticLayer(
+    this.collisionLayer.setCollisionByProperty({ collision: true });
+
+    this.collisionLayer.setScale(window.innerWidth / 1860);
+
+    //creates the food and dots layer
+    this.collisionLayerFoodDots = map.createStaticLayer(
       "foodDotsLayer",
       [smallDotTileset,largeDotTileset, candyTileset,burgerTileset,papayaTileset,peachTileset,pizzaSliceTileset,cakeSliceTileset,eggTileset],
       0,
       0
     );
+    this.collisionLayerFoodDots.setCollisionByProperty({ collision: true });
 
+    this.collisionLayerFoodDots.setScale(window.innerWidth / 1860);
 
-
-    this.collisionLayer.setCollisionByProperty({ collision: true });
-
-    this.collisionLayer.setScale(window.innerWidth / 1860);
 
     window.addEventListener("resize", resizeCanvas);
     // const WIDTH = this.collisionLayer.displayWidth;
