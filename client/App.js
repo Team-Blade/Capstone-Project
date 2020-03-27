@@ -1,6 +1,6 @@
 import React from "react";
 import Popup from "reactjs-popup";
-import Game from "./Game";
+import ScoreBoard from "./ScoreBoard";
 import db from "../src/firebase";
 
 export const socket = io();
@@ -21,16 +21,20 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
+      beginGameButtonClicked: false,
       buttonClicked: false,
       name: "",
       buttonClickedName: "",
-      code: ""
+      code: "",
+      players: []
     };
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleCodeChange = this.handleCodeChange.bind(this);
     this.createGame = this.createGame.bind(this);
     this.joinGame = this.joinGame.bind(this);
+    this.startGame = this.startGame.bind(this);
   }
+
   handleNameChange(event) {
     this.setState({ name: event.target.value });
   }
@@ -40,21 +44,23 @@ class App extends React.Component {
   }
 
   createGame() {
-    console.log("inside createGame");
+    //generate a game code
     const code = randomString();
+
     this.setState({
-      buttonClicked: true,
+      buttonClicked: false,
       name: "",
       buttonClickedName: "create",
       code
     });
 
+    //sending player to database
     let name = this.state.name;
     let players = {};
     players[name] = { score: 0 };
     games.doc(code).set({ players }, { merge: true });
+
     socket.emit("createRoom", code);
-    // alert(`Share your game code: ${code}`);
     // store the room id in the socket for future use
     socket.roomId = code;
   }
@@ -62,13 +68,27 @@ class App extends React.Component {
   joinGame() {
     let name = this.state.name;
     let code = this.state.code;
+
+    //sending player to database
     let players = {};
     players[name] = { score: 0 };
     games.doc(code).set({ players }, { merge: true });
+    games.doc(code).onSnapshot(doc => {
+      const players = Object.keys(doc.data().players);
+      this.setState({ players });
+    });
 
     socket.emit("joinRoom", code);
     // store the room id in the socket for future use
     socket.roomId = code;
+  }
+
+  startGame() {
+    games.doc(this.state.code).onSnapshot(doc => {
+      const players = Object.keys(doc.data().players);
+      this.setState({ buttonClickedName: "", players });
+      socket.emit("startGame", this.state.code);
+    });
   }
 
   render() {
@@ -76,23 +96,44 @@ class App extends React.Component {
       <div id="main-wrapper">
         <main id="main">
           <nav>
-            <img className="logo" src="/public/assets/extract/Menu_rogo.png" />
+            {/* <div></div> */}
+            {/* {this.state.players.length > 0 ? (
+              <ScoreBoard players={this.state.players}></ScoreBoard>
+            ) : null} */}
           </nav>
           <div>
-            {!this.state.buttonClicked ? (
-              <Popup
-                trigger={
-                  <div id="container-start">
-                    <button className="start-button"> CLICK TO BEGIN </button>
-                  </div>
-                }
-                modal
-              >
+            {!this.state.beginGameButtonClicked ? (
+              <Popup defaultOpen>
+                <div id="container-start">
+                  <div></div>
+                  <img
+                    className="logo"
+                    src="/public/assets/extract/Menu_rogo.png"
+                  />
+                  <button
+                    className="start-button"
+                    onClick={() =>
+                      this.setState({
+                        beginGameButtonClicked: true,
+                        buttonClicked: true
+                      })
+                    }
+                  >
+                    CLICK TO BEGIN
+                  </button>
+                  <div></div>
+                </div>
+              </Popup>
+            ) : null}
+
+            {this.state.buttonClicked ? (
+              <Popup open>
                 <div className="input-buttons">
                   <div>
                     <h4>Enter Name:</h4>
                   </div>
                   <div>
+                    {/* Input for player Name */}
                     <input
                       type="text"
                       name="name"
@@ -102,6 +143,7 @@ class App extends React.Component {
                     />
                   </div>
                   <div>
+                    {/* Create Game */}
                     <button
                       type="submit"
                       name="create"
@@ -111,13 +153,14 @@ class App extends React.Component {
                       Create A Game
                     </button>
 
+                    {/* Join Game */}
                     <button
                       type="button"
                       name="join"
                       disabled={!this.state.name}
                       onClick={() =>
                         this.setState({
-                          buttonClicked: true,
+                          buttonClicked: false,
                           buttonClickedName: "join"
                         })
                       }
@@ -130,6 +173,7 @@ class App extends React.Component {
             ) : null}
           </div>
 
+          {/* Popup for game creator */}
           {this.state.buttonClickedName === "create" ? (
             <Popup open>
               <div className="init-game">
@@ -141,10 +185,7 @@ class App extends React.Component {
                 <button
                   className="start-button"
                   type="submit"
-                  onClick={() => {
-                    socket.emit("startGame", this.state.code);
-                    this.setState({ buttonClickedName: "" });
-                  }}
+                  onClick={this.startGame}
                   open={false}
                 >
                   START!
@@ -153,6 +194,7 @@ class App extends React.Component {
             </Popup>
           ) : null}
 
+          {/* Popup for game joiners */}
           {this.state.buttonClickedName === "join" ? (
             <Popup open>
               <div className="init-game">
@@ -172,7 +214,6 @@ class App extends React.Component {
               </div>
             </Popup>
           ) : null}
-          <div id="score-board"></div>
         </main>
       </div>
     );

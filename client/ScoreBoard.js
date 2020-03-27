@@ -1,12 +1,26 @@
-// import React from "react";
-// import db from "../src/firebase";
+import React from "react";
+import Popup from "reactjs-popup";
 
-// const SideBar = props => {
-//   return (
-//     <div>
-//       <h6>Players</h6>
-//     </div>
-//   );
-// };
+const ScoreBoard = props => {
+  let count = 0;
+  let players = props.players.reverse();
+  return (
+    // <Popup open closeOnDocumentClick={false} position="right">
+    <div id="player-container">
+      <h3>PLAYERS: </h3>
+      <ul>
+        {players.map(player => {
+          count++;
+          return (
+            <li key={player}>
+              Player{count}: {player}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+    // </Popup>
+  );
+};
 
-// export default SideBar;
+export default ScoreBoard;
