@@ -32,7 +32,7 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("pinksquare", "/public/assets/pinksquare.jpeg");
     this.load.image("blacksquare", "public/assets/blacksquare.png");
     //loads image of map
-    this.load.tilemapTiledJSON("map", "/public/assets/newmap.json");
+    this.load.tilemapTiledJSON("map", "/public/assets/newMapWithFoodDots4.json");
     //loads yellow pacman
     this.load.spritesheet("pacYellow", "/public/assets/royale.png", {
       frameWidth: 32,
@@ -97,7 +97,24 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("og4", "/public/assets/ghosts/GameMain184.png");
     this.load.image("og5", "/public/assets/ghosts/GameMain185.png");
     this.load.image("og6", "/public/assets/ghosts/GameMain186.png");
+
+
+    //dots and food preload images
+
+    this.load.image("smallDot", "/public/assets/extract/GameMain219.png")
+    this.load.image("largeDot", "/public/assets/extract/Common061.png")
+    this.load.image("candy", "/public/assets/food/GameMain004.png")
+    this.load.image("burger", "/public/assets/food/GameMain006.png")
+    this.load.image("papaya", "/public/assets/food/GameMain008.png")
+    this.load.image("peach", "/public/assets/food/GameMain010.png")
+    this.load.image("pizzaSlice", "/public/assets/food/GameMain011.png")
+    this.load.image("cakeSlice", "/public/assets/food/GameMain003.png")
+    this.load.image("egg", "/public/assets/food/GameMain014.png")
+
+
   }
+
+
 
   create() {
     // this.directions = {};
@@ -138,6 +155,17 @@ export default class Level1 extends Phaser.Scene {
 
     const pinkTileset = map.addTilesetImage("pinksquare", "pinksquare");
     const blackTileset = map.addTilesetImage("blacksquare", "blacksquare");
+    const smallDotTileset = map.addTilesetImage("GameMain219", "smallDot");
+    const largeDotTileset = map.addTilesetImage("Common061", "largeDot");
+    const candyTileset = map.addTilesetImage("GameMain004", "candy");
+    const burgerTileset = map.addTilesetImage("GameMain006", "burger");
+    const papayaTileset = map.addTilesetImage("GameMain008", "papaya");
+    const peachTileset = map.addTilesetImage("GameMain010", "peach");
+    const pizzaSliceTileset = map.addTilesetImage("GameMain011", "pizzaSlice");
+    const cakeSliceTileset = map.addTilesetImage("GameMain003", "cakeSlice");
+    const eggTileset = map.addTilesetImage("GameMain014", "egg");
+
+
 
     //creates the map layer, key must match layer name in tiled
     this.collisionLayer = map.createStaticLayer(
@@ -150,6 +178,18 @@ export default class Level1 extends Phaser.Scene {
     this.collisionLayer.setCollisionByProperty({ collision: true });
 
     this.collisionLayer.setScale(window.innerWidth / 1860);
+
+    //creates the food and dots layer
+    this.collisionLayerFoodDots = map.createStaticLayer(
+      "foodDotsLayer",
+      [smallDotTileset,largeDotTileset, candyTileset,burgerTileset,papayaTileset,peachTileset,pizzaSliceTileset,cakeSliceTileset,eggTileset],
+      0,
+      0
+    );
+    this.collisionLayerFoodDots.setCollisionByProperty({ collision: true });
+
+    this.collisionLayerFoodDots.setScale(window.innerWidth / 1860);
+
 
     window.addEventListener("resize", resizeCanvas);
     // const WIDTH = this.collisionLayer.displayWidth;
