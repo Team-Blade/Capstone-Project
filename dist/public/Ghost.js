@@ -80,7 +80,8 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
           this.angle -= this.TURN_RATE;
         }
         if (Math.abs(delta) < Phaser.Math.DegToRad(this.TURN_RATE)) {
-          this.rotation = targetAngle;
+          console.log("inequate");
+          // this.rotation = targetAngle;
         }
         this.body.velocity.y = Math.cos(this.rotation) * this.SPEED;
         this.body.velocity.x = Math.sin(this.rotation) * this.SPEED;
