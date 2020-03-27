@@ -5,8 +5,8 @@ const config = {
     scale: "SHOW_ALL",
     orientation: "LANDSCAPE",
     // mode: Phaser.Scale.RESIZE
-    width: (window.innerWidth/1860)*1860,
-    height: (window.innerWidth/1860)*900
+    width: 1860 * 0.7,
+    height: 900 * 0.7
   },
   resolution: window.deviePixelRatio,
   pixelArt: true,
