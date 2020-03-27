@@ -186,7 +186,7 @@ export default class Level1 extends Phaser.Scene {
 
     this.collisionLayer.setCollisionByProperty({ collision: true });
 
-    this.collisionLayer.setScale(window.innerWidth / 1860);
+    this.collisionLayer.setScale(0.7);
 
     //creates the food and dots layer
     this.collisionLayerFoodDots = map.createStaticLayer(
@@ -207,7 +207,7 @@ export default class Level1 extends Phaser.Scene {
     );
     this.collisionLayerFoodDots.setCollisionByProperty({ collision: true });
 
-    this.collisionLayerFoodDots.setScale(window.innerWidth / 1860);
+    this.collisionLayerFoodDots.setScale(this.collisionLayer.scale);
 
     window.addEventListener("resize", resizeCanvas);
     // const WIDTH = this.collisionLayer.displayWidth;
@@ -219,6 +219,7 @@ export default class Level1 extends Phaser.Scene {
       canvas.style.height = `${(window.innerWidth / 1860) * 900}px`;
     }
 
+    resizeCanvas();
     //sprite movement yellow pacman
     this.pg = new Ghost({
       scene: scene,
@@ -305,13 +306,13 @@ export default class Level1 extends Phaser.Scene {
         }
       }
 
-      const resized =
-        this.pac.oldPosition && this.pac.oldPosition.scale !== this.pac.scale;
+      // const resized =
+      //   this.pac.oldPosition && this.pac.oldPosition.scale !== this.pac.scale;
 
-      if (resized) {
-        this.pac.x = this.map.tileToWorldX(this.pac.oldPosition.tileX);
-        this.pac.y = this.map.tileToWorldY(this.pac.oldPosition.tileY);
-      }
+      // if (resized) {
+      //   this.pac.x = this.map.tileToWorldX(this.pac.oldPosition.tileX);
+      //   this.pac.y = this.map.tileToWorldY(this.pac.oldPosition.tileY);
+      // }
 
       this.pac.oldPosition = {
         x: this.pac.x,
@@ -334,7 +335,7 @@ function addPlayer(scene, player) {
     y: scene.map.tileToWorldY(y),
     key: `${scene[player.playerNumber].color}sclosed`
   });
-  scene.pac.setScale(scene.collisionLayer.scale);
+  scene.pac.setScale(scene.collisionLayer.scale *.99);
   scene.pac.tilePositionX = scene.map.worldToTileX(scene.pac.x);
   scene.pac.tilePositionY = scene.map.worldToTileY(scene.pac.y);
 
@@ -357,7 +358,7 @@ function addOtherPlayers(scene, player) {
     key: `${scene[player.playerNumber].color}sclosed`
   });
 
-  otherPlayer.setScale(scene.collisionLayer.scale);
+  otherPlayer.setScale(scene.collisionLayer.scale*.99);
   scene.physics.add.collider(otherPlayer, scene.collisionLayer);
 
   scene.otherPlayersArray.push(otherPlayer);
