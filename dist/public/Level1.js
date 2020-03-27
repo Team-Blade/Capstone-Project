@@ -10,21 +10,21 @@ export default class Level1 extends Phaser.Scene {
     //   "3": { x: 12, y: 9 },
     //   "4": { x: 18, y: 9 }
     // };
-    this['1'] = {
-      startPositions: {x: 12, y: 5},
-      color: 'y'
+    this["1"] = {
+      startPositions: { x: 12, y: 5 },
+      color: "y"
     };
-    this['2'] = {
+    this["2"] = {
       startPositions: { x: 18, y: 5 },
-      color: 'r'
+      color: "r"
     };
-    this['3'] = {
+    this["3"] = {
       startPositions: { x: 12, y: 9 },
-      color: 'b'
+      color: "b"
     };
-    this['4'] = {
+    this["4"] = {
       startPositions: { x: 18, y: 9 },
-      color: 'p'
+      color: "p"
     };
   }
   preload() {
@@ -87,7 +87,7 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("rsdown1", "/public/assets/redSmall/GameMain048.png");
     this.load.image("rsdown2", "/public/assets/redSmall/GameMain049.png");
 
-    //pacman orange ghost preload images
+    //orange ghost preload images
     this.load.image("og1", "/public/assets/ghosts/GameMain178.png"); //down
     this.load.image("og2", "/public/assets/ghosts/GameMain179.png"); //down
     this.load.image("og3", "/public/assets/ghosts/GameMain180.png"); //left
@@ -97,6 +97,17 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("og7", "/public/assets/ghosts/GameMain184.png"); //up
     this.load.image("og8", "/public/assets/ghosts/GameMain185.png"); //up
     this.load.image("og9", "/public/assets/ghosts/GameMain186.png"); //back
+
+    //purple ghost preload images
+    this.load.image("pg1", "/public/assets/ghosts/GameMain187.png"); //down
+    this.load.image("pg2", "/public/assets/ghosts/GameMain188.png"); //down
+    this.load.image("pg3", "/public/assets/ghosts/GameMain189.png"); //left
+    this.load.image("pg4", "/public/assets/ghosts/GameMain190.png"); //left
+    this.load.image("pg5", "/public/assets/ghosts/GameMain191.png"); //right
+    this.load.image("pg6", "/public/assets/ghosts/GameMain192.png"); //right
+    this.load.image("pg7", "/public/assets/ghosts/GameMain193.png"); //up
+    this.load.image("pg8", "/public/assets/ghosts/GameMain194.png"); //up
+    this.load.image("pg9", "/public/assets/ghosts/GameMain195.png"); //back
   }
 
   create() {
@@ -155,7 +166,13 @@ export default class Level1 extends Phaser.Scene {
     this.collisionLayer.setScale(window.innerWidth / 1860);
 
     //sprite movement yellow pacman
-
+    this.pg = new Ghost({
+      scene: scene,
+      key: "pg1",
+      x: scene.map.tileToWorldX(17),
+      y: scene.map.tileToWorldY(7.5),
+      game: this.game
+    });
     this.og = new Ghost({
       scene: scene,
       key: "og1",
@@ -163,14 +180,11 @@ export default class Level1 extends Phaser.Scene {
       y: scene.map.tileToWorldY(7.5),
       game: this.game
     });
-    this.og.createAnimation();
-    this.og.anims.play("moveUp");
+
+    this.ghosts.add(this.pg);
     this.ghosts.add(this.og);
-    console.log(this.ghosts);
-    this.physics.add.collider(this.ghosts, this.collisionLayer, () => {
-      this.ghosts.setBounce(1);
-    });
-    this.og.move("right");
+    this.og.setBounce(1);
+    this.physics.add.collider(this.ghosts, this.collisionLayer);
 
     //processes DOM input events if true
     this.input.enabled = true;
@@ -184,6 +198,7 @@ export default class Level1 extends Phaser.Scene {
     });
   }
   update() {
+    this.og.trajectory();
     this.collisionLayer.setScale(window.innerWidth / 1860);
     if (this.pac) {
       this.pac.setScale(window.innerWidth / 1861);
@@ -195,13 +210,9 @@ export default class Level1 extends Phaser.Scene {
       }
 
       if (this.cursors.up.isDown) {
-        // this.pac.setVelocityY(-180);
-        // this.pac.anims.play("ysup", true);
         this.pac.move("up");
       }
       if (this.cursors.down.isDown) {
-        // this.pac.setVelocityY(180);
-        // this.pac.anims.play("ysdown", true);
         this.pac.move("down");
       }
       if (
@@ -209,8 +220,6 @@ export default class Level1 extends Phaser.Scene {
         this.pac.tilePositionY >= 0 &&
         this.pac.tilePositionY < 14
       ) {
-        // this.pac.setVelocityX(-180);
-        // this.pac.anims.play("ysleft", true);
         this.pac.move("left");
       }
       if (
@@ -219,8 +228,6 @@ export default class Level1 extends Phaser.Scene {
         this.pac.tilePositionY < 14
       ) {
         this.pac.move("right");
-        // this.pac.setVelocityX(180);
-        // this.pac.anims.play("ysright", true);
       }
 
       let x = this.pac.x;
@@ -271,7 +278,7 @@ export default class Level1 extends Phaser.Scene {
   }
 }
 function addPlayer(scene, player) {
-  const playerNumber = player.playerNumber
+  const playerNumber = player.playerNumber;
   const x = scene[playerNumber].startPositions.x;
   const y = scene[playerNumber].startPositions.y;
 
