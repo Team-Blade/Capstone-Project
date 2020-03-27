@@ -221,13 +221,13 @@ export default class Level1 extends Phaser.Scene {
 
     resizeCanvas();
     //sprite movement yellow pacman
-    this.pg = new Ghost({
-      scene: scene,
-      key: "pg1",
-      x: scene.map.tileToWorldX(17),
-      y: scene.map.tileToWorldY(7.5),
-      game: this.game
-    });
+    // this.pg = new Ghost({
+    //   scene: scene,
+    //   key: "pg1",
+    //   x: scene.map.tileToWorldX(17),
+    //   y: scene.map.tileToWorldY(7.5),
+    //   game: this.game
+    // });
     this.og = new Ghost({
       scene: scene,
       key: "og1",
@@ -236,11 +236,10 @@ export default class Level1 extends Phaser.Scene {
       game: this.game
     });
 
-    this.ghosts.add(this.pg);
+    // this.ghosts.add(this.pg);
     this.ghosts.add(this.og);
     this.og.setBounce(1);
     this.physics.add.collider(this.ghosts, this.collisionLayer);
-   
 
     //processes DOM input events if true
     this.input.enabled = true;
@@ -305,6 +304,15 @@ export default class Level1 extends Phaser.Scene {
         if (this.pac.tilePositionY < 0 && this.pac.body.velocity.y < 0) {
           this.pac.y = this.map.tileToWorldY(15);
         }
+        if (this.og.tilePositionY >= 15 && this.og.body.velocity.y > 0) {
+          this.og.y = this.map.tileToWorldY(1);
+          console.log("bottom", this.og.y);
+        }
+
+        if (this.og.tilePositionY < 0 && this.og.body.velocity.y < 0) {
+          this.og.y = this.map.tileToWorldY(13);
+          console.log("second", this.og.y);
+        }
       }
 
       // const resized =
@@ -314,7 +322,8 @@ export default class Level1 extends Phaser.Scene {
       //   this.pac.x = this.map.tileToWorldX(this.pac.oldPosition.tileX);
       //   this.pac.y = this.map.tileToWorldY(this.pac.oldPosition.tileY);
       // }
-
+      this.og.tilePositionX = this.map.worldToTileX(this.og.x);
+      this.og.tilePositionY = this.map.worldToTileY(this.og.y);
       this.pac.oldPosition = {
         x: this.pac.x,
         y: this.pac.y,

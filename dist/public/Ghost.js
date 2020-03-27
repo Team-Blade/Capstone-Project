@@ -3,11 +3,14 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     super(config.scene, config.x, config.y, config.key);
     config.scene.add.existing(this);
     config.scene.physics.world.enable(this);
-    this.setSize(60, 60, true).setScale(0.69);
+    this.setSize(60, 60, true).setScale(0.63);
     this.key = config.key.slice(0, -1);
     this.scene = config.scene;
     this.game = config.game;
     this.name = this.key;
+    this.tilePositionX = this.scene.map.worldToTileX(this.x);
+    this.tilePositionY = this.scene.map.worldToTileY(this.y);
+    console.log("in constructor", this.tilePositionY, this.tilePositionX);
   }
 
   createAnimation() {
@@ -56,49 +59,41 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     }
   }
   trajectory() {
+    this.createAnimation();
     console.log("in trajectory");
     this.TURN_RATE = 5;
     this.SPEED = 250;
+    console.log(this.tilePositionX);
+    console.log("y", this.tilePositionY);
     if (this.scene.pac) {
-      // this.scene.physics.moveTo(this, this.scene.pac.x, this.scene.pac.y, 150);
-      while (this.scene.pac.position !== this.position) {
-        if (this.x > this.scene.pac.x) {
-          this.setVelocityX(-180);
-        }
-        if (this.x < this.scene.pac.x) {
-          this.setVelocityX(180);
-        }
-        if (this.y < this.scene.pac.y) {
-          this.setVelocityY(-180);
-        }
-        if (this.y > this.scene.pac.y) {
-          this.setVelocityY(180);
+      if (this.x > this.scene.pac.x) {
+        if (this.tilePositionY > 14 || this.tilePositionY < 0) {
+          this.setVelocityX(0);
+        } else this.setVelocityX(-140);
+        console.log("moveLeft");
+        this.anims.play("moveLeft");
+      }
+      if (this.x < this.scene.pac.x) {
+        if (this.tilePositionY > 14 || this.tilePositionY < 0) {
+          this.setVelocityX(0);
+        } else {
+          this.setVelocityX(140);
+          console.log("moveRight");
+          this.anims.play("moveRight");
         }
       }
-      // let targetAngle = Phaser.Math.Angle.Between(
-      //   this.scene.pac.x,
-      //   this.scene.pac.y,
-      //   this.game.input.activePointer.x,
-      //   this.game.input.activePointer.y
-      // );
-      // console.log(targetAngle);
-
-      // if (this.rotation !== targetAngle) {
-      //   const delta = targetAngle - this.rotation;
-      //   if (delta > Math.PI) delta -= Math.PI * 2;
-      //   if (delta < -Math.PI) delta += Math.PI * 2;
-      //   if (delta > 0) {
-      //     // Turn clockwise
-      //     this.angle += this.TURN_RATE;
-      //   } else {
-      //     // Turn counter-clockwise
-      //     this.angle -= this.TURN_RATE;
-      //   }
-      //   if (Math.abs(delta) < Phaser.Math.DegToRad(this.TURN_RATE)) {
-      //   }
-      //   this.body.velocity.y = Math.cos(this.rotation) * this.SPEED;
-      //   this.body.velocity.x = Math.sin(this.rotation) * this.SPEED;
-      // }
+      if (this.y < this.scene.pac.y) {
+        this.setVelocityY(140);
+        this.anims.play("moveDown");
+        console.log("moveDown");
+        console.log("pac higher than ghost", this.body.velocity.y);
+      }
+      if (this.y > this.scene.pac.y) {
+        this.setVelocityY(-140);
+        this.anims.play("moveUp");
+        console.log("moveUp");
+        console.log("pac lower than ghost", this.body.velocity.y);
+      }
     }
   }
 }
