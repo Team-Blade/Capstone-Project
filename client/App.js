@@ -8,7 +8,7 @@ const games = db.collection("games");
 
 const randomString = () => {
   const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZ";
-  const codeLength = 5;
+  const codeLength = 4;
   let randomCode = "";
   for (let i = 0; i < codeLength; i++) {
     let randoNum = Math.floor(Math.random() * chars.length);
@@ -40,6 +40,7 @@ class App extends React.Component {
   }
 
   createGame() {
+    console.log("inside createGame");
     const code = randomString();
     this.setState({
       buttonClicked: true,
@@ -53,7 +54,7 @@ class App extends React.Component {
     players[name] = { score: 0 };
     games.doc(code).set({ players }, { merge: true });
     socket.emit("createRoom", code);
-    alert(`Share your game code: ${code}`);
+    // alert(`Share your game code: ${code}`);
     // store the room id in the socket for future use
     socket.roomId = code;
   }
@@ -102,10 +103,9 @@ class App extends React.Component {
                   </div>
                   <div>
                     <button
-                      type="button"
+                      type="submit"
                       name="create"
-                      disabled={!this.state.name}
-                      onClick={() => this.createGame()}
+                      onClick={this.createGame}
                     >
                       Create A Game
                     </button>
@@ -130,28 +130,46 @@ class App extends React.Component {
           </div>
 
           {this.state.buttonClickedName === "create" ? (
-            <div className="init-game">
-              <button
-                className="start-button"
-                type="submit"
-                onClick={() => {
-                  socket.emit("startGame", this.state.code);
-                }}
-              >
-                START!
-              </button>
-            </div>
+            <Popup open>
+              <div className="init-game">
+                <div>
+                  <p>Game code:</p>
+                  <br />
+                  <h2>{this.state.code}</h2>
+                </div>
+                <button
+                  className="start-button"
+                  type="submit"
+                  onClick={() => {
+                    socket.emit("startGame", this.state.code);
+                    this.setState({ buttonClickedName: "" });
+                  }}
+                  open={false}
+                >
+                  START!
+                </button>
+              </div>
+            </Popup>
           ) : null}
 
           {this.state.buttonClickedName === "join" ? (
-            <div className="init-game">
-              <input
-                type="text"
-                placeholder="Game Code Here"
-                onChange={() => this.handleCodeChange(event)}
-              />
-              <button onClick={() => this.joinGame()}>Enter Game</button>
-            </div>
+            <Popup open>
+              <div className="init-game">
+                <input
+                  type="text"
+                  placeholder="Game Code Here"
+                  onChange={() => this.handleCodeChange(event)}
+                />
+                <button
+                  onClick={() => {
+                    this.joinGame();
+                    this.setState({ buttonClickedName: "" });
+                  }}
+                >
+                  Enter Game
+                </button>
+              </div>
+            </Popup>
           ) : null}
           <div id="score-board"></div>
         </main>
