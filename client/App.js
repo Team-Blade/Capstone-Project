@@ -105,6 +105,7 @@ class App extends React.Component {
                     <button
                       type="submit"
                       name="create"
+                      disabled={!this.state.name}
                       onClick={this.createGame}
                     >
                       Create A Game
