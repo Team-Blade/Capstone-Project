@@ -3,7 +3,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     super(config.scene, config.x, config.y, config.key);
     config.scene.add.existing(this);
     config.scene.physics.world.enable(this);
-    this.setSize(60, 60, true);
+    this.setSize(60, 60, true).setScale(0.69);
     this.key = config.key.slice(0, -1);
     this.scene = config.scene;
     this.game = config.game;
@@ -60,30 +60,45 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.TURN_RATE = 5;
     this.SPEED = 250;
     if (this.scene.pac) {
-      let targetAngle = Phaser.Math.Angle.Between(
-        this.scene.pac.x,
-        this.scene.pac.y,
-        this.game.input.activePointer.x,
-        this.game.input.activePointer.y
-      );
-      console.log(targetAngle);
-
-      if (this.rotation !== targetAngle) {
-        const delta = targetAngle - this.rotation;
-        if (delta > Math.PI) delta -= Math.PI * 2;
-        if (delta < -Math.PI) delta += Math.PI * 2;
-        if (delta > 0) {
-          // Turn clockwise
-          this.angle += this.TURN_RATE;
-        } else {
-          // Turn counter-clockwise
-          this.angle -= this.TURN_RATE;
+      // this.scene.physics.moveTo(this, this.scene.pac.x, this.scene.pac.y, 150);
+      while (this.scene.pac.position !== this.position) {
+        if (this.x > this.scene.pac.x) {
+          this.setVelocityX(-180);
         }
-        if (Math.abs(delta) < Phaser.Math.DegToRad(this.TURN_RATE)) {
+        if (this.x < this.scene.pac.x) {
+          this.setVelocityX(180);
         }
-        this.body.velocity.y = Math.cos(this.rotation) * this.SPEED;
-        this.body.velocity.x = Math.sin(this.rotation) * this.SPEED;
+        if (this.y < this.scene.pac.y) {
+          this.setVelocityY(-180);
+        }
+        if (this.y > this.scene.pac.y) {
+          this.setVelocityY(180);
+        }
       }
+      // let targetAngle = Phaser.Math.Angle.Between(
+      //   this.scene.pac.x,
+      //   this.scene.pac.y,
+      //   this.game.input.activePointer.x,
+      //   this.game.input.activePointer.y
+      // );
+      // console.log(targetAngle);
+
+      // if (this.rotation !== targetAngle) {
+      //   const delta = targetAngle - this.rotation;
+      //   if (delta > Math.PI) delta -= Math.PI * 2;
+      //   if (delta < -Math.PI) delta += Math.PI * 2;
+      //   if (delta > 0) {
+      //     // Turn clockwise
+      //     this.angle += this.TURN_RATE;
+      //   } else {
+      //     // Turn counter-clockwise
+      //     this.angle -= this.TURN_RATE;
+      //   }
+      //   if (Math.abs(delta) < Phaser.Math.DegToRad(this.TURN_RATE)) {
+      //   }
+      //   this.body.velocity.y = Math.cos(this.rotation) * this.SPEED;
+      //   this.body.velocity.x = Math.sin(this.rotation) * this.SPEED;
+      // }
     }
   }
 }

@@ -240,6 +240,7 @@ export default class Level1 extends Phaser.Scene {
     this.ghosts.add(this.og);
     this.og.setBounce(1);
     this.physics.add.collider(this.ghosts, this.collisionLayer);
+   
 
     //processes DOM input events if true
     this.input.enabled = true;
@@ -335,7 +336,7 @@ function addPlayer(scene, player) {
     y: scene.map.tileToWorldY(y),
     key: `${scene[player.playerNumber].color}sclosed`
   });
-  scene.pac.setScale(scene.collisionLayer.scale *.99);
+  scene.pac.setScale(scene.collisionLayer.scale * 0.99);
   scene.pac.tilePositionX = scene.map.worldToTileX(scene.pac.x);
   scene.pac.tilePositionY = scene.map.worldToTileY(scene.pac.y);
 
@@ -358,7 +359,7 @@ function addOtherPlayers(scene, player) {
     key: `${scene[player.playerNumber].color}sclosed`
   });
 
-  otherPlayer.setScale(scene.collisionLayer.scale*.99);
+  otherPlayer.setScale(scene.collisionLayer.scale * 0.99);
   scene.physics.add.collider(otherPlayer, scene.collisionLayer);
 
   scene.otherPlayersArray.push(otherPlayer);
