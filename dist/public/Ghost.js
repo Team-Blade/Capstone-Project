@@ -71,7 +71,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
           this.setVelocityX(0);
         } else this.setVelocityX(-140);
         console.log("moveLeft");
-        this.anims.play("moveLeft");
+        this.anims.play("moveLeft", true);
       }
       if (this.x < this.scene.pac.x) {
         if (this.tilePositionY > 14 || this.tilePositionY < 0) {
@@ -79,18 +79,18 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
         } else {
           this.setVelocityX(140);
           console.log("moveRight");
-          this.anims.play("moveRight");
+          this.anims.play("moveRight", true);
         }
       }
       if (this.y < this.scene.pac.y) {
         this.setVelocityY(140);
-        this.anims.play("moveDown");
+        this.anims.play("moveDown", true);
         console.log("moveDown");
         console.log("pac higher than ghost", this.body.velocity.y);
       }
       if (this.y > this.scene.pac.y) {
         this.setVelocityY(-140);
-        this.anims.play("moveUp");
+        this.anims.play("moveUp", true);
         console.log("moveUp");
         console.log("pac lower than ghost", this.body.velocity.y);
       }
