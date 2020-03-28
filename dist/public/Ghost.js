@@ -10,7 +10,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.name = this.key;
     this.tilePositionX = this.scene.map.worldToTileX(this.x);
     this.tilePositionY = this.scene.map.worldToTileY(this.y);
-    console.log("in constructor", this.tilePositionY, this.tilePositionX);
   }
 
   createAnimation() {
@@ -40,7 +39,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     });
   }
   move(direction) {
-    console.log("in move");
     this.createAnimation();
 
     if (direction === "up") {
@@ -54,23 +52,18 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       this.anims.play("moveLeft", true);
     } else if (direction === "right") {
       this.setVelocityX(180);
-      console.log("in right");
       this.anims.play("moveRight", true);
     }
   }
   trajectory() {
     this.createAnimation();
-    console.log("in trajectory");
     this.TURN_RATE = 5;
     this.SPEED = 250;
-    console.log(this.tilePositionX);
-    console.log("y", this.tilePositionY);
     if (this.scene.pac) {
       if (this.x > this.scene.pac.x) {
         if (this.tilePositionY > 14 || this.tilePositionY < 0) {
           this.setVelocityX(0);
         } else this.setVelocityX(-140);
-        console.log("moveLeft");
         this.anims.play("moveLeft", true);
       }
       if (this.x < this.scene.pac.x) {
@@ -78,21 +71,16 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
           this.setVelocityX(0);
         } else {
           this.setVelocityX(140);
-          console.log("moveRight");
           this.anims.play("moveRight", true);
         }
       }
       if (this.y < this.scene.pac.y) {
         this.setVelocityY(140);
         this.anims.play("moveDown", true);
-        console.log("moveDown");
-        console.log("pac higher than ghost", this.body.velocity.y);
       }
       if (this.y > this.scene.pac.y) {
         this.setVelocityY(-140);
         this.anims.play("moveUp", true);
-        console.log("moveUp");
-        console.log("pac lower than ghost", this.body.velocity.y);
       }
     }
   }

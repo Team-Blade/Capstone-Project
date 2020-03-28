@@ -85,10 +85,11 @@ io.on("connection", socket => {
   });
 
   socket.on("playerMovement", movementData => {
-    const { x, y, socketId, roomId } = movementData;
+    const { x, y, socketId, roomId, direction } = movementData;
     player = rooms[roomId].players[socketId];
     player.x = x;
     player.y = y;
+    player.direction = direction;
     socket.broadcast.emit("playerMoved", player);
   });
 });

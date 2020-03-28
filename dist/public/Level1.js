@@ -248,19 +248,23 @@ export default class Level1 extends Phaser.Scene {
       scene.otherPlayers.getChildren().forEach(otherPlayer => {
         if (playerInfo.playerId === otherPlayer.playerId) {
           otherPlayer.setPosition(playerInfo.x, playerInfo.y);
+          otherPlayer.move(playerInfo.direction);
         }
       });
     });
   }
   update() {
     this.og.trajectory();
+    this.direction = "";
 
     if (this.pac) {
       if (this.cursors.up.isDown) {
         this.pac.move("up");
+        this.direction = "up";
       }
       if (this.cursors.down.isDown) {
         this.pac.move("down");
+        this.direction = "down";
       }
       if (
         this.cursors.left.isDown &&
@@ -268,6 +272,7 @@ export default class Level1 extends Phaser.Scene {
         this.pac.tilePositionY < 14
       ) {
         this.pac.move("left");
+        this.direction = "left";
       }
       if (
         this.cursors.right.isDown &&
@@ -275,6 +280,7 @@ export default class Level1 extends Phaser.Scene {
         this.pac.tilePositionY < 14
       ) {
         this.pac.move("right");
+        this.direction = "right";
       }
 
       let x = this.pac.x;
@@ -287,7 +293,8 @@ export default class Level1 extends Phaser.Scene {
           roomId: socket.roomId,
           socketId: socket.id,
           x: this.pac.x,
-          y: this.pac.y
+          y: this.pac.y,
+          direction: this.direction
         });
         this.pac.tilePositionX = this.map.worldToTileX(this.pac.x);
         this.pac.tilePositionY = this.map.worldToTileY(this.pac.y);
@@ -306,12 +313,10 @@ export default class Level1 extends Phaser.Scene {
         }
         if (this.og.tilePositionY >= 15 && this.og.body.velocity.y > 0) {
           this.og.y = this.map.tileToWorldY(1);
-          console.log("bottom", this.og.y);
         }
 
         if (this.og.tilePositionY < 0 && this.og.body.velocity.y < 0) {
           this.og.y = this.map.tileToWorldY(13);
-          console.log("second", this.og.y);
         }
       }
 
@@ -349,7 +354,10 @@ function addPlayer(scene, player) {
   scene.pac.tilePositionX = scene.map.worldToTileX(scene.pac.x);
   scene.pac.tilePositionY = scene.map.worldToTileY(scene.pac.y);
 
-  scene.physics.add.collider(scene.pac, scene.collisionLayer);
+  scene.physics.add.collider(scene.pac, scene.collisionLayer, (pac, layer) => {
+    pac.moving = false;
+    pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
+  });
   scene.physics.add.collider(scene.pac, scene.otherPlayers);
 
   // scene.directions[Phaser.UP] = scene.map.getTileAt(scene.pac.tilePositionX, scene.pac.tilePositionY - 1);
@@ -367,7 +375,7 @@ function addOtherPlayers(scene, player) {
     y: scene.map.tileToWorldY(y),
     key: `${scene[player.playerNumber].color}sclosed`
   });
-
+  otherPlayer.createAnimations();
   otherPlayer.setScale(scene.collisionLayer.scale * 0.99);
   scene.physics.add.collider(otherPlayer, scene.collisionLayer);
 
