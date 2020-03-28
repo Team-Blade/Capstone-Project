@@ -3,7 +3,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     super(config.scene, config.x, config.y, config.key);
     config.scene.add.existing(this);
     config.scene.physics.world.enable(this);
-    this.setSize(60, 60, true);
+    this.setSize(42, 42, true);
     this.setOrigin(0, 0);
     this.scene = config.scene;
     this.key = config.key;
