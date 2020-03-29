@@ -56,6 +56,16 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("ysup2", "/public/assets/yellowSmall/GameMain028.png");
     this.load.image("ysdown1", "/public/assets/yellowSmall/GameMain021.png");
     this.load.image("ysdown2", "/public/assets/yellowSmall/GameMain022.png");
+    this.load.image("ysdeath1", "/public/assets/yellowSmall/GameMain114.png");
+    this.load.image("ysdeath2", "/public/assets/yellowSmall/GameMain115.png");
+    this.load.image("ysdeath3", "/public/assets/yellowSmall/GameMain116.png");
+    this.load.image("ysdeath4", "/public/assets/yellowSmall/GameMain117.png");
+    this.load.image("ysdeath5", "/public/assets/yellowSmall/GameMain118.png");
+    this.load.image("ysdeath6", "/public/assets/yellowSmall/GameMain119.png");
+    this.load.image("ysdeath7", "/public/assets/yellowSmall/GameMain120.png");
+    this.load.image("ysdeath8", "/public/assets/yellowSmall/GameMain121.png");
+    //pacman yellow big preload images
+    // this.load.image("ybclosed", "/public/assets/extract/GameMain214.png");
 
     //pacman blue small preload images
     this.load.image("bsclosed", "/public/assets/blueSmall/GameMain038.png");
@@ -67,6 +77,14 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("bsup2", "/public/assets/blueSmall/GameMain046.png");
     this.load.image("bsdown1", "/public/assets/blueSmall/GameMain039.png");
     this.load.image("bsdown2", "/public/assets/blueSmall/GameMain040.png");
+    this.load.image("bsdeath1", "/public/assets/yellowSmall/GameMain130.png");
+    this.load.image("bsdeath2", "/public/assets/yellowSmall/GameMain131.png");
+    this.load.image("bsdeath3", "/public/assets/yellowSmall/GameMain132.png");
+    this.load.image("bsdeath4", "/public/assets/yellowSmall/GameMain133.png");
+    this.load.image("bsdeath5", "/public/assets/yellowSmall/GameMain134.png");
+    this.load.image("bsdeath6", "/public/assets/yellowSmall/GameMain135.png");
+    this.load.image("bsdeath7", "/public/assets/yellowSmall/GameMain136.png");
+    this.load.image("bsdeath8", "/public/assets/yellowSmall/GameMain137.png");
 
     //pacman pink small preload images
     this.load.image("psclosed", "/public/assets/pinkSmall/GameMain029.png");
@@ -78,6 +96,14 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("psup2", "/public/assets/pinkSmall/GameMain037.png");
     this.load.image("psdown1", "/public/assets/pinkSmall/GameMain030.png");
     this.load.image("psdown2", "/public/assets/pinkSmall/GameMain031.png");
+    this.load.image("psdeath1", "/public/assets/yellowSmall/GameMain122.png");
+    this.load.image("psdeath2", "/public/assets/yellowSmall/GameMain123.png");
+    this.load.image("psdeath3", "/public/assets/yellowSmall/GameMain124.png");
+    this.load.image("psdeath4", "/public/assets/yellowSmall/GameMain125.png");
+    this.load.image("psdeath5", "/public/assets/yellowSmall/GameMain126.png");
+    this.load.image("psdeath6", "/public/assets/yellowSmall/GameMain127.png");
+    this.load.image("psdeath7", "/public/assets/yellowSmall/GameMain128.png");
+    this.load.image("psdeath8", "/public/assets/yellowSmall/GameMain129.png");
 
     //pacman red small preload images
     this.load.image("rsclosed", "/public/assets/redSmall/GameMain047.png");
@@ -89,6 +115,14 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("rsup2", "/public/assets/redSmall/GameMain055.png");
     this.load.image("rsdown1", "/public/assets/redSmall/GameMain048.png");
     this.load.image("rsdown2", "/public/assets/redSmall/GameMain049.png");
+    this.load.image("rsdeath1", "/public/assets/yellowSmall/GameMain138.png");
+    this.load.image("rsdeath2", "/public/assets/yellowSmall/GameMain139.png");
+    this.load.image("rsdeath3", "/public/assets/yellowSmall/GameMain140.png");
+    this.load.image("rsdeath4", "/public/assets/yellowSmall/GameMain141.png");
+    this.load.image("rsdeath5", "/public/assets/yellowSmall/GameMain142.png");
+    this.load.image("rsdeath6", "/public/assets/yellowSmall/GameMain143.png");
+    this.load.image("rsdeath7", "/public/assets/yellowSmall/GameMain144.png");
+    this.load.image("rsdeath8", "/public/assets/yellowSmall/GameMain145.png");
 
     //orange ghost preload images
     this.load.image("og1", "/public/assets/ghosts/GameMain178.png"); //down
@@ -123,6 +157,17 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("pizzaSlice", "/public/assets/food/GameMain011.png");
     this.load.image("cakeSlice", "/public/assets/food/GameMain003.png");
     this.load.image("egg", "/public/assets/food/GameMain014.png");
+
+    //load ghost flashing images
+    this.load.image("ghostFlash1", "/public/assets/extract/GameMain214.png"); //blue 1
+    this.load.image("ghostFlash2", "/public/assets/extract/GameMain214.png"); //blue 2
+    this.load.image("ghostFlash3", "/public/assets/extract/GameMain214.png"); //white 1
+    this.load.image("ghostFlash4", "/public/assets/extract/GameMain214.png"); //white 2
+    this.load.image("ghostFlash5", "/public/assets/extract/GameMain214.png"); //back
+    this.load.image("ghostEyesDown", "/public/assets/extract/GameMain266.png");
+    this.load.image("ghostEyesLeft", "/public/assets/extract/GameMain267.png");
+    this.load.image("ghostEyesRight", "/public/assets/extract/GameMain268.png");
+    this.load.image("ghostEyesDown", "/public/assets/extract/GameMain269.png");
   }
 
   create() {

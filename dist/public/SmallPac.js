@@ -7,46 +7,46 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.setOrigin(0, 0);
     this.scene = config.scene;
     this.key = config.key;
-    this.color = this.key[0];
+    this.color = this.key.slice(0, 2);
     this.moving = false;
   }
   createAnimations() {
     this.scene.anims.create({
-      key: `${this.color}sleft`,
+      key: `${this.color}left`,
       frames: [
-        { key: `${this.color}sclosed` },
-        { key: `${this.color}sleft1` },
-        { key: `${this.color}sleft2` }
+        { key: `${this.color}closed` },
+        { key: `${this.color}left1` },
+        { key: `${this.color}left2` }
       ],
       frameRate: 10,
       repeat: -1
     });
     this.scene.anims.create({
-      key: `${this.color}sright`,
+      key: `${this.color}right`,
       frames: [
-        { key: `${this.color}sclosed` },
-        { key: `${this.color}sright1` },
-        { key: `${this.color}sright2` }
+        { key: `${this.color}closed` },
+        { key: `${this.color}right1` },
+        { key: `${this.color}right2` }
       ],
       frameRate: 10,
       repeat: -1
     });
     this.scene.anims.create({
-      key: `${this.color}sup`,
+      key: `${this.color}up`,
       frameRate: 10,
       frames: [
-        { key: `${this.color}sclosed` },
-        { key: `${this.color}sup1` },
-        { key: `${this.color}sup2` }
+        { key: `${this.color}closed` },
+        { key: `${this.color}up1` },
+        { key: `${this.color}up2` }
       ],
       repeat: -1
     });
     this.scene.anims.create({
-      key: `${this.color}sdown`,
+      key: `${this.color}down`,
       frames: [
-        { key: `${this.color}sclosed` },
-        { key: `${this.color}sdown1` },
-        { key: `${this.color}sdown2` }
+        { key: `${this.color}closed` },
+        { key: `${this.color}down1` },
+        { key: `${this.color}down2` }
       ],
       frameRate: 10,
       repeat: -1
@@ -58,16 +58,17 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
 
     if (direction === `up`) {
       this.setVelocityY(-180);
-      this.anims.play(`${this.color}sup`, true);
+      this.anims.play(`${this.color}up`, true);
     } else if (direction === `down`) {
       this.setVelocityY(180);
-      this.anims.play(`${this.color}sdown`, true);
+      this.anims.play(`${this.color}down`, true);
     } else if (direction === `left`) {
       this.setVelocityX(-180);
-      this.anims.play(`${this.color}sleft`, true);
+      this.anims.play(`${this.color}left`, true);
     } else if (direction === `right`) {
       this.setVelocityX(180);
-      this.anims.play(`${this.color}sright`, true);
+      this.anims.play(`${this.color}right`, true);
     }
   }
 }
+
