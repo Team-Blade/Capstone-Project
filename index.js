@@ -90,6 +90,7 @@ io.on("connection", socket => {
     player.x = x;
     player.y = y;
     player.direction = direction;
+    player.big = big;
     socket.broadcast.emit("playerMoved", player);
   });
 });

@@ -337,6 +337,7 @@ export default class Level1 extends Phaser.Scene {
       scene.otherPlayers.getChildren().forEach(otherPlayer => {
         if (playerInfo.playerId === otherPlayer.playerId) {
           otherPlayer.setPosition(playerInfo.x, playerInfo.y);
+          otherPlayer.big = playerInfo.big;
           otherPlayer.move(playerInfo.direction);
         }
       });
@@ -383,7 +384,8 @@ export default class Level1 extends Phaser.Scene {
           socketId: socket.id,
           x: this.pac.x,
           y: this.pac.y,
-          direction: this.direction
+          direction: this.direction,
+          big: this.pac.big
         });
         this.pac.tilePositionX = this.map.worldToTileX(this.pac.x);
         this.pac.tilePositionY = this.map.worldToTileY(this.pac.y);
