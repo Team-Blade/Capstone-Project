@@ -3,9 +3,9 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     super(config.scene, config.x, config.y, config.key);
     config.scene.add.existing(this);
     config.scene.physics.world.enable(this);
-    this.setSize(60, 60, true).setOrigin(0,0).setScale(0.7);
-    this.key = config.key.slice(0, -1);
     this.scene = config.scene;
+    this.setSize(42, 42, true).setScale(this.scene.collisionLayer.scale * 1.4);
+    this.key = config.key.slice(0, -1);
     this.game = config.game;
     this.name = this.key;
     this.tilePositionX = this.scene.map.worldToTileX(this.x);
@@ -37,6 +37,18 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       frameRate: 4,
       repeat: -1
     });
+    this.scene.anims.create({
+      key: "turnBlue",
+      frames: [{ key: "ghostFlash1" }, { key: "ghostFlash2" }],
+      frameRate: 4,
+      repeat: -1
+    });
+    this.scene.anims.create({
+      key: "turnWhite",
+      frames: [{ key: "ghostFlash3" }, { key: "ghostFlash4" }],
+      frameRate: 4,
+      repeat: -1
+    });
   }
   move(direction) {
     this.createAnimation();
@@ -56,9 +68,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     }
   }
   trajectory() {
-    this.createAnimation();
-    this.TURN_RATE = 5;
-    this.SPEED = 250;
     if (this.scene.pac) {
       if (this.x === this.scene.pac.x) {
         this.setVelocityY(0);
@@ -90,5 +99,14 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
         this.anims.play("moveUp", true);
       }
     }
+  }
+  turnBlue() {
+    this.createAnimation();
+    this.anims.play("turnBlue", true);
+  }
+  flash() {
+    this.createAnimation();
+    this.anims.play("turnBlue", true);
+    this.anims.play("turnWhite", true);
   }
 }
