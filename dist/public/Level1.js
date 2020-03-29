@@ -305,12 +305,12 @@ export default class Level1 extends Phaser.Scene {
           this.pac.y = this.map.tileToWorldY(15);
         }
         if (this.og.tilePositionY >= 15 && this.og.body.velocity.y > 0) {
-          this.og.y = this.map.tileToWorldY(1);
+          this.og.y = this.map.tileToWorldY(-1);
           console.log("bottom", this.og.y);
         }
 
         if (this.og.tilePositionY < 0 && this.og.body.velocity.y < 0) {
-          this.og.y = this.map.tileToWorldY(13);
+          this.og.y = this.map.tileToWorldY(15);
           console.log("second", this.og.y);
         }
       }

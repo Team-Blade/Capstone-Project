@@ -4,7 +4,6 @@ const config = {
   scale: {
     scale: "SHOW_ALL",
     orientation: "LANDSCAPE",
-    // mode: Phaser.Scale.RESIZE
     width: 1860 * 0.7,
     height: 900 * 0.7
   },
