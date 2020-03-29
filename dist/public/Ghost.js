@@ -8,6 +8,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.key = config.key.slice(0, -1);
     this.game = config.game;
     this.name = this.key;
+    this.direction = "";
     this.tilePositionX = this.scene.map.worldToTileX(this.x);
     this.tilePositionY = this.scene.map.worldToTileY(this.y);
   }
@@ -54,21 +55,26 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.createAnimation();
 
     if (direction === "up") {
-      this.setVelocityY(-180);
+      // this.setVelocityY(-140);
       this.anims.play("moveUp", true);
     } else if (direction === "down") {
-      this.setVelocityY(180);
+      // this.setVelocityY(140);
       this.anims.play("moveDown", true);
     } else if (direction === "left") {
-      this.setVelocityX(-180);
+      // this.setVelocityX(-140);
       this.anims.play("moveLeft", true);
     } else if (direction === "right") {
-      this.setVelocityX(180);
+      // this.setVelocityX(140);
       this.anims.play("moveRight", true);
     }
   }
   trajectory() {
-    this.createAnimation();
+
+    // if(this.direction) {
+    //   this.anims.play(this.direction, true);
+    //   console.log('playing', this.direction)
+    // }
+
     if (this.scene.pac) {
       if (this.x === this.scene.pac.x) {
         this.setVelocityY(0);
@@ -79,25 +85,47 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       if (this.tilePositionX > this.scene.pac.tilePositionX) {
         if (this.tilePositionY > 14 || this.tilePositionY < 0) {
           this.setVelocityX(0);
-        } else this.setVelocityX(-140);
-        this.anims.play("moveLeft", true);
+        } else {
+          this.setVelocityX(-140);
+          this.move("left");
+          this.direction = "moveLeft";
+        }
       }
       if (this.tilePositionX < this.scene.pac.tilePositionX) {
         if (this.tilePositionY > 14 || this.tilePositionY < 0) {
           this.setVelocityX(0);
         } else {
           this.setVelocityX(140);
-          this.anims.play("moveRight", true);
+          this.move("right");
+          this.direction = "moveRight";
         }
         // this.setVelocityX(140);
       }
-      if (this.scene.map.worldToTileY(this.y) < this.scene.pac.tilePositionY) {
+      if (this.tilePositionY < this.scene.pac.tilePositionY) {
+        if ((this.tilePositionY + 1 + (15-this.scene.pac.tilePositionY)) < this.scene.pac.tilePositionY - this.tilePositionY){
+          this.setVelocityY(-140);
+          this.move("up");
+          this.direction = "moveUp"
+          console.log('hello');
+        } 
+        else {
         this.setVelocityY(140);
-        this.anims.play("moveDown", true);
+        this.move("down");
+        this.direction = "moveDown";
+        }
       }
-      if (this.scene.map.worldToTileY(this.y) > this.scene.pac.tilePositionY) {
+      if (this.tilePositionY > this.scene.pac.tilePositionY) {
+        if((15 - this.tilePositionY + this.scene.pac.tilePositionY + 1) < this.tilePositionY - this.scene.pac.tilePositionY){
+          this.setVelocityY(140);
+          this.move("down");
+          this.direction = "moveDown";
+          console.log('hello');
+        }
+        else { 
         this.setVelocityY(-140);
-        this.anims.play("moveUp", true);
+        this.move("up");
+        this.direction = "moveUp"
+        }
       }
     }
   }

@@ -26,6 +26,7 @@ export default class Level1 extends Phaser.Scene {
       startPositions: { x: 18, y: 9 },
       color: "p"
     };
+
   }
   preload() {
     //loads image for tileset
@@ -344,17 +345,38 @@ export default class Level1 extends Phaser.Scene {
     });
   }
   update() {
+
     this.og.trajectory();
-    this.direction = "";
 
     if (this.pac) {
+
+      if(this.pac.direction) {
+        this.pac.move(this.pac.direction);
+      }
+
+      if (this.pac.body.velocity.x > 0) {
+        this.pac.direction = "right"
+      }
+  
+      if (this.pac.body.velocity.x < 0) {
+        this.pac.direction = "left"
+      }
+  
+      if (this.pac.body.velocity.y > 0) {
+        this.pac.direction = "down"
+      }
+  
+      if (this.pac.body.velocity.y < 0) {
+        this.pac.direction = "up"
+      }
+
       if (this.cursors.up.isDown) {
         this.pac.move("up");
-        this.direction = "up";
+        this.pac.direction = "up";
       }
       if (this.cursors.down.isDown) {
         this.pac.move("down");
-        this.direction = "down";
+        this.pac.direction = "down";
       }
       if (
         this.cursors.left.isDown &&
@@ -362,7 +384,7 @@ export default class Level1 extends Phaser.Scene {
         this.pac.tilePositionY < 14
       ) {
         this.pac.move("left");
-        this.direction = "left";
+        this.pac.direction = "left";
       }
       if (
         this.cursors.right.isDown &&
@@ -370,7 +392,7 @@ export default class Level1 extends Phaser.Scene {
         this.pac.tilePositionY < 14
       ) {
         this.pac.move("right");
-        this.direction = "right";
+        this.pac.direction = "right";
       }
 
       let x = this.pac.x;
@@ -384,7 +406,7 @@ export default class Level1 extends Phaser.Scene {
           socketId: socket.id,
           x: this.pac.x,
           y: this.pac.y,
-          direction: this.direction,
+          direction: this.pac.direction,
           big: this.pac.big
         });
         this.pac.tilePositionX = this.map.worldToTileX(this.pac.x);
@@ -413,15 +435,9 @@ export default class Level1 extends Phaser.Scene {
         }
       }
 
-      // const resized =
-      //   this.pac.oldPosition && this.pac.oldPosition.scale !== this.pac.scale;
-
-      // if (resized) {
-      //   this.pac.x = this.map.tileToWorldX(this.pac.oldPosition.tileX);
-      //   this.pac.y = this.map.tileToWorldY(this.pac.oldPosition.tileY);
-      // }
       this.og.tilePositionX = this.map.worldToTileX(this.og.x);
       this.og.tilePositionY = this.map.worldToTileY(this.og.y);
+
       this.pac.oldPosition = {
         x: this.pac.x,
         y: this.pac.y,
