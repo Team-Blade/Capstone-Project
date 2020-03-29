@@ -3,9 +3,10 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     super(config.scene, config.x, config.y, config.key);
     config.scene.add.existing(this);
     config.scene.physics.world.enable(this);
-    this.setSize(60, 60, true).setScale(0.63);
-    this.key = config.key.slice(0, -1);
     this.scene = config.scene;
+    this.setSize(42, 42, true).setScale(this.scene.collisionLayer.scale * 1.4);
+    this.key = config.key.slice(0, -1);
+
     this.game = config.game;
     this.name = this.key;
     this.tilePositionX = this.scene.map.worldToTileX(this.x);
@@ -16,25 +17,37 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.scene.anims.create({
       key: `moveUp`,
       frames: [{ key: `${this.key}7` }, { key: `${this.key}8` }],
-      frameRate: 4,
+      frameRate: 10,
       repeat: -1
     });
     this.scene.anims.create({
       key: `moveDown`,
       frames: [{ key: `${this.key}1` }, { key: `${this.key}2` }],
-      frameRate: 4,
+      frameRate: 10,
       repeat: -1
     });
     this.scene.anims.create({
       key: `moveLeft`,
       frames: [{ key: `${this.key}3` }, { key: `${this.key}4` }],
-      frameRate: 4,
+      frameRate: 10,
       repeat: -1
     });
     this.scene.anims.create({
       key: `moveRight`,
       frames: [{ key: `${this.key}5` }, { key: `${this.key}6` }],
-      frameRate: 4,
+      frameRate: 10,
+      repeat: -1
+    });
+    this.scene.anims.create({
+      key: "turnBlue",
+      frames: [{ key: "ghostFlash1" }, { key: "ghostFlash2" }],
+      frameRate: 10,
+      repeat: -1
+    });
+    this.scene.anims.create({
+      key: "turnWhite",
+      frames: [{ key: "ghostFlash3" }, { key: "ghostFlash4" }],
+      frameRate: 10,
       repeat: -1
     });
   }
@@ -83,5 +96,14 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
         this.anims.play("moveUp", true);
       }
     }
+  }
+  turnBlue() {
+    this.createAnimation();
+    this.anims.play("turnBlue", true);
+  }
+  flash() {
+    this.createAnimation();
+    this.anims.play("turnBlue", true);
+    this.anims.play("turnWhite", true);
   }
 }

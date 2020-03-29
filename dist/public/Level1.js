@@ -202,15 +202,15 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("egg", "/public/assets/food/GameMain014.png");
 
     //load ghost flashing images
-    this.load.image("ghostFlash1", "/public/assets/extract/GameMain214.png"); //blue 1
-    this.load.image("ghostFlash2", "/public/assets/extract/GameMain214.png"); //blue 2
-    this.load.image("ghostFlash3", "/public/assets/extract/GameMain214.png"); //white 1
-    this.load.image("ghostFlash4", "/public/assets/extract/GameMain214.png"); //white 2
-    this.load.image("ghostFlash5", "/public/assets/extract/GameMain214.png"); //back
-    this.load.image("ghostEyesDown", "/public/assets/extract/GameMain266.png");
-    this.load.image("ghostEyesLeft", "/public/assets/extract/GameMain267.png");
-    this.load.image("ghostEyesRight", "/public/assets/extract/GameMain268.png");
-    this.load.image("ghostEyesDown", "/public/assets/extract/GameMain269.png");
+    this.load.image("ghostFlash1", "/public/assets/ghosts/GameMain214.png"); //blue 1
+    this.load.image("ghostFlash2", "/public/assets/ghosts/GameMain215.png"); //blue 2
+    this.load.image("ghostFlash3", "/public/assets/ghosts/GameMain216.png"); //white 1
+    this.load.image("ghostFlash4", "/public/assets/ghosts/GameMain217.png"); //white 2
+    this.load.image("ghostFlash5", "/public/assets/ghosts/GameMain218.png"); //back
+    this.load.image("ghostEyesDown", "/public/assets/ghosts/GameMain266.png");
+    this.load.image("ghostEyesLeft", "/public/assets/ghosts/GameMain267.png");
+    this.load.image("ghostEyesRight", "/public/assets/ghosts/GameMain268.png");
+    this.load.image("ghostEyesDown", "/public/assets/ghosts/GameMain269.png");
   }
 
   create() {
