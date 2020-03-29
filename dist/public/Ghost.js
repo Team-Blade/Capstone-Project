@@ -10,7 +10,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.name = this.key;
     this.tilePositionX = this.scene.map.worldToTileX(this.x);
     this.tilePositionY = this.scene.map.worldToTileY(this.y);
-    console.log("in constructor", this.tilePositionY, this.tilePositionX);
   }
 
   createAnimation() {
@@ -40,7 +39,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     });
   }
   move(direction) {
-    console.log("in move");
     this.createAnimation();
 
     if (direction === "up") {
@@ -54,17 +52,13 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       this.anims.play("moveLeft", true);
     } else if (direction === "right") {
       this.setVelocityX(180);
-      console.log("in right");
       this.anims.play("moveRight", true);
     }
   }
   trajectory() {
     this.createAnimation();
-    console.log("in trajectory");
     this.TURN_RATE = 5;
     this.SPEED = 250;
-    console.log(this.tilePositionX);
-    console.log("y", this.tilePositionY);
     if (this.scene.pac) {
       if (this.x === this.scene.pac.x) {
         this.setVelocityY(0);
@@ -76,29 +70,40 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
         if (this.tilePositionY > 14 || this.tilePositionY < 0) {
           this.setVelocityX(0);
         } else this.setVelocityX(-140);
+<<<<<<< HEAD
         console.log("moveLeft");
         this.anims.play("moveLeft");
         // this.setVelocityX(-140);
+=======
+        this.anims.play("moveLeft", true);
+>>>>>>> 687742cff5866d8ee09c8a4be4d642fe2edc3c33
       }
       if (this.tilePositionX < this.scene.pac.tilePositionX) {
         if (this.tilePositionY > 14 || this.tilePositionY < 0) {
           this.setVelocityX(0);
         } else {
           this.setVelocityX(140);
-          console.log("moveRight");
-          this.anims.play("moveRight");
+          this.anims.play("moveRight", true);
         }
         // this.setVelocityX(140);
       }
       if (this.scene.map.worldToTileY(this.y) < this.scene.pac.tilePositionY) {
         this.setVelocityY(140);
+<<<<<<< HEAD
         this.anims.play("moveDown");
         console.log("moveDown");
+=======
+        this.anims.play("moveDown", true);
+>>>>>>> 687742cff5866d8ee09c8a4be4d642fe2edc3c33
       }
       if (this.scene.map.worldToTileY(this.y) > this.scene.pac.tilePositionY) {
         this.setVelocityY(-140);
+<<<<<<< HEAD
         this.anims.play("moveUp");
         console.log("moveUp");
+=======
+        this.anims.play("moveUp", true);
+>>>>>>> 687742cff5866d8ee09c8a4be4d642fe2edc3c33
       }
     }
   }
