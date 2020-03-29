@@ -9,6 +9,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.key = config.key;
     this.color = this.key.slice(0, 2);
     this.moving = false;
+    this.big = true;
   }
   createAnimations() {
     this.scene.anims.create({
@@ -55,7 +56,6 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   move(direction) {
     this.moving = true;
     this.createAnimations();
-
     if (direction === `up`) {
       this.setVelocityY(-180);
       this.anims.play(`${this.color}up`, true);
@@ -71,4 +71,3 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
   }
 }
-
