@@ -10,7 +10,10 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.color = this.key.slice(0, 2);
     this.bigColor = `${this.key.slice(0, 1)}b`;
     this.moving = false;
-    this.big = false;
+    this.big = true;
+    if (this.big) {
+      this.setOffset(6, 6);
+    }
   }
   createAnimations() {
     if (this.big) {
