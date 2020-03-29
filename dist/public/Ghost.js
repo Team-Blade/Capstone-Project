@@ -68,6 +68,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     }
   }
   trajectory() {
+    this.createAnimation();
     if (this.scene.pac) {
       if (this.x === this.scene.pac.x) {
         this.setVelocityY(0);
