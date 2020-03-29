@@ -69,17 +69,20 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     }
   }
   trajectory() {
-
     // if(this.direction) {
     //   this.anims.play(this.direction, true);
     //   console.log('playing', this.direction)
     // }
 
     if (this.scene.pac) {
-      if (this.x === this.scene.pac.x) {
+      console.log("pacx", this.scene.pac.tilePositionX);
+      console.log("ghostx", this.tilePositionX);
+      console.log("pacy", this.scene.pac.tilePositionY);
+      console.log("ghosty", this.tilePositionY);
+      if (this.tilePositionX === this.scene.pac.tilePositionX) {
         this.setVelocityY(0);
       }
-      if (this.y === this.scene.pac.y) {
+      if (this.tilePositionY === this.scene.pac.tilePositionY) {
         this.setVelocityX(0);
       }
       if (this.tilePositionX > this.scene.pac.tilePositionX) {
@@ -102,29 +105,33 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
         // this.setVelocityX(140);
       }
       if (this.tilePositionY < this.scene.pac.tilePositionY) {
-        if ((this.tilePositionY + 1 + (15-this.scene.pac.tilePositionY)) < this.scene.pac.tilePositionY - this.tilePositionY){
+        if (
+          this.tilePositionY + 1 + (15 - this.scene.pac.tilePositionY) <
+          this.scene.pac.tilePositionY - this.tilePositionY + 1
+        ) {
           this.setVelocityY(-140);
           this.move("up");
-          this.direction = "moveUp"
-          console.log('hello');
-        } 
-        else {
-        this.setVelocityY(140);
-        this.move("down");
-        this.direction = "moveDown";
-        }
-      }
-      if (this.tilePositionY > this.scene.pac.tilePositionY) {
-        if((15 - this.tilePositionY + this.scene.pac.tilePositionY + 1) < this.tilePositionY - this.scene.pac.tilePositionY){
+          this.direction = "moveUp";
+          console.log("hello");
+        } else {
           this.setVelocityY(140);
           this.move("down");
           this.direction = "moveDown";
-          console.log('hello');
         }
-        else { 
-        this.setVelocityY(-140);
-        this.move("up");
-        this.direction = "moveUp"
+      }
+      if (this.tilePositionY > this.scene.pac.tilePositionY + 1) {
+        if (
+          15 - this.tilePositionY + this.scene.pac.tilePositionY + 1 <
+          this.tilePositionY - this.scene.pac.tilePositionY + 1
+        ) {
+          this.setVelocityY(140);
+          this.move("down");
+          this.direction = "moveDown";
+          console.log("hello");
+        } else {
+          this.setVelocityY(-140);
+          this.move("up");
+          this.direction = "moveUp";
         }
       }
     }

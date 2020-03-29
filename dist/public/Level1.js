@@ -26,7 +26,6 @@ export default class Level1 extends Phaser.Scene {
       startPositions: { x: 18, y: 9 },
       color: "p"
     };
-
   }
   preload() {
     //loads image for tileset
@@ -345,29 +344,27 @@ export default class Level1 extends Phaser.Scene {
     });
   }
   update() {
-
     this.og.trajectory();
 
     if (this.pac) {
-
-      if(this.pac.direction) {
+      if (this.pac.direction) {
         this.pac.move(this.pac.direction);
       }
 
       if (this.pac.body.velocity.x > 0) {
-        this.pac.direction = "right"
+        this.pac.direction = "right";
       }
-  
+
       if (this.pac.body.velocity.x < 0) {
-        this.pac.direction = "left"
+        this.pac.direction = "left";
       }
-  
+
       if (this.pac.body.velocity.y > 0) {
-        this.pac.direction = "down"
+        this.pac.direction = "down";
       }
-  
+
       if (this.pac.body.velocity.y < 0) {
-        this.pac.direction = "up"
+        this.pac.direction = "up";
       }
 
       if (this.cursors.up.isDown) {
@@ -409,8 +406,8 @@ export default class Level1 extends Phaser.Scene {
           direction: this.pac.direction,
           big: this.pac.big
         });
-        this.pac.tilePositionX = this.map.worldToTileX(this.pac.x);
-        this.pac.tilePositionY = this.map.worldToTileY(this.pac.y);
+        this.pac.tilePositionX = this.map.worldToTileX(this.pac.x) + 1;
+        this.pac.tilePositionY = this.map.worldToTileY(this.pac.y) + 1;
 
         // this.directions[Phaser.UP] = this.map.getTileAt(this.pac.tilePositionX, this.pac.tilePositionY - 1);
         // this.directions[Phaser.DOWN] = this.map.getTileAt(this.pac.tilePositionX, this.pac.tilePositionY + 1);
@@ -426,12 +423,10 @@ export default class Level1 extends Phaser.Scene {
         }
         if (this.og.tilePositionY >= 15 && this.og.body.velocity.y > 0) {
           this.og.y = this.map.tileToWorldY(-1);
-          console.log("bottom", this.og.y);
         }
 
         if (this.og.tilePositionY < 0 && this.og.body.velocity.y < 0) {
           this.og.y = this.map.tileToWorldY(15);
-          console.log("second", this.og.y);
         }
       }
 
