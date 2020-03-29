@@ -277,7 +277,7 @@ export default class Level1 extends Phaser.Scene {
     this.collisionLayer.setScale(0.7);
 
     //creates the food and dots layer
-    this.collisionLayerFoodDots = map.createStaticLayer(
+    this.collisionLayerFoodDots = map.createDynamicLayer(
       "foodDotsLayer",
       [
         smallDotTileset,
