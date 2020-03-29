@@ -10,7 +10,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.color = this.key.slice(0, 2);
     this.bigColor = `${this.key.slice(0, 1)}b`;
     this.moving = false;
-    this.big = true;
+    this.big = false;
     if (this.big) {
       this.setOffset(6, 6);
     }
@@ -59,6 +59,21 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       frameRate: 10,
       repeat: -1
     });
+    this.scene.anims.create({
+      key: `death`,
+      frames: [
+        { key: `${this.color}death1` },
+        { key: `${this.color}death2` },
+        { key: `${this.color}death3` },
+        { key: `${this.color}death4` },
+        { key: `${this.color}death5` },
+        { key: `${this.color}death6` },
+        { key: `${this.color}death7` },
+        { key: `${this.color}death8` }
+      ],
+      frameRate: 8,
+      repeat: 0
+    });
   }
   move(direction) {
     this.moving = true;
@@ -79,5 +94,8 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       this.setVelocityX(180);
       this.anims.play(`${this.color}right`, true);
     }
+  }
+  death() {
+    this.anims.play("death");
   }
 }

@@ -17,37 +17,37 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.scene.anims.create({
       key: `moveUp`,
       frames: [{ key: `${this.key}7` }, { key: `${this.key}8` }],
-      frameRate: 10,
+      frameRate: 4,
       repeat: -1
     });
     this.scene.anims.create({
       key: `moveDown`,
       frames: [{ key: `${this.key}1` }, { key: `${this.key}2` }],
-      frameRate: 10,
+      frameRate: 4,
       repeat: -1
     });
     this.scene.anims.create({
       key: `moveLeft`,
       frames: [{ key: `${this.key}3` }, { key: `${this.key}4` }],
-      frameRate: 10,
+      frameRate: 4,
       repeat: -1
     });
     this.scene.anims.create({
       key: `moveRight`,
       frames: [{ key: `${this.key}5` }, { key: `${this.key}6` }],
-      frameRate: 10,
+      frameRate: 4,
       repeat: -1
     });
     this.scene.anims.create({
       key: "turnBlue",
       frames: [{ key: "ghostFlash1" }, { key: "ghostFlash2" }],
-      frameRate: 10,
+      frameRate: 4,
       repeat: -1
     });
     this.scene.anims.create({
       key: "turnWhite",
       frames: [{ key: "ghostFlash3" }, { key: "ghostFlash4" }],
-      frameRate: 10,
+      frameRate: 4,
       repeat: -1
     });
   }
@@ -69,9 +69,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     }
   }
   trajectory() {
-    this.createAnimation();
-    this.TURN_RATE = 5;
-    this.SPEED = 250;
     if (this.scene.pac) {
       if (this.x > this.scene.pac.x) {
         if (this.tilePositionY > 14 || this.tilePositionY < 0) {

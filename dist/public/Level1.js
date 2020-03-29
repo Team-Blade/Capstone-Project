@@ -326,7 +326,8 @@ export default class Level1 extends Phaser.Scene {
 
     // this.ghosts.add(this.pg);
     this.ghosts.add(this.og);
-    this.og.setBounce(1);
+    this.og.setBounce(0, 1);
+
     this.physics.add.collider(this.ghosts, this.collisionLayer);
 
     //processes DOM input events if true
