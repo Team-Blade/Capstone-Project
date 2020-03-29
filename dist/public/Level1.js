@@ -312,7 +312,6 @@ export default class Level1 extends Phaser.Scene {
           this.pac.y = this.map.tileToWorldY(15);
         }
         if (this.og.tilePositionY >= 15 && this.og.body.velocity.y > 0) {
-<<<<<<< HEAD
           this.og.y = this.map.tileToWorldY(-1);
           console.log("bottom", this.og.y);
         }
@@ -320,13 +319,6 @@ export default class Level1 extends Phaser.Scene {
         if (this.og.tilePositionY < 0 && this.og.body.velocity.y < 0) {
           this.og.y = this.map.tileToWorldY(15);
           console.log("second", this.og.y);
-=======
-          this.og.y = this.map.tileToWorldY(1);
-        }
-
-        if (this.og.tilePositionY < 0 && this.og.body.velocity.y < 0) {
-          this.og.y = this.map.tileToWorldY(13);
->>>>>>> 687742cff5866d8ee09c8a4be4d642fe2edc3c33
         }
       }
 
