@@ -79,7 +79,9 @@ io.on("connection", socket => {
   socket.on("disconnect", () => {
     console.log("user disconnected");
     if (socket.roomId) {
+      console.log('before, rooms', rooms);
       delete rooms[socket.roomId].players[socket.id];
+      console.log('after, rooms', rooms);
     }
     io.emit("disconnect", socket.id);
   });
