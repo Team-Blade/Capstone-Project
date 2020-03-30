@@ -97,9 +97,9 @@ class App extends React.Component {
         <main id="main">
           <nav>
             {/* <div></div> */}
-            {/* {this.state.players.length > 0 ? (
-              <ScoreBoard players={this.state.players}></ScoreBoard>
-            ) : null} */}
+            {/* {this.state.players.length > 0 ? ( */}
+            <ScoreBoard players={this.state.players}></ScoreBoard>
+            {/* ) : null} */}
           </nav>
           <div>
             {!this.state.beginGameButtonClicked ? (

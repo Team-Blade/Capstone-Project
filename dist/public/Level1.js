@@ -10,21 +10,25 @@ export default class Level1 extends Phaser.Scene {
     //   "3": { x: 12, y: 9 },
     //   "4": { x: 18, y: 9 }
     // };
-    this['1'] = {
-      startPositions: {x: 12, y: 5},
-      color: 'y'
+    this["1"] = {
+      startPositions: { x: 12, y: 5 },
+      color: "y",
+      score: 0
     };
-    this['2'] = {
+    this["2"] = {
       startPositions: { x: 18, y: 5 },
-      color: 'r'
+      color: "r",
+      score: 0
     };
-    this['3'] = {
+    this["3"] = {
       startPositions: { x: 12, y: 9 },
-      color: 'b'
+      color: "b",
+      score: 0
     };
-    this['4'] = {
+    this["4"] = {
       startPositions: { x: 18, y: 9 },
-      color: 'p'
+      color: "p",
+      score: 0
     };
   }
   preload() {
@@ -32,7 +36,10 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("pinksquare", "/public/assets/pinksquare.jpeg");
     this.load.image("blacksquare", "public/assets/blacksquare.png");
     //loads image of map
-    this.load.tilemapTiledJSON("map", "/public/assets/newMapWithFoodDots4.json");
+    this.load.tilemapTiledJSON(
+      "map",
+      "/public/assets/newMapWithFoodDots4.json"
+    );
     //loads yellow pacman
     this.load.spritesheet("pacYellow", "/public/assets/royale.png", {
       frameWidth: 32,
@@ -98,27 +105,28 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("og5", "/public/assets/ghosts/GameMain185.png");
     this.load.image("og6", "/public/assets/ghosts/GameMain186.png");
 
-
     //dots and food preload images
 
-    this.load.image("smallDot", "/public/assets/extract/GameMain219.png")
-    this.load.image("largeDot", "/public/assets/extract/Common061.png")
-    this.load.image("candy", "/public/assets/food/GameMain004.png")
-    this.load.image("burger", "/public/assets/food/GameMain006.png")
-    this.load.image("papaya", "/public/assets/food/GameMain008.png")
-    this.load.image("peach", "/public/assets/food/GameMain010.png")
-    this.load.image("pizzaSlice", "/public/assets/food/GameMain011.png")
-    this.load.image("cakeSlice", "/public/assets/food/GameMain003.png")
-    this.load.image("egg", "/public/assets/food/GameMain014.png")
-
-
+    this.load.image("smallDot", "/public/assets/extract/GameMain219.png");
+    this.load.image("largeDot", "/public/assets/extract/Common061.png");
+    this.load.image("candy", "/public/assets/food/GameMain004.png");
+    this.load.image("burger", "/public/assets/food/GameMain006.png");
+    this.load.image("papaya", "/public/assets/food/GameMain008.png");
+    this.load.image("peach", "/public/assets/food/GameMain010.png");
+    this.load.image("pizzaSlice", "/public/assets/food/GameMain011.png");
+    this.load.image("cakeSlice", "/public/assets/food/GameMain003.png");
+    this.load.image("egg", "/public/assets/food/GameMain014.png");
   }
-
-
 
   create() {
     // this.directions = {};
     const scene = this;
+    // this.add.text(1100, 800, "PLAYERS", {
+    //   fontSize: "100px",
+    //   backgroundColor: "#ff0",
+    //   color: "#0e0"
+    // });
+
     this.socket = socket;
     this.otherPlayers = this.physics.add.group();
     this.otherPlayersArray = [];
@@ -165,8 +173,6 @@ export default class Level1 extends Phaser.Scene {
     const cakeSliceTileset = map.addTilesetImage("GameMain003", "cakeSlice");
     const eggTileset = map.addTilesetImage("GameMain014", "egg");
 
-
-
     //creates the map layer, key must match layer name in tiled
     this.collisionLayer = map.createStaticLayer(
       "mapBaseLayer",
@@ -182,7 +188,17 @@ export default class Level1 extends Phaser.Scene {
     //creates the food and dots layer
     this.collisionLayerFoodDots = map.createStaticLayer(
       "foodDotsLayer",
-      [smallDotTileset,largeDotTileset, candyTileset,burgerTileset,papayaTileset,peachTileset,pizzaSliceTileset,cakeSliceTileset,eggTileset],
+      [
+        smallDotTileset,
+        largeDotTileset,
+        candyTileset,
+        burgerTileset,
+        papayaTileset,
+        peachTileset,
+        pizzaSliceTileset,
+        cakeSliceTileset,
+        eggTileset
+      ],
       0,
       0
     );
@@ -190,15 +206,14 @@ export default class Level1 extends Phaser.Scene {
 
     this.collisionLayerFoodDots.setScale(this.collisionLayer.scale);
 
-
     window.addEventListener("resize", resizeCanvas);
     // const WIDTH = this.collisionLayer.displayWidth;
     // const HEIGHT = this.collisionLayer.displayHeight;
 
-    function resizeCanvas () {
+    function resizeCanvas() {
       const canvas = document.querySelector("canvas");
-      canvas.style.width = `${(window.innerWidth/1860)*1860}px`;
-      canvas.style.height = `${(window.innerWidth/1860)*900}px`;
+      canvas.style.width = `${(window.innerWidth / 1860) * 1860}px`;
+      canvas.style.height = `${(window.innerWidth / 1860) * 900}px`;
     }
 
     resizeCanvas();
@@ -223,11 +238,16 @@ export default class Level1 extends Phaser.Scene {
         }
       });
     });
+    // this.scoreBoard = this.add.text(1100, 800, "PLAYERS", {
+    //   fontSize: "100px",
+    //   backgroundColor: "#ff0",
+    //   color: "#0e0"
+    // });
+    // this.scoreBoard.setOrigin(0.5, 0.5);
+    // this.scoreBoard.setDepth(3);
   }
   update() {
-    
     if (this.pac) {
-
       if (this.cursors.up.isDown) {
         // this.pac.setVelocityY(-180);
         // this.pac.anims.play("ysup", true);
@@ -305,7 +325,7 @@ export default class Level1 extends Phaser.Scene {
   }
 }
 function addPlayer(scene, player) {
-  const playerNumber = player.playerNumber
+  const playerNumber = player.playerNumber;
   const x = scene[playerNumber].startPositions.x;
   const y = scene[playerNumber].startPositions.y;
 
@@ -315,7 +335,7 @@ function addPlayer(scene, player) {
     y: scene.map.tileToWorldY(y),
     key: `${scene[player.playerNumber].color}sclosed`
   });
-  scene.pac.setScale(scene.collisionLayer.scale *.99);
+  scene.pac.setScale(scene.collisionLayer.scale * 0.99);
   scene.pac.tilePositionX = scene.map.worldToTileX(scene.pac.x);
   scene.pac.tilePositionY = scene.map.worldToTileY(scene.pac.y);
 
@@ -338,7 +358,7 @@ function addOtherPlayers(scene, player) {
     key: `${scene[player.playerNumber].color}sclosed`
   });
 
-  otherPlayer.setScale(scene.collisionLayer.scale*.99);
+  otherPlayer.setScale(scene.collisionLayer.scale * 0.99);
   scene.physics.add.collider(otherPlayer, scene.collisionLayer);
 
   scene.otherPlayersArray.push(otherPlayer);

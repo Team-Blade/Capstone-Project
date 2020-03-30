@@ -1,10 +1,15 @@
 body {
   display: flex;
+  flex-direction: row-reverse;
   background-color: #000000;
   border: black solid;
 }
+
+#app {
+  position: absolute;
+}
 nav {
-  padding: 30px;
+  padding: 75px;
   padding-left: 0px;
   display: flex;
   justify-content: center;
@@ -123,7 +128,7 @@ h2 {
 }
 
 h3 {
-  padding-left: 30px;
+  /* padding-left: 30px; */
   text-decoration: underline;
 }
 
