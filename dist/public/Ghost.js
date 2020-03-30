@@ -12,6 +12,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.tilePositionX = this.scene.map.worldToTileX(this.x);
     this.tilePositionY = this.scene.map.worldToTileY(this.y);
     this.vulnerable = false;
+    this.scene.physics.add.collider(this, this.scene.pac);
   }
 
   createAnimation() {
@@ -80,18 +81,17 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       // console.log("ghostx", this.tilePositionX);
       // console.log("pacy", this.scene.pac.tilePositionY);
       // console.log("ghosty", this.tilePositionY);
-      
+
       this.followPac();
       //ghost wrap
       this.wrap();
 
       //UPDATE TILE POSITION
       this.updateTilePosition();
-
     }
   }
 
-  followPac () {
+  followPac() {
     if (this.tilePositionX === this.scene.pac.tilePositionX) {
       this.setVelocityY(0);
     }
@@ -147,7 +147,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  wrap () {
+  wrap() {
     if (this.tilePositionY >= 15 && this.body.velocity.y > 0) {
       this.y = this.scene.map.tileToWorldY(-1);
     }
@@ -157,12 +157,13 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  updateTilePosition () {
+  updateTilePosition() {
     this.tilePositionX = this.scene.map.worldToTileX(this.x);
     this.tilePositionY = this.scene.map.worldToTileY(this.y);
   }
 
   turnBlue() {
+    console.log("in turn blue");
     this.createAnimation();
     this.anims.play("turnBlue", true);
   }

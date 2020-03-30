@@ -288,6 +288,11 @@ export default class Level1 extends Phaser.Scene {
 
     //small dots
     this.dots = this.physics.add.staticGroup();
+    //big dots
+    this.bigDots = this.physics.add.staticGroup();
+    //food
+    this.food = this.physics.add.staticGroup();
+
     this.collisionLayerFoodDots.forEachTile(tile => {
       if (tile.index === 13) {
         const x = tile.getCenterX();
@@ -305,26 +310,23 @@ export default class Level1 extends Phaser.Scene {
       if (tile.index === 4) {
         const x = tile.getCenterX();
         const y = tile.getCenterY();
-        const dot = this.dots.create(x, y, "largeDot");
+        const dot = this.bigDots.create(x, y, "largeDot");
       }
     });
 
-    this.dots.getChildren().forEach(dot => {
-      dot.setSize(35, 35);
+    this.food.getChildren().forEach(foodItem => {
+      foodItem.setSize(30, 30);
     });
 
+    console.log(this.food);
     // candy
 
     this.collisionLayerFoodDots.forEachTile(tile => {
       if (tile.index === 6) {
         const x = tile.getCenterX();
         const y = tile.getCenterY();
-        const dot = this.dots.create(x, y, "candy");
+        const foodItem = this.food.create(x, y, "candy");
       }
-    });
-
-    this.dots.getChildren().forEach(dot => {
-      dot.setSize(45, 45);
     });
 
     // burger
@@ -333,12 +335,8 @@ export default class Level1 extends Phaser.Scene {
       if (tile.index === 5) {
         const x = tile.getCenterX();
         const y = tile.getCenterY();
-        const dot = this.dots.create(x, y, "burger");
+        const foodItem = this.food.create(x, y, "burger");
       }
-    });
-
-    this.dots.getChildren().forEach(dot => {
-      dot.setSize(45, 45);
     });
 
     // papaya
@@ -347,11 +345,11 @@ export default class Level1 extends Phaser.Scene {
       if (tile.index === 12) {
         const x = tile.getCenterX();
         const y = tile.getCenterY();
-        const dot = this.dots.create(x, y, "papaya");
+        const foodItem = this.food.create(x, y, "papaya");
       }
     });
 
-    this.dots.getChildren().forEach(dot => {
+    this.bigDots.getChildren().forEach(dot => {
       dot.setSize(45, 45);
     });
 
@@ -360,12 +358,8 @@ export default class Level1 extends Phaser.Scene {
       if (tile.index === 11) {
         const x = tile.getCenterX();
         const y = tile.getCenterY();
-        const dot = this.dots.create(x, y, "peach");
+        const foodItem = this.food.create(x, y, "peach");
       }
-    });
-
-    this.dots.getChildren().forEach(dot => {
-      dot.setSize(45, 45);
     });
 
     //pizza slice
@@ -374,12 +368,8 @@ export default class Level1 extends Phaser.Scene {
       if (tile.index === 10) {
         const x = tile.getCenterX();
         const y = tile.getCenterY();
-        const dot = this.dots.create(x, y, "pizzaSlice");
+        const foodItem = this.food.create(x, y, "pizzaSlice");
       }
-    });
-
-    this.dots.getChildren().forEach(dot => {
-      dot.setSize(45, 45);
     });
 
     //cake Slice
@@ -388,12 +378,8 @@ export default class Level1 extends Phaser.Scene {
       if (tile.index === 7) {
         const x = tile.getCenterX();
         const y = tile.getCenterY();
-        const dot = this.dots.create(x, y, "cakeSlice");
+        const foodItem = this.food.create(x, y, "cakeSlice");
       }
-    });
-
-    this.dots.getChildren().forEach(dot => {
-      dot.setSize(45, 45);
     });
 
     //egg
@@ -402,12 +388,8 @@ export default class Level1 extends Phaser.Scene {
       if (tile.index === 9) {
         const x = tile.getCenterX();
         const y = tile.getCenterY();
-        const dot = this.dots.create(x, y, "egg");
+        const foodItem = this.food.create(x, y, "egg");
       }
-    });
-
-    this.dots.getChildren().forEach(dot => {
-      dot.setSize(45, 45);
     });
 
     window.addEventListener("resize", resizeCanvas);
@@ -458,6 +440,10 @@ export default class Level1 extends Phaser.Scene {
     // this.scoreBoard.setDepth(3);
   }
   update() {
+    if (this.pac && this.pac.big === true) {
+      this.pac.vulnerable = false;
+      this.pac.setOffset(6, 6);
+    }
     checkWin(this);
 
     this.og.trajectory();
@@ -485,6 +471,14 @@ export default class Level1 extends Phaser.Scene {
       this.physics.add.overlap(this.pac, this.dots, (pac, dots) => {
         dots.destroy();
       });
+      this.physics.add.overlap(this.pac, this.food, (pac, food) => {
+        food.destroy();
+      });
+      this.physics.add.overlap(this.pac, this.bigDots, (pac, dots) => {
+        this.og.turnBlue();
+        dots.destroy();
+        pac.big = true;
+      });
     }
   }
 }
@@ -510,12 +504,16 @@ function addPlayer(scene, player) {
     // pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
   });
   scene.physics.add.collider(scene.pac, scene.otherPlayers);
-  scene.physics.add.collider(scene.pac, scene.og, () => {
+  scene.physics.add.overlap(scene.pac, scene.og, () => {
     console.log("cant touch this");
-    scene.pac.disableBody(true, true);
-    delete scene.playersAlive[scene.pac.playerNumber];
+    if (scene.pac.vulnerable === true) {
+      scene.pac.disableBody(true, true);
+      delete scene.playersAlive[scene.pac.playerNumber];
+    } else {
+      scene.og.vulnerable = true;
+      scene.og.disableBody(true, true);
+    }
   });
-
   scene.playersAlive[playerNumber] = `player${playerNumber}`;
   // scene.directions[Phaser.UP] = scene.map.getTileAt(scene.pac.tilePositionX, scene.pac.tilePositionY - 1);
   // scene.directions[Phaser.DOWN] = scene.map.getTileAt(scene.pac.tilePositionX, scene.pac.tilePositionY + 1);
