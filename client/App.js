@@ -2,7 +2,6 @@ import React from "react";
 import Popup from "reactjs-popup";
 import ScoreBoard from "./ScoreBoard";
 import db from "../src/firebase";
-import { Alert } from "reactstrap";
 
 export const socket = io();
 const games = db.collection("games");
