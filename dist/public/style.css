@@ -134,6 +134,11 @@ h2 {
   flex-direction: column;
   justify-content: space-around;
   background-color: black;
+  /* border: gold solid 2px; */
+}
+
+#players {
+  display: flex;
 }
 
 h3 {

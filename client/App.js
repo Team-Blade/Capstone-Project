@@ -58,6 +58,10 @@ class App extends React.Component {
     let players = {};
     players[name] = { score: 0 };
     games.doc(code).set({ players }, { merge: true });
+    games.doc(code).onSnapshot(doc => {
+      const players = Object.keys(doc.data().players);
+      this.setState({ players });
+    });
 
     socket.emit("createRoom", code);
     // store the room id in the socket for future use
