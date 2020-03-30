@@ -24,15 +24,16 @@ main {
 }
 
 .start-button {
-  width: 150px;
-  height: 40px;
+  width: 150;
+  height: 80;
+  font-size: large;
   margin-top: 0px;
   align-self: center;
 }
 
 #container-start {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   padding: 20px;
   background-color: black;
 }
@@ -51,6 +52,14 @@ main {
 .init-game {
   display: flex;
   justify-content: space-around;
+  padding: 50px;
+  background-color: black;
+  color: gold;
+  font-size: medium;
+}
+.init-game-create {
+  display: flex;
+  justify-content: space-evenly;
   padding: 50px;
   background-color: black;
   color: gold;
