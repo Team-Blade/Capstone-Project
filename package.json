@@ -5,10 +5,13 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config webpack/prod.js",
+    "build": "webpack --config webpack/base.js",
     "dev": "webpack --config webpack/base.js --open -w",
-    "start": "npm run start-server & npm run dev ",
+    "start": "npm run start-server & npm run build ",
     "start-server": "nodemon index.js -e html,js,css --ignore public --ignore client"
+  },
+  "engines": {
+    "node": "12.16.x"
   },
   "author": "",
   "license": "ISC",
@@ -58,8 +61,5 @@
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.9.0",
     "webpack-merge": "^4.2.2"
-  },
-  "engines": {
-    "node": "12.16.1"
   }
 }
