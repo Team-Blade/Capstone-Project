@@ -10,6 +10,9 @@
     "start": "npm run start-server & npm run build ",
     "start-server": "nodemon index.js -e html,js,css --ignore public --ignore client"
   },
+  "engines": {
+    "node": "12.16.1"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
