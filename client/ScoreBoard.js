@@ -11,11 +11,7 @@ const ScoreBoard = props => {
       <ul>
         {players.map(player => {
           count++;
-          return (
-            <li key={player}>
-              Player{count}: {player}
-            </li>
-          );
+          return <li key={player}>{player}</li>;
         })}
       </ul>
     </div>

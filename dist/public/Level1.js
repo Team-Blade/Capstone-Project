@@ -25,7 +25,6 @@ export default class Level1 extends Phaser.Scene {
     this.otherPlayersArray = [];
 
     this.playersAlive = {};
-
   }
   preload() {
     //loads image for tileset
@@ -284,139 +283,132 @@ export default class Level1 extends Phaser.Scene {
     );
     //this.collisionLayerFoodDots.setCollisionByProperty({ collision: true });
 
-    this.collisionLayerFoodDots.active= false;
+    this.collisionLayerFoodDots.active = false;
     this.collisionLayerFoodDots.setScale(this.collisionLayer.scale);
 
     //small dots
     this.dots = this.physics.add.staticGroup();
     this.collisionLayerFoodDots.forEachTile(tile => {
-      if(tile.index===13){
-        const x= tile.getCenterX()
-        const y = tile.getCenterY()
-        const dot = this.dots.create(x,y,'smallDot')
+      if (tile.index === 13) {
+        const x = tile.getCenterX();
+        const y = tile.getCenterY();
+        const dot = this.dots.create(x, y, "smallDot");
       }
-    })
+    });
 
-    this.dots.getChildren().forEach(dot =>{
-      dot.setSize(30,30);
-    })
+    this.dots.getChildren().forEach(dot => {
+      dot.setSize(30, 30);
+    });
 
-   //large dots
+    //large dots
     this.collisionLayerFoodDots.forEachTile(tile => {
-      if(tile.index===4){
-        const x= tile.getCenterX()
-        const y = tile.getCenterY()
-        const dot = this.dots.create(x,y,'largeDot')
+      if (tile.index === 4) {
+        const x = tile.getCenterX();
+        const y = tile.getCenterY();
+        const dot = this.dots.create(x, y, "largeDot");
       }
-    })
+    });
 
-    this.dots.getChildren().forEach(dot =>{
-      dot.setSize(35,35);
-    })
-
+    this.dots.getChildren().forEach(dot => {
+      dot.setSize(35, 35);
+    });
 
     // candy
 
     this.collisionLayerFoodDots.forEachTile(tile => {
-      if(tile.index===6){
-        const x= tile.getCenterX()
-        const y = tile.getCenterY()
-        const dot = this.dots.create(x,y,'candy')
+      if (tile.index === 6) {
+        const x = tile.getCenterX();
+        const y = tile.getCenterY();
+        const dot = this.dots.create(x, y, "candy");
       }
-    })
+    });
 
-    this.dots.getChildren().forEach(dot =>{
-      dot.setSize(45,45);
-    })
-
+    this.dots.getChildren().forEach(dot => {
+      dot.setSize(45, 45);
+    });
 
     // burger
 
     this.collisionLayerFoodDots.forEachTile(tile => {
-      if(tile.index===5){
-        const x= tile.getCenterX()
-        const y = tile.getCenterY()
-        const dot = this.dots.create(x,y,'burger')
+      if (tile.index === 5) {
+        const x = tile.getCenterX();
+        const y = tile.getCenterY();
+        const dot = this.dots.create(x, y, "burger");
       }
-    })
+    });
 
-    this.dots.getChildren().forEach(dot =>{
-      dot.setSize(45,45);
-    })
+    this.dots.getChildren().forEach(dot => {
+      dot.setSize(45, 45);
+    });
 
     // papaya
 
     this.collisionLayerFoodDots.forEachTile(tile => {
-      if(tile.index===12){
-        const x= tile.getCenterX()
-        const y = tile.getCenterY()
-        const dot = this.dots.create(x,y,'papaya')
+      if (tile.index === 12) {
+        const x = tile.getCenterX();
+        const y = tile.getCenterY();
+        const dot = this.dots.create(x, y, "papaya");
       }
-    })
+    });
 
-    this.dots.getChildren().forEach(dot =>{
-      dot.setSize(45,45);
-    })
-
+    this.dots.getChildren().forEach(dot => {
+      dot.setSize(45, 45);
+    });
 
     //peach
     this.collisionLayerFoodDots.forEachTile(tile => {
-      if(tile.index===11){
-        const x= tile.getCenterX()
-        const y = tile.getCenterY()
-        const dot = this.dots.create(x,y,'peach')
+      if (tile.index === 11) {
+        const x = tile.getCenterX();
+        const y = tile.getCenterY();
+        const dot = this.dots.create(x, y, "peach");
       }
-    })
+    });
 
-    this.dots.getChildren().forEach(dot =>{
-      dot.setSize(45,45);
-    })
-
+    this.dots.getChildren().forEach(dot => {
+      dot.setSize(45, 45);
+    });
 
     //pizza slice
 
     this.collisionLayerFoodDots.forEachTile(tile => {
-      if(tile.index===10){
-        const x= tile.getCenterX()
-        const y = tile.getCenterY()
-        const dot = this.dots.create(x,y,'pizzaSlice')
+      if (tile.index === 10) {
+        const x = tile.getCenterX();
+        const y = tile.getCenterY();
+        const dot = this.dots.create(x, y, "pizzaSlice");
       }
-    })
+    });
 
-    this.dots.getChildren().forEach(dot =>{
-      dot.setSize(45,45);
-    })
-
+    this.dots.getChildren().forEach(dot => {
+      dot.setSize(45, 45);
+    });
 
     //cake Slice
 
     this.collisionLayerFoodDots.forEachTile(tile => {
-      if(tile.index===7){
-        const x= tile.getCenterX()
-        const y = tile.getCenterY()
-        const dot = this.dots.create(x,y,'cakeSlice')
+      if (tile.index === 7) {
+        const x = tile.getCenterX();
+        const y = tile.getCenterY();
+        const dot = this.dots.create(x, y, "cakeSlice");
       }
-    })
+    });
 
-    this.dots.getChildren().forEach(dot =>{
-      dot.setSize(45,45);
-    })
-
+    this.dots.getChildren().forEach(dot => {
+      dot.setSize(45, 45);
+    });
 
     //egg
 
     this.collisionLayerFoodDots.forEachTile(tile => {
-      if(tile.index===9){
-        const x= tile.getCenterX()
-        const y = tile.getCenterY()
-        const dot = this.dots.create(x,y,'egg')
+      if (tile.index === 9) {
+        const x = tile.getCenterX();
+        const y = tile.getCenterY();
+        const dot = this.dots.create(x, y, "egg");
       }
-    })
+    });
 
-    this.dots.getChildren().forEach(dot =>{
-      dot.setSize(45,45);
-    })
-
+    this.dots.getChildren().forEach(dot => {
+      dot.setSize(45, 45);
+    });
 
     window.addEventListener("resize", resizeCanvas);
     // const WIDTH = this.collisionLayer.displayWidth;
@@ -457,18 +449,23 @@ export default class Level1 extends Phaser.Scene {
         }
       });
     });
+    // this.scoreBoard = this.add.text(1100, 800, "PLAYERS", {
+    //   fontSize: "100px",
+    //   backgroundColor: "#ff0",
+    //   color: "#0e0"
+    // });
+    // this.scoreBoard.setOrigin(0.5, 0.5);
+    // this.scoreBoard.setDepth(3);
   }
   update() {
-
     checkWin(this);
 
     this.og.trajectory();
 
     if (this.pac) {
-
       this.pac.trajectory();
 
-      this.otherPlayersArray.forEach(player=> player.wrap());
+      this.otherPlayersArray.forEach(player => player.wrap());
 
       sendMovementInfo(this);
 
@@ -485,10 +482,10 @@ export default class Level1 extends Phaser.Scene {
       // this.directions[Phaser.LEFT] = this.map.getTileAt(this.pac.tilePositionX - 1, this.pac.tilePositionY);
       // this.directions[Phaser.RIGHT] = this.map.getTileAt(this.pac.tilePositionX + 1, this.pac.tilePositionY);
 
-      this.physics.add.overlap(this.pac, this.dots, (pac, dots)=>{
-        console.log("Are you working?")
-        dots.destroy()})
-
+      this.physics.add.overlap(this.pac, this.dots, (pac, dots) => {
+        console.log("Are you working?");
+        dots.destroy();
+      });
     }
   }
 }
@@ -514,11 +511,11 @@ function addPlayer(scene, player) {
     // pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
   });
   scene.physics.add.collider(scene.pac, scene.otherPlayers);
-  scene.physics.add.collider(scene.pac, scene.og, ()=>{
-    console.log('cant touch this');
+  scene.physics.add.collider(scene.pac, scene.og, () => {
+    console.log("cant touch this");
     scene.pac.disableBody(true, true);
     delete scene.playersAlive[scene.pac.playerNumber];
-  })
+  });
 
   scene.playersAlive[playerNumber] = `player${playerNumber}`;
   // scene.directions[Phaser.UP] = scene.map.getTileAt(scene.pac.tilePositionX, scene.pac.tilePositionY - 1);
@@ -541,26 +538,26 @@ function addOtherPlayers(scene, player) {
 
   otherPlayer.setScale(scene.collisionLayer.scale * 1.4);
   scene.physics.add.collider(otherPlayer, scene.collisionLayer);
-  scene.physics.add.collider(otherPlayer, scene.pac)
-  scene.physics.add.collider(otherPlayer, scene.og, ()=>{
-    console.log('cant touch this');
+  scene.physics.add.collider(otherPlayer, scene.pac);
+  scene.physics.add.collider(otherPlayer, scene.og, () => {
+    console.log("cant touch this");
     otherPlayer.disableBody(true, true);
     delete scene.playersAlive[otherPlayer.playerNumber];
-  })
+  });
   scene.otherPlayersArray.push(otherPlayer);
   scene.playersAlive[playerNumber] = `player${playerNumber}`;
   otherPlayer.playerId = player.playerId;
   scene.otherPlayers.add(otherPlayer);
 }
 
-function checkWin (scene) {
+function checkWin(scene) {
   const playersAlive = Object.keys(scene.playersAlive);
   if (playersAlive.length === 1) {
-    console.log('WINNER:', `player${playersAlive[0]}`);
+    console.log("WINNER:", `player${playersAlive[0]}`);
   }
 }
 
-function sendMovementInfo (scene) {
+function sendMovementInfo(scene) {
   let x = scene.pac.x;
   let y = scene.pac.y;
   const moving =

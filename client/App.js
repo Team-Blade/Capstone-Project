@@ -53,7 +53,6 @@ class App extends React.Component {
       buttonClickedName: "create",
       code
     });
-
     //sending player to database
     let name = this.state.name;
     let players = {};
@@ -69,21 +68,32 @@ class App extends React.Component {
     let name = this.state.name;
     let code = this.state.code;
 
-    //sending player to database
-    let players = {};
-    players[name] = { score: 0 };
-    games.doc(code).set({ players }, { merge: true });
-    games.doc(code).onSnapshot(doc => {
-      const players = Object.keys(doc.data().players);
-      this.setState({ players });
-    });
+    games
+      .doc(code)
+      .get()
+      .then(doc => console.log("Code is Valid", doc.id, doc.data().players))
+      .catch(err => console.log("Invalid Code"));
 
-    socket.emit("joinRoom", code);
-    // store the room id in the socket for future use
-    socket.roomId = code;
+    if (!this.state.names.includes(name)) {
+      //sending player to database
+      let players = {};
+      players[name] = { score: 0 };
+      games.doc(code).set({ players }, { merge: true });
+      games.doc(code).onSnapshot(doc => {
+        const players = Object.keys(doc.data().players);
+        this.setState({ players });
+      });
+
+      socket.emit("joinRoom", code);
+      // store the room id in the socket for future use
+      socket.roomId = code;
+    } else {
+      alert("Error! Please choose a different name");
+    }
   }
 
   startGame() {
+    //fetching players in game collection
     games.doc(this.state.code).onSnapshot(doc => {
       const players = Object.keys(doc.data().players);
       this.setState({ buttonClickedName: "", players });
@@ -97,13 +107,13 @@ class App extends React.Component {
         <main id="main">
           <nav>
             {/* <div></div> */}
-            {/* {this.state.players.length > 0 ? (
-              <ScoreBoard players={this.state.players}></ScoreBoard>
-            ) : null} */}
+            {/* {this.state.players.length > 0 ? ( */}
+            <ScoreBoard players={this.state.players}></ScoreBoard>
+            {/* ) : null} */}
           </nav>
           <div>
             {!this.state.beginGameButtonClicked ? (
-              <Popup defaultOpen>
+              <Popup defaultOpen closeOnDocumentClick={false}>
                 <div id="container-start">
                   <div></div>
                   <img
@@ -127,7 +137,7 @@ class App extends React.Component {
             ) : null}
 
             {this.state.buttonClicked ? (
-              <Popup open>
+              <Popup open closeOnDocumentClick={false}>
                 <div className="input-buttons">
                   <div>
                     <h4>Enter Name:</h4>
@@ -139,7 +149,7 @@ class App extends React.Component {
                       name="name"
                       placeholder="Player Name"
                       onChange={this.handleNameChange}
-                      required
+                      required={(true, "Name is required")}
                     />
                   </div>
                   <div>
@@ -175,8 +185,8 @@ class App extends React.Component {
 
           {/* Popup for game creator */}
           {this.state.buttonClickedName === "create" ? (
-            <Popup open>
-              <div className="init-game">
+            <Popup open closeOnDocumentClick={false}>
+              <div className="init-game-create">
                 <div>
                   <p>Game code:</p>
                   <br />
@@ -196,7 +206,7 @@ class App extends React.Component {
 
           {/* Popup for game joiners */}
           {this.state.buttonClickedName === "join" ? (
-            <Popup open>
+            <Popup open closeOnDocumentClick={false}>
               <div className="init-game">
                 <input
                   type="text"
