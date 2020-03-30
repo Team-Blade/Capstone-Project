@@ -79,16 +79,20 @@ io.on("connection", socket => {
   socket.on("disconnect", () => {
     console.log("user disconnected");
     if (socket.roomId) {
+      console.log("before, rooms", rooms);
       delete rooms[socket.roomId].players[socket.id];
+      console.log("after, rooms", rooms);
     }
     io.emit("disconnect", socket.id);
   });
 
   socket.on("playerMovement", movementData => {
-    const { x, y, socketId, roomId } = movementData;
+    const { x, y, socketId, roomId, direction, big } = movementData;
     player = rooms[roomId].players[socketId];
     player.x = x;
     player.y = y;
+    player.direction = direction;
+    player.big = big;
     socket.broadcast.emit("playerMoved", player);
   });
 });
