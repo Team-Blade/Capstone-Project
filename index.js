@@ -97,10 +97,8 @@ io.on("connection", socket => {
   });
 });
 
-const PORT = process.env.PORT;
-if (PORT === null || PORT === "") {
-  PORT === 8080;
-}
+const PORT = process.env.PORT || 8080;
+
 server.listen(PORT, () => {
   console.log(`Eating dots on port ${PORT}`);
 });
