@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack/base.js",
     "dev": "webpack --config webpack/base.js --open -w",
-    "start": "npm run start-server & npm run build ",
+    "start": "npm run start-server & npm run dev",
     "start-server": "nodemon index.js -e html,js,css --ignore public --ignore client"
   },
   "engines": {
