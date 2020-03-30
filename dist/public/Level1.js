@@ -27,6 +27,7 @@ export default class Level1 extends Phaser.Scene {
     this.playersAlive = {};
   }
   preload() {
+    console.log('working')
     //loads image for tileset
     this.load.image("pinksquare", "/public/assets/pinksquare.jpeg");
     this.load.image("blacksquare", "public/assets/blacksquare.png");
@@ -411,8 +412,6 @@ export default class Level1 extends Phaser.Scene {
     });
 
     window.addEventListener("resize", resizeCanvas);
-    // const WIDTH = this.collisionLayer.displayWidth;
-    // const HEIGHT = this.collisionLayer.displayHeight;
 
     resizeCanvas();
     //sprite movement yellow pacman
@@ -465,7 +464,10 @@ export default class Level1 extends Phaser.Scene {
     if (this.pac) {
       this.pac.trajectory();
 
-      this.otherPlayersArray.forEach(player => player.wrap());
+      this.otherPlayersArray.forEach(player => {
+        player.wrap()
+        player.updateTilePosition();
+      });
 
       sendMovementInfo(this);
 
@@ -504,6 +506,8 @@ function addPlayer(scene, player) {
   scene.pac.tilePositionX = scene.map.worldToTileX(scene.pac.x);
   scene.pac.tilePositionY = scene.map.worldToTileY(scene.pac.y);
 
+  scene.playersAlive[playerNumber] = scene.pac;
+
   scene.physics.add.collider(scene.pac, scene.collisionLayer, (pac, layer) => {
     pac.moving = false;
     //had to take it cause because it was throwing an error on player2, could not read frames
@@ -516,7 +520,6 @@ function addPlayer(scene, player) {
     delete scene.playersAlive[scene.pac.playerNumber];
   });
 
-  scene.playersAlive[playerNumber] = `player${playerNumber}`;
   // scene.directions[Phaser.UP] = scene.map.getTileAt(scene.pac.tilePositionX, scene.pac.tilePositionY - 1);
   // scene.directions[Phaser.DOWN] = scene.map.getTileAt(scene.pac.tilePositionX, scene.pac.tilePositionY + 1);
   // scene.directions[Phaser.LEFT] = scene.map.getTileAt(scene.pac.tilePositionX - 1, scene.pac.tilePositionY);
@@ -536,6 +539,8 @@ function addOtherPlayers(scene, player) {
   });
 
   otherPlayer.setScale(scene.collisionLayer.scale * 1.4);
+  otherPlayer.tilePositionX = scene.map.worldToTileX(otherPlayer.x);
+  otherPlayer.tilePositionY = scene.map.worldToTileY(otherPlayer.y);
   scene.physics.add.collider(otherPlayer, scene.collisionLayer);
   scene.physics.add.collider(otherPlayer, scene.pac);
   scene.physics.add.collider(otherPlayer, scene.og, () => {
@@ -544,7 +549,7 @@ function addOtherPlayers(scene, player) {
     delete scene.playersAlive[otherPlayer.playerNumber];
   });
   scene.otherPlayersArray.push(otherPlayer);
-  scene.playersAlive[playerNumber] = `player${playerNumber}`;
+  scene.playersAlive[playerNumber] = otherPlayer;
   otherPlayer.playerId = player.playerId;
   scene.otherPlayers.add(otherPlayer);
 }
