@@ -2,7 +2,7 @@
 
 # PAC-MAN BATTLE ROYALE 
 
-Pac-Man is a maze chase online video game inspired from the 17th arcade game in Pac-Man's series developed by Namco Bandai Games. 
+Pac-Man Battle Royale is a maze chase online video game inspired from the 17th arcade game in Pac-Man's series developed by Namco Bandai Games. 
 
 ## Game Rules
 
