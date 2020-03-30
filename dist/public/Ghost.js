@@ -11,6 +11,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.direction = "";
     this.tilePositionX = this.scene.map.worldToTileX(this.x);
     this.tilePositionY = this.scene.map.worldToTileY(this.y);
+    this.vulnerable = false;
   }
 
   createAnimation() {
@@ -75,67 +76,92 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     // }
 
     if (this.scene.pac) {
-      console.log("pacx", this.scene.pac.tilePositionX);
-      console.log("ghostx", this.tilePositionX);
-      console.log("pacy", this.scene.pac.tilePositionY);
-      console.log("ghosty", this.tilePositionY);
-      if (this.tilePositionX === this.scene.pac.tilePositionX) {
-        this.setVelocityY(0);
-      }
-      if (this.tilePositionY === this.scene.pac.tilePositionY) {
+      // console.log("pacx", this.scene.pac.tilePositionX);
+      // console.log("ghostx", this.tilePositionX);
+      // console.log("pacy", this.scene.pac.tilePositionY);
+      // console.log("ghosty", this.tilePositionY);
+      
+      this.followPac();
+      //ghost wrap
+      this.wrap();
+
+      //UPDATE TILE POSITION
+      this.updateTilePosition();
+
+    }
+  }
+
+  followPac () {
+    if (this.tilePositionX === this.scene.pac.tilePositionX) {
+      this.setVelocityY(0);
+    }
+    if (this.tilePositionY === this.scene.pac.tilePositionY) {
+      this.setVelocityX(0);
+    }
+    if (this.tilePositionX > this.scene.pac.tilePositionX) {
+      if (this.tilePositionY > 14 || this.tilePositionY < 0) {
         this.setVelocityX(0);
+      } else {
+        this.setVelocityX(-140);
+        this.move("left");
+        this.direction = "moveLeft";
       }
-      if (this.tilePositionX > this.scene.pac.tilePositionX) {
-        if (this.tilePositionY > 14 || this.tilePositionY < 0) {
-          this.setVelocityX(0);
-        } else {
-          this.setVelocityX(-140);
-          this.move("left");
-          this.direction = "moveLeft";
-        }
+    }
+    if (this.tilePositionX < this.scene.pac.tilePositionX) {
+      if (this.tilePositionY > 14 || this.tilePositionY < 0) {
+        this.setVelocityX(0);
+      } else {
+        this.setVelocityX(140);
+        this.move("right");
+        this.direction = "moveRight";
       }
-      if (this.tilePositionX < this.scene.pac.tilePositionX) {
-        if (this.tilePositionY > 14 || this.tilePositionY < 0) {
-          this.setVelocityX(0);
-        } else {
-          this.setVelocityX(140);
-          this.move("right");
-          this.direction = "moveRight";
-        }
-        // this.setVelocityX(140);
+      // this.setVelocityX(140);
+    }
+    if (this.tilePositionY < this.scene.pac.tilePositionY) {
+      if (
+        this.tilePositionY + 1 + (15 - this.scene.pac.tilePositionY) <
+        this.scene.pac.tilePositionY - this.tilePositionY + 1
+      ) {
+        this.setVelocityY(-140);
+        this.move("up");
+        this.direction = "moveUp";
+      } else {
+        this.setVelocityY(140);
+        this.move("down");
+        this.direction = "moveDown";
       }
-      if (this.tilePositionY < this.scene.pac.tilePositionY) {
-        if (
-          this.tilePositionY + 1 + (15 - this.scene.pac.tilePositionY) <
-          this.scene.pac.tilePositionY - this.tilePositionY + 1
-        ) {
-          this.setVelocityY(-140);
-          this.move("up");
-          this.direction = "moveUp";
-          console.log("hello");
-        } else {
-          this.setVelocityY(140);
-          this.move("down");
-          this.direction = "moveDown";
-        }
-      }
-      if (this.tilePositionY > this.scene.pac.tilePositionY + 1) {
-        if (
-          15 - this.tilePositionY + this.scene.pac.tilePositionY + 1 <
-          this.tilePositionY - this.scene.pac.tilePositionY + 1
-        ) {
-          this.setVelocityY(140);
-          this.move("down");
-          this.direction = "moveDown";
-          console.log("hello");
-        } else {
-          this.setVelocityY(-140);
-          this.move("up");
-          this.direction = "moveUp";
-        }
+    }
+    if (this.tilePositionY > this.scene.pac.tilePositionY + 1) {
+      if (
+        15 - this.tilePositionY + this.scene.pac.tilePositionY + 1 <
+        this.tilePositionY - this.scene.pac.tilePositionY + 1
+      ) {
+        this.setVelocityY(140);
+        this.move("down");
+        this.direction = "moveDown";
+      } else {
+        this.setVelocityY(-140);
+        this.move("up");
+        this.direction = "moveUp";
       }
     }
   }
+
+  wrap () {
+    if (this.tilePositionY >= 15 && this.body.velocity.y > 0) {
+      this.y = this.scene.map.tileToWorldY(-1);
+    }
+
+    if (this.tilePositionY < 0 && this.body.velocity.y < 0) {
+      this.y = this.scene.map.tileToWorldY(15);
+    }
+  }
+
+  updateTilePosition () {
+    this.tilePositionX = this.scene.map.worldToTileX(this.x);
+    this.tilePositionY = this.scene.map.worldToTileY(this.y);
+  }
+
   turnBlue() {
     this.createAnimation();
     this.anims.play("turnBlue", true);

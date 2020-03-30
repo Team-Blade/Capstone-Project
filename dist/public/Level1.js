@@ -4,12 +4,6 @@ import { socket } from "../../client/App";
 export default class Level1 extends Phaser.Scene {
   constructor() {
     super({ key: "Level1" });
-    // this.startPositions = {
-    //   "1": { x: 12, y: 5 },
-    //   "2": { x: 18, y: 5 },
-    //   "3": { x: 12, y: 9 },
-    //   "4": { x: 18, y: 9 }
-    // };
     this["1"] = {
       startPositions: { x: 12, y: 5 },
       color: "y"
@@ -26,6 +20,12 @@ export default class Level1 extends Phaser.Scene {
       startPositions: { x: 18, y: 9 },
       color: "p"
     };
+
+    this.socket = socket;
+    this.otherPlayersArray = [];
+
+    this.playersAlive = {};
+
   }
   preload() {
     //loads image for tileset
@@ -216,11 +216,10 @@ export default class Level1 extends Phaser.Scene {
   create() {
     // this.directions = {};
     const scene = this;
-    this.socket = socket;
+
     this.otherPlayers = this.physics.add.group();
     this.ghosts = this.physics.add.group();
 
-    this.otherPlayersArray = [];
     this.socket.on("currentPlayers", players => {
       Object.keys(players).forEach(playerId => {
         if (playerId === scene.socket.id) {
@@ -423,12 +422,6 @@ export default class Level1 extends Phaser.Scene {
     // const WIDTH = this.collisionLayer.displayWidth;
     // const HEIGHT = this.collisionLayer.displayHeight;
 
-    function resizeCanvas() {
-      const canvas = document.querySelector("canvas");
-      canvas.style.width = `${(window.innerWidth / 1860) * 1860}px`;
-      canvas.style.height = `${(window.innerWidth / 1860) * 900}px`;
-    }
-
     resizeCanvas();
     //sprite movement yellow pacman
     // this.pg = new Ghost({
@@ -466,94 +459,18 @@ export default class Level1 extends Phaser.Scene {
     });
   }
   update() {
+
+    checkWin(this);
+
     this.og.trajectory();
 
     if (this.pac) {
-      if (this.pac.direction) {
-        this.pac.move(this.pac.direction);
-      }
 
-      if (this.pac.body.velocity.x > 0) {
-        this.pac.direction = "right";
-      }
+      this.pac.trajectory();
 
-      if (this.pac.body.velocity.x < 0) {
-        this.pac.direction = "left";
-      }
+      this.otherPlayersArray.forEach(player=> player.wrap());
 
-      if (this.pac.body.velocity.y > 0) {
-        this.pac.direction = "down";
-      }
-
-      if (this.pac.body.velocity.y < 0) {
-        this.pac.direction = "up";
-      }
-
-      if (this.cursors.up.isDown) {
-        this.pac.move("up");
-        this.pac.direction = "up";
-      }
-      if (this.cursors.down.isDown) {
-        this.pac.move("down");
-        this.pac.direction = "down";
-      }
-      if (
-        this.cursors.left.isDown &&
-        this.pac.tilePositionY >= 0 &&
-        this.pac.tilePositionY < 14
-      ) {
-        this.pac.move("left");
-        this.pac.direction = "left";
-      }
-      if (
-        this.cursors.right.isDown &&
-        this.pac.tilePositionY >= 0 &&
-        this.pac.tilePositionY < 14
-      ) {
-        this.pac.move("right");
-        this.pac.direction = "right";
-      }
-
-      let x = this.pac.x;
-      let y = this.pac.y;
-      const moving =
-        this.pac.oldPosition &&
-        (x !== this.pac.oldPosition.x || y !== this.pac.oldPosition.y);
-      if (moving) {
-        this.socket.emit("playerMovement", {
-          roomId: socket.roomId,
-          socketId: socket.id,
-          x: this.pac.x,
-          y: this.pac.y,
-          direction: this.pac.direction,
-          big: this.pac.big
-        });
-        this.pac.tilePositionX = this.map.worldToTileX(this.pac.x) + 1;
-        this.pac.tilePositionY = this.map.worldToTileY(this.pac.y) + 1;
-
-        // this.directions[Phaser.UP] = this.map.getTileAt(this.pac.tilePositionX, this.pac.tilePositionY - 1);
-        // this.directions[Phaser.DOWN] = this.map.getTileAt(this.pac.tilePositionX, this.pac.tilePositionY + 1);
-        // this.directions[Phaser.LEFT] = this.map.getTileAt(this.pac.tilePositionX - 1, this.pac.tilePositionY);
-        // this.directions[Phaser.RIGHT] = this.map.getTileAt(this.pac.tilePositionX + 1, this.pac.tilePositionY);
-
-        if (this.pac.tilePositionY >= 15 && this.pac.body.velocity.y > 0) {
-          this.pac.y = this.map.tileToWorldY(-1);
-        }
-
-        if (this.pac.tilePositionY < 0 && this.pac.body.velocity.y < 0) {
-          this.pac.y = this.map.tileToWorldY(15);
-        }
-        if (this.og.tilePositionY >= 15 && this.og.body.velocity.y > 0) {
-          this.og.y = this.map.tileToWorldY(-1);
-        }
-
-        if (this.og.tilePositionY < 0 && this.og.body.velocity.y < 0) {
-          this.og.y = this.map.tileToWorldY(15);
-        }
-      }
-
-      this.og.tilePositionX = this.map.worldToTileX(this.og.x);
-      this.og.tilePositionY = this.map.worldToTileY(this.og.y);
+      sendMovementInfo(this);
 
       this.pac.oldPosition = {
         x: this.pac.x,
@@ -563,10 +480,10 @@ export default class Level1 extends Phaser.Scene {
         scale: this.pac.scale
       };
 
-      this.physics.add.overlap(this.pac, this.dots, (pac, dots)=>{
-        console.log("Are you working?")
-        dots.destroy()})
-
+      // this.directions[Phaser.UP] = this.map.getTileAt(this.pac.tilePositionX, this.pac.tilePositionY - 1);
+      // this.directions[Phaser.DOWN] = this.map.getTileAt(this.pac.tilePositionX, this.pac.tilePositionY + 1);
+      // this.directions[Phaser.LEFT] = this.map.getTileAt(this.pac.tilePositionX - 1, this.pac.tilePositionY);
+      // this.directions[Phaser.RIGHT] = this.map.getTileAt(this.pac.tilePositionX + 1, this.pac.tilePositionY);
     }
   }
 }
@@ -579,7 +496,8 @@ function addPlayer(scene, player) {
     scene: scene,
     x: scene.map.tileToWorldX(x),
     y: scene.map.tileToWorldY(y),
-    key: `${scene[player.playerNumber].color}sclosed`
+    key: `${scene[playerNumber].color}sclosed`,
+    playerNumber: playerNumber
   });
   scene.pac.setScale(scene.collisionLayer.scale * 1.4); //.99
   scene.pac.tilePositionX = scene.map.worldToTileX(scene.pac.x);
@@ -587,10 +505,17 @@ function addPlayer(scene, player) {
 
   scene.physics.add.collider(scene.pac, scene.collisionLayer, (pac, layer) => {
     pac.moving = false;
-    pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
+    //had to take it cause because it was throwing an error on player2, could not read frames
+    // pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
   });
   scene.physics.add.collider(scene.pac, scene.otherPlayers);
+  scene.physics.add.collider(scene.pac, scene.og, ()=>{
+    console.log('cant touch this');
+    scene.pac.disableBody(true, true);
+    delete scene.playersAlive[scene.pac.playerNumber];
+  })
 
+  scene.playersAlive[playerNumber] = `player${playerNumber}`;
   // scene.directions[Phaser.UP] = scene.map.getTileAt(scene.pac.tilePositionX, scene.pac.tilePositionY - 1);
   // scene.directions[Phaser.DOWN] = scene.map.getTileAt(scene.pac.tilePositionX, scene.pac.tilePositionY + 1);
   // scene.directions[Phaser.LEFT] = scene.map.getTileAt(scene.pac.tilePositionX - 1, scene.pac.tilePositionY);
@@ -599,18 +524,57 @@ function addPlayer(scene, player) {
 function addOtherPlayers(scene, player) {
   const x = scene[player.playerNumber].startPositions.x;
   const y = scene[player.playerNumber].startPositions.y;
+  const playerNumber = player.playerNumber;
 
   const otherPlayer = new SmallPac({
     scene: scene,
     x: scene.map.tileToWorldX(x),
     y: scene.map.tileToWorldY(y),
-    key: `${scene[player.playerNumber].color}sclosed`
+    key: `${scene[playerNumber].color}sclosed`,
+    playerNumber: playerNumber
   });
-  otherPlayer.createAnimations();
+
   otherPlayer.setScale(scene.collisionLayer.scale * 1.4);
   scene.physics.add.collider(otherPlayer, scene.collisionLayer);
-
+  scene.physics.add.collider(otherPlayer, scene.pac)
+  scene.physics.add.collider(otherPlayer, scene.og, ()=>{
+    console.log('cant touch this');
+    otherPlayer.disableBody(true, true);
+    delete scene.playersAlive[otherPlayer.playerNumber];
+  })
   scene.otherPlayersArray.push(otherPlayer);
+  scene.playersAlive[playerNumber] = `player${playerNumber}`;
   otherPlayer.playerId = player.playerId;
   scene.otherPlayers.add(otherPlayer);
+}
+
+function checkWin (scene) {
+  const playersAlive = Object.keys(scene.playersAlive);
+  if (playersAlive.length === 1) {
+    console.log('WINNER:', `player${playersAlive[0]}`);
+  }
+}
+
+function sendMovementInfo (scene) {
+  let x = scene.pac.x;
+  let y = scene.pac.y;
+  const moving =
+    scene.pac.oldPosition &&
+    (x !== scene.pac.oldPosition.x || y !== scene.pac.oldPosition.y);
+  if (moving) {
+    scene.socket.emit("playerMovement", {
+      roomId: socket.roomId,
+      socketId: socket.id,
+      x: scene.pac.x,
+      y: scene.pac.y,
+      direction: scene.pac.direction,
+      big: scene.pac.big
+    });
+  }
+}
+
+function resizeCanvas() {
+  const canvas = document.querySelector("canvas");
+  canvas.style.width = `${(window.innerWidth / 1860) * 1860}px`;
+  canvas.style.height = `${(window.innerWidth / 1860) * 900}px`;
 }
