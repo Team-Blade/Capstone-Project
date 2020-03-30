@@ -8,8 +8,7 @@
     "build": "webpack --config webpack/prod.js",
     "dev": "webpack --config webpack/base.js --open -w",
     "start": "npm run start-server & npm run build ",
-    "start-server": "nodemon index.js -e html,js,css --ignore public --ignore client",
-    "postinstall": "npm run build"
+    "start-server": "nodemon index.js -e html,js,css --ignore public --ignore client"
   },
   "author": "",
   "license": "ISC",
