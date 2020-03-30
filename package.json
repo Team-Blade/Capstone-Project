@@ -11,7 +11,7 @@
     "start-server": "nodemon index.js -e html,js,css --ignore public --ignore client"
   },
   "engines": {
-    "node": "12.16.1"
+    "node": "12.16.x"
   },
   "author": "",
   "license": "ISC",
