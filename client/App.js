@@ -68,28 +68,17 @@ class App extends React.Component {
     let name = this.state.name;
     let code = this.state.code;
 
-    games
-      .doc(code)
-      .get()
-      .then(doc => console.log("Code is Valid", doc.id, doc.data().players))
-      .catch(err => console.log("Invalid Code"));
+    let players = {};
+    players[name] = { score: 0 };
+    games.doc(code).set({ players }, { merge: true });
+    games.doc(code).onSnapshot(doc => {
+      const players = Object.keys(doc.data().players);
+      this.setState({ players });
+    });
 
-    if (!this.state.names.includes(name)) {
-      //sending player to database
-      let players = {};
-      players[name] = { score: 0 };
-      games.doc(code).set({ players }, { merge: true });
-      games.doc(code).onSnapshot(doc => {
-        const players = Object.keys(doc.data().players);
-        this.setState({ players });
-      });
-
-      socket.emit("joinRoom", code);
-      // store the room id in the socket for future use
-      socket.roomId = code;
-    } else {
-      alert("Error! Please choose a different name");
-    }
+    socket.emit("joinRoom", code);
+    // store the room id in the socket for future use
+    socket.roomId = code;
   }
 
   startGame() {
@@ -106,10 +95,7 @@ class App extends React.Component {
       <div id="main-wrapper">
         <main id="main">
           <nav>
-            {/* <div></div> */}
-            {/* {this.state.players.length > 0 ? ( */}
             <ScoreBoard players={this.state.players}></ScoreBoard>
-            {/* ) : null} */}
           </nav>
           <div>
             {!this.state.beginGameButtonClicked ? (
