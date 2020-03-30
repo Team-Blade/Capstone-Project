@@ -3,53 +3,100 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     super(config.scene, config.x, config.y, config.key);
     config.scene.add.existing(this);
     config.scene.physics.world.enable(this);
-    this.setSize(60, 60, true);
-    this.setOrigin(0, 0);
+    this.setSize(42, 42, true);
+    this.setOrigin(-0.2, -0.2);
     this.scene = config.scene;
     this.key = config.key;
-    this.color = this.key[0];
+    this.color = this.key.slice(0, 2);
+    this.bigColor = `${this.key.slice(0, 1)}b`;
+    this.moving = false;
+    this.big = true;
+    this.direction = "";
+    if (this.big) {
+      this.setOffset(6, 6);
+    }
   }
   createAnimations() {
+    if (this.big) {
+      this.color = this.bigColor;
+    }
     this.scene.anims.create({
-      key: `${this.color}sleft`,
-      frames: [{ key: `${this.color}sclosed` }, { key: `${this.color}sleft1` }, { key: `${this.color}sleft2` }],
+      key: `${this.color}left`,
+      frames: [
+        { key: `${this.color}closed` },
+        { key: `${this.color}left1` },
+        { key: `${this.color}left2` }
+      ],
       frameRate: 10,
       repeat: -1
     });
     this.scene.anims.create({
-      key: `${this.color}sright`,
-      frames: [{ key: `${this.color}sclosed` }, { key: `${this.color}sright1` }, { key: `${this.color}sright2` }],
+      key: `${this.color}right`,
+      frames: [
+        { key: `${this.color}closed` },
+        { key: `${this.color}right1` },
+        { key: `${this.color}right2` }
+      ],
       frameRate: 10,
       repeat: -1
     });
     this.scene.anims.create({
-      key: `${this.color}sup`,
+      key: `${this.color}up`,
       frameRate: 10,
-      frames: [{ key: `${this.color}sclosed` }, { key: `${this.color}sup1` }, { key: `${this.color}sup2` }],
+      frames: [
+        { key: `${this.color}closed` },
+        { key: `${this.color}up1` },
+        { key: `${this.color}up2` }
+      ],
       repeat: -1
     });
     this.scene.anims.create({
-      key: `${this.color}sdown`,
-      frames: [{ key: `${this.color}sclosed` }, { key: `${this.color}sdown1` }, { key: `${this.color}sdown2` }],
+      key: `${this.color}down`,
+      frames: [
+        { key: `${this.color}closed` },
+        { key: `${this.color}down1` },
+        { key: `${this.color}down2` }
+      ],
       frameRate: 10,
       repeat: -1
+    });
+    this.scene.anims.create({
+      key: `death`,
+      frames: [
+        { key: `${this.color}death1` },
+        { key: `${this.color}death2` },
+        { key: `${this.color}death3` },
+        { key: `${this.color}death4` },
+        { key: `${this.color}death5` },
+        { key: `${this.color}death6` },
+        { key: `${this.color}death7` },
+        { key: `${this.color}death8` }
+      ],
+      frameRate: 8,
+      repeat: 0
     });
   }
   move(direction) {
+    this.moving = true;
+    if (this.big) {
+      this.color = this.bigColor;
+    }
     this.createAnimations();
-
     if (direction === `up`) {
       this.setVelocityY(-180);
-      this.anims.play(`${this.color}sup`, true);
+      this.anims.play(`${this.color}up`, true);
     } else if (direction === `down`) {
       this.setVelocityY(180);
-      this.anims.play(`${this.color}sdown`, true);
+      this.anims.play(`${this.color}down`, true);
     } else if (direction === `left`) {
       this.setVelocityX(-180);
-      this.anims.play(`${this.color}sleft`, true);
+      this.anims.play(`${this.color}left`, true);
     } else if (direction === `right`) {
       this.setVelocityX(180);
-      this.anims.play(`${this.color}sright`, true);
+      this.anims.play(`${this.color}right`, true);
     }
+  }
+  death() {
+    this.anims.play("death");
   }
 }

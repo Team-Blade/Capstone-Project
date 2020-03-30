@@ -12,23 +12,19 @@ export default class Level1 extends Phaser.Scene {
     // };
     this["1"] = {
       startPositions: { x: 12, y: 5 },
-      color: "y",
-      score: 0
+      color: "y"
     };
     this["2"] = {
       startPositions: { x: 18, y: 5 },
-      color: "r",
-      score: 0
+      color: "r"
     };
     this["3"] = {
       startPositions: { x: 12, y: 9 },
-      color: "b",
-      score: 0
+      color: "b"
     };
     this["4"] = {
       startPositions: { x: 18, y: 9 },
-      color: "p",
-      score: 0
+      color: "p"
     };
   }
   preload() {
@@ -60,6 +56,25 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("ysup2", "/public/assets/yellowSmall/GameMain028.png");
     this.load.image("ysdown1", "/public/assets/yellowSmall/GameMain021.png");
     this.load.image("ysdown2", "/public/assets/yellowSmall/GameMain022.png");
+    this.load.image("ysdeath1", "/public/assets/yellowSmall/GameMain114.png");
+    this.load.image("ysdeath2", "/public/assets/yellowSmall/GameMain115.png");
+    this.load.image("ysdeath3", "/public/assets/yellowSmall/GameMain116.png");
+    this.load.image("ysdeath4", "/public/assets/yellowSmall/GameMain117.png");
+    this.load.image("ysdeath5", "/public/assets/yellowSmall/GameMain118.png");
+    this.load.image("ysdeath6", "/public/assets/yellowSmall/GameMain119.png");
+    this.load.image("ysdeath7", "/public/assets/yellowSmall/GameMain120.png");
+    this.load.image("ysdeath8", "/public/assets/yellowSmall/GameMain121.png");
+
+    //pacman yellow big preload images
+    this.load.image("ybclosed", "/public/assets/yellowBig/GameMain230.png");
+    this.load.image("ybleft1", "/public/assets/yellowBig/GameMain233.png");
+    this.load.image("ybleft2", "/public/assets/yellowBig/GameMain234.png");
+    this.load.image("ybright1", "/public/assets/yellowBig/GameMain235.png");
+    this.load.image("ybright2", "/public/assets/yellowBig/GameMain236.png");
+    this.load.image("ybup1", "/public/assets/yellowBig/GameMain237.png");
+    this.load.image("ybup2", "/public/assets/yellowBig/GameMain238.png");
+    this.load.image("ybdown1", "/public/assets/yellowBig/GameMain231.png");
+    this.load.image("ybdown2", "/public/assets/yellowBig/GameMain232.png");
 
     //pacman blue small preload images
     this.load.image("bsclosed", "/public/assets/blueSmall/GameMain038.png");
@@ -71,6 +86,26 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("bsup2", "/public/assets/blueSmall/GameMain046.png");
     this.load.image("bsdown1", "/public/assets/blueSmall/GameMain039.png");
     this.load.image("bsdown2", "/public/assets/blueSmall/GameMain040.png");
+    this.load.image("bsdeath1", "/public/assets/blueSmall/GameMain130.png");
+    this.load.image("bsdeath2", "/public/assets/blueSmall/GameMain131.png");
+    this.load.image("bsdeath3", "/public/assets/blueSmall/GameMain132.png");
+    this.load.image("bsdeath4", "/public/assets/blueSmall/GameMain133.png");
+    this.load.image("bsdeath5", "/public/assets/blueSmall/GameMain134.png");
+    this.load.image("bsdeath6", "/public/assets/blueSmall/GameMain135.png");
+    this.load.image("bsdeath7", "/public/assets/blueSmall/GameMain136.png");
+    this.load.image("bsdeath8", "/public/assets/blueSmall/GameMain137.png");
+
+    //pacman blue big preload images
+
+    this.load.image("bbclosed", "/public/assets/blueBig/GameMain248.png");
+    this.load.image("bbleft1", "/public/assets/blueBig/GameMain251.png");
+    this.load.image("bbleft2", "/public/assets/blueBig/GameMain252.png");
+    this.load.image("bbright1", "/public/assets/blueBig/GameMain253.png");
+    this.load.image("bbright2", "/public/assets/blueBig/GameMain254.png");
+    this.load.image("bbup1", "/public/assets/blueBig/GameMain255.png");
+    this.load.image("bbup2", "/public/assets/blueBig/GameMain256.png");
+    this.load.image("bbdown1", "/public/assets/blueBig/GameMain249.png");
+    this.load.image("bbdown2", "/public/assets/blueBig/GameMain250.png");
 
     //pacman pink small preload images
     this.load.image("psclosed", "/public/assets/pinkSmall/GameMain029.png");
@@ -82,6 +117,25 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("psup2", "/public/assets/pinkSmall/GameMain037.png");
     this.load.image("psdown1", "/public/assets/pinkSmall/GameMain030.png");
     this.load.image("psdown2", "/public/assets/pinkSmall/GameMain031.png");
+    this.load.image("psdeath1", "/public/assets/pinkSmall/GameMain122.png");
+    this.load.image("psdeath2", "/public/assets/pinkSmall/GameMain123.png");
+    this.load.image("psdeath3", "/public/assets/pinkSmall/GameMain124.png");
+    this.load.image("psdeath4", "/public/assets/pinkSmall/GameMain125.png");
+    this.load.image("psdeath5", "/public/assets/pinkSmall/GameMain126.png");
+    this.load.image("psdeath6", "/public/assets/pinkSmall/GameMain127.png");
+    this.load.image("psdeath7", "/public/assets/pinkSmall/GameMain128.png");
+    this.load.image("psdeath8", "/public/assets/pinkSmall/GameMain129.png");
+
+    //pacman pink big preload images
+    this.load.image("pbclosed", "/public/assets/pinkBig/GameMain239.png");
+    this.load.image("pbleft1", "/public/assets/pinkBig/GameMain242.png");
+    this.load.image("pbleft2", "/public/assets/pinkBig/GameMain243.png");
+    this.load.image("pbright1", "/public/assets/pinkBig/GameMain244.png");
+    this.load.image("pbright2", "/public/assets/pinkBig/GameMain245.png");
+    this.load.image("pbup1", "/public/assets/pinkBig/GameMain246.png");
+    this.load.image("pbup2", "/public/assets/pinkBig/GameMain247.png");
+    this.load.image("pbdown1", "/public/assets/pinkBig/GameMain240.png");
+    this.load.image("pbdown2", "/public/assets/pinkBig/GameMain241.png");
 
     //pacman red small preload images
     this.load.image("rsclosed", "/public/assets/redSmall/GameMain047.png");
@@ -93,17 +147,47 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("rsup2", "/public/assets/redSmall/GameMain055.png");
     this.load.image("rsdown1", "/public/assets/redSmall/GameMain048.png");
     this.load.image("rsdown2", "/public/assets/redSmall/GameMain049.png");
+    this.load.image("rsdeath1", "/public/assets/redSmall/GameMain138.png");
+    this.load.image("rsdeath2", "/public/assets/redSmall/GameMain139.png");
+    this.load.image("rsdeath3", "/public/assets/redSmall/GameMain140.png");
+    this.load.image("rsdeath4", "/public/assets/redSmall/GameMain141.png");
+    this.load.image("rsdeath5", "/public/assets/redSmall/GameMain142.png");
+    this.load.image("rsdeath6", "/public/assets/redSmall/GameMain143.png");
+    this.load.image("rsdeath7", "/public/assets/redSmall/GameMain144.png");
+    this.load.image("rsdeath8", "/public/assets/redSmall/GameMain145.png");
 
-    //pacman orange ghost preload images
-    this.load.image("og1", "/public/assets/ghosts/GameMain178.png");
-    this.load.image("og2", "/public/assets/ghosts/GameMain179.png");
-    this.load.image("og3", "/public/assets/ghosts/GameMain180.png");
-    this.load.image("og4", "/public/assets/ghosts/GameMain181.png");
-    this.load.image("og5", "/public/assets/ghosts/GameMain182.png");
-    this.load.image("og3", "/public/assets/ghosts/GameMain183.png");
-    this.load.image("og4", "/public/assets/ghosts/GameMain184.png");
-    this.load.image("og5", "/public/assets/ghosts/GameMain185.png");
-    this.load.image("og6", "/public/assets/ghosts/GameMain186.png");
+    //pacman red big preload images
+    this.load.image("rbclosed", "/public/assets/redBig/GameMain257.png");
+    this.load.image("rbleft1", "/public/assets/redBig/GameMain260.png");
+    this.load.image("rbleft2", "/public/assets/redBig/GameMain261.png");
+    this.load.image("rbright1", "/public/assets/redBig/GameMain262.png");
+    this.load.image("rbright2", "/public/assets/redBig/GameMain263.png");
+    this.load.image("rbup1", "/public/assets/redBig/GameMain264.png");
+    this.load.image("rbup2", "/public/assets/redBig/GameMain265.png");
+    this.load.image("rbdown1", "/public/assets/redBig/GameMain258.png");
+    this.load.image("rbdown2", "/public/assets/redBig/GameMain259.png");
+
+    //orange ghost preload images
+    this.load.image("og1", "/public/assets/ghosts/GameMain178.png"); //down
+    this.load.image("og2", "/public/assets/ghosts/GameMain179.png"); //down
+    this.load.image("og3", "/public/assets/ghosts/GameMain180.png"); //left
+    this.load.image("og4", "/public/assets/ghosts/GameMain181.png"); //left
+    this.load.image("og5", "/public/assets/ghosts/GameMain182.png"); //right
+    this.load.image("og6", "/public/assets/ghosts/GameMain183.png"); //right
+    this.load.image("og7", "/public/assets/ghosts/GameMain184.png"); //up
+    this.load.image("og8", "/public/assets/ghosts/GameMain185.png"); //up
+    this.load.image("og9", "/public/assets/ghosts/GameMain186.png"); //back
+
+    //purple ghost preload images
+    this.load.image("pg1", "/public/assets/ghosts/GameMain187.png"); //down
+    this.load.image("pg2", "/public/assets/ghosts/GameMain188.png"); //down
+    this.load.image("pg3", "/public/assets/ghosts/GameMain189.png"); //left
+    this.load.image("pg4", "/public/assets/ghosts/GameMain190.png"); //left
+    this.load.image("pg5", "/public/assets/ghosts/GameMain191.png"); //right
+    this.load.image("pg6", "/public/assets/ghosts/GameMain192.png"); //right
+    this.load.image("pg7", "/public/assets/ghosts/GameMain193.png"); //up
+    this.load.image("pg8", "/public/assets/ghosts/GameMain194.png"); //up
+    this.load.image("pg9", "/public/assets/ghosts/GameMain195.png"); //back
 
     //dots and food preload images
 
@@ -116,6 +200,17 @@ export default class Level1 extends Phaser.Scene {
     this.load.image("pizzaSlice", "/public/assets/food/GameMain011.png");
     this.load.image("cakeSlice", "/public/assets/food/GameMain003.png");
     this.load.image("egg", "/public/assets/food/GameMain014.png");
+
+    //load ghost flashing images
+    this.load.image("ghostFlash1", "/public/assets/ghosts/GameMain214.png"); //blue 1
+    this.load.image("ghostFlash2", "/public/assets/ghosts/GameMain215.png"); //blue 2
+    this.load.image("ghostFlash3", "/public/assets/ghosts/GameMain216.png"); //white 1
+    this.load.image("ghostFlash4", "/public/assets/ghosts/GameMain217.png"); //white 2
+    this.load.image("ghostFlash5", "/public/assets/ghosts/GameMain218.png"); //back
+    this.load.image("ghostEyesDown", "/public/assets/ghosts/GameMain266.png");
+    this.load.image("ghostEyesLeft", "/public/assets/ghosts/GameMain267.png");
+    this.load.image("ghostEyesRight", "/public/assets/ghosts/GameMain268.png");
+    this.load.image("ghostEyesDown", "/public/assets/ghosts/GameMain269.png");
   }
 
   create() {
@@ -129,6 +224,8 @@ export default class Level1 extends Phaser.Scene {
 
     this.socket = socket;
     this.otherPlayers = this.physics.add.group();
+    this.ghosts = this.physics.add.group();
+
     this.otherPlayersArray = [];
     this.socket.on("currentPlayers", players => {
       Object.keys(players).forEach(playerId => {
@@ -186,7 +283,7 @@ export default class Level1 extends Phaser.Scene {
     this.collisionLayer.setScale(0.7);
 
     //creates the food and dots layer
-    this.collisionLayerFoodDots = map.createStaticLayer(
+    this.collisionLayerFoodDots = map.createDynamicLayer(
       "foodDotsLayer",
       [
         smallDotTileset,
@@ -218,15 +315,26 @@ export default class Level1 extends Phaser.Scene {
 
     resizeCanvas();
     //sprite movement yellow pacman
-
+    // this.pg = new Ghost({
+    //   scene: scene,
+    //   key: "pg1",
+    //   x: scene.map.tileToWorldX(17),
+    //   y: scene.map.tileToWorldY(7.5),
+    //   game: this.game
+    // });
     this.og = new Ghost({
       scene: scene,
       key: "og1",
       x: scene.map.tileToWorldX(15),
-      y: scene.map.tileToWorldY(7.5)
+      y: scene.map.tileToWorldY(7.5),
+      game: this.game
     });
-    this.og.createAnimation();
-    this.og.anims.play("move");
+
+    // this.ghosts.add(this.pg);
+    this.ghosts.add(this.og);
+    this.og.setBounce(0, 1);
+
+    this.physics.add.collider(this.ghosts, this.collisionLayer);
 
     //processes DOM input events if true
     this.input.enabled = true;
@@ -235,6 +343,8 @@ export default class Level1 extends Phaser.Scene {
       scene.otherPlayers.getChildren().forEach(otherPlayer => {
         if (playerInfo.playerId === otherPlayer.playerId) {
           otherPlayer.setPosition(playerInfo.x, playerInfo.y);
+          otherPlayer.big = playerInfo.big;
+          otherPlayer.move(playerInfo.direction);
         }
       });
     });
@@ -247,25 +357,44 @@ export default class Level1 extends Phaser.Scene {
     // this.scoreBoard.setDepth(3);
   }
   update() {
+    this.og.trajectory();
+
     if (this.pac) {
+      if (this.pac.direction) {
+        this.pac.move(this.pac.direction);
+      }
+
+      if (this.pac.body.velocity.x > 0) {
+        this.pac.direction = "right";
+      }
+
+      if (this.pac.body.velocity.x < 0) {
+        this.pac.direction = "left";
+      }
+
+      if (this.pac.body.velocity.y > 0) {
+        this.pac.direction = "down";
+      }
+
+      if (this.pac.body.velocity.y < 0) {
+        this.pac.direction = "up";
+      }
+
       if (this.cursors.up.isDown) {
-        // this.pac.setVelocityY(-180);
-        // this.pac.anims.play("ysup", true);
         this.pac.move("up");
+        this.pac.direction = "up";
       }
       if (this.cursors.down.isDown) {
-        // this.pac.setVelocityY(180);
-        // this.pac.anims.play("ysdown", true);
         this.pac.move("down");
+        this.pac.direction = "down";
       }
       if (
         this.cursors.left.isDown &&
         this.pac.tilePositionY >= 0 &&
         this.pac.tilePositionY < 14
       ) {
-        // this.pac.setVelocityX(-180);
-        // this.pac.anims.play("ysleft", true);
         this.pac.move("left");
+        this.pac.direction = "left";
       }
       if (
         this.cursors.right.isDown &&
@@ -273,8 +402,7 @@ export default class Level1 extends Phaser.Scene {
         this.pac.tilePositionY < 14
       ) {
         this.pac.move("right");
-        // this.pac.setVelocityX(180);
-        // this.pac.anims.play("ysright", true);
+        this.pac.direction = "right";
       }
 
       let x = this.pac.x;
@@ -287,10 +415,12 @@ export default class Level1 extends Phaser.Scene {
           roomId: socket.roomId,
           socketId: socket.id,
           x: this.pac.x,
-          y: this.pac.y
+          y: this.pac.y,
+          direction: this.pac.direction,
+          big: this.pac.big
         });
-        this.pac.tilePositionX = this.map.worldToTileX(this.pac.x);
-        this.pac.tilePositionY = this.map.worldToTileY(this.pac.y);
+        this.pac.tilePositionX = this.map.worldToTileX(this.pac.x) + 1;
+        this.pac.tilePositionY = this.map.worldToTileY(this.pac.y) + 1;
 
         // this.directions[Phaser.UP] = this.map.getTileAt(this.pac.tilePositionX, this.pac.tilePositionY - 1);
         // this.directions[Phaser.DOWN] = this.map.getTileAt(this.pac.tilePositionX, this.pac.tilePositionY + 1);
@@ -304,15 +434,17 @@ export default class Level1 extends Phaser.Scene {
         if (this.pac.tilePositionY < 0 && this.pac.body.velocity.y < 0) {
           this.pac.y = this.map.tileToWorldY(15);
         }
+        if (this.og.tilePositionY >= 15 && this.og.body.velocity.y > 0) {
+          this.og.y = this.map.tileToWorldY(-1);
+        }
+
+        if (this.og.tilePositionY < 0 && this.og.body.velocity.y < 0) {
+          this.og.y = this.map.tileToWorldY(15);
+        }
       }
 
-      // const resized =
-      //   this.pac.oldPosition && this.pac.oldPosition.scale !== this.pac.scale;
-
-      // if (resized) {
-      //   this.pac.x = this.map.tileToWorldX(this.pac.oldPosition.tileX);
-      //   this.pac.y = this.map.tileToWorldY(this.pac.oldPosition.tileY);
-      // }
+      this.og.tilePositionX = this.map.worldToTileX(this.og.x);
+      this.og.tilePositionY = this.map.worldToTileY(this.og.y);
 
       this.pac.oldPosition = {
         x: this.pac.x,
@@ -335,11 +467,14 @@ function addPlayer(scene, player) {
     y: scene.map.tileToWorldY(y),
     key: `${scene[player.playerNumber].color}sclosed`
   });
-  scene.pac.setScale(scene.collisionLayer.scale * 0.99);
+  scene.pac.setScale(scene.collisionLayer.scale * 1.4); //.99
   scene.pac.tilePositionX = scene.map.worldToTileX(scene.pac.x);
   scene.pac.tilePositionY = scene.map.worldToTileY(scene.pac.y);
 
-  scene.physics.add.collider(scene.pac, scene.collisionLayer);
+  scene.physics.add.collider(scene.pac, scene.collisionLayer, (pac, layer) => {
+    pac.moving = false;
+    pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
+  });
   scene.physics.add.collider(scene.pac, scene.otherPlayers);
 
   // scene.directions[Phaser.UP] = scene.map.getTileAt(scene.pac.tilePositionX, scene.pac.tilePositionY - 1);
@@ -357,8 +492,8 @@ function addOtherPlayers(scene, player) {
     y: scene.map.tileToWorldY(y),
     key: `${scene[player.playerNumber].color}sclosed`
   });
-
-  otherPlayer.setScale(scene.collisionLayer.scale * 0.99);
+  otherPlayer.createAnimations();
+  otherPlayer.setScale(scene.collisionLayer.scale * 1.4);
   scene.physics.add.collider(otherPlayer, scene.collisionLayer);
 
   scene.otherPlayersArray.push(otherPlayer);

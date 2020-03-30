@@ -84,6 +84,7 @@ class App extends React.Component {
   }
 
   startGame() {
+    //fetching players in game collection
     games.doc(this.state.code).onSnapshot(doc => {
       const players = Object.keys(doc.data().players);
       this.setState({ buttonClickedName: "", players });
