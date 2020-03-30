@@ -484,6 +484,11 @@ export default class Level1 extends Phaser.Scene {
       // this.directions[Phaser.DOWN] = this.map.getTileAt(this.pac.tilePositionX, this.pac.tilePositionY + 1);
       // this.directions[Phaser.LEFT] = this.map.getTileAt(this.pac.tilePositionX - 1, this.pac.tilePositionY);
       // this.directions[Phaser.RIGHT] = this.map.getTileAt(this.pac.tilePositionX + 1, this.pac.tilePositionY);
+
+      this.physics.add.overlap(this.pac, this.dots, (pac, dots)=>{
+        console.log("Are you working?")
+        dots.destroy()})
+
     }
   }
 }
