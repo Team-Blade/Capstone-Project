@@ -4,6 +4,10 @@
 
 Pac-Man Battle Royale is a maze chase online video game inspired by the 17th arcade game in Pac-Man's series developed by Namco Bandai Games. 
 
+```
+Game Link : dot-eater.herokuapp.com
+```
+
 ## Game Rules
 
 1) Player-1 creates the game room and shares the game code with minimum 1 player and maximum 3 more players and initiates the game.
