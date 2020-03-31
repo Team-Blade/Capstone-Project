@@ -88,7 +88,7 @@ io.on("connection", socket => {
 
   socket.on("playerMovement", movementData => {
     const { x, y, socketId, roomId, direction, big } = movementData;
-    if(roomId){
+    if (roomId) {
       player = rooms[roomId].players[socketId];
       player.x = x;
       player.y = y;
@@ -100,8 +100,10 @@ io.on("connection", socket => {
 
   socket.on("ghostMovement", ghost => {
     socket.broadcast.emit("ghostMove", ghost);
-  })
-
+  });
+  socket.on("ateSmallDot", dots => {
+    socket.broadcast.emit("eatSomething", dots);
+  });
 });
 
 const PORT = process.env.PORT || 8080;

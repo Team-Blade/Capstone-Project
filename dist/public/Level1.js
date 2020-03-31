@@ -50,7 +50,7 @@ export default class Level1 extends Phaser.Scene {
     this.otherPlayers = this.physics.add.group();
     this.ghosts = this.physics.add.group();
 
-    this.socket.on("currentPlayers", players => {
+    this.socket.on("currentPlayers", (players, room) => {
       Object.keys(players).forEach(playerId => {
         if (playerId === scene.socket.id) {
           addPlayer(scene, players[playerId]);
@@ -105,6 +105,10 @@ export default class Level1 extends Phaser.Scene {
       this.og.move(ghost.direction);
       this.og.wrap();
     });
+    this.socket.on("smallDotGone", dots => {
+      console.log("inside socket.on(`smallDotGone`)", dots);
+      dots.destroy();
+    });
 
     // this.ghosts.add(this.pg);
     this.ghosts.add(this.og);
@@ -124,13 +128,6 @@ export default class Level1 extends Phaser.Scene {
         }
       });
     });
-    // this.scoreBoard = this.add.text(1100, 800, "PLAYERS", {
-    //   fontSize: "100px",
-    //   backgroundColor: "#ff0",
-    //   color: "#0e0"
-    // });
-    // this.scoreBoard.setOrigin(0.5, 0.5);
-    // this.scoreBoard.setDepth(3);
   }
   update() {
     if (this.pac && this.pac.big === true) {
@@ -167,6 +164,8 @@ export default class Level1 extends Phaser.Scene {
       // this.directions[Phaser.RIGHT] = this.map.getTileAt(this.pac.tilePositionX + 1, this.pac.tilePositionY);
 
       this.physics.add.overlap(this.pac, this.dots, (pac, dots) => {
+        console.log("OVERLAP", this.dots);
+        this.socket.emit("ateSmallDot", dots);
         dots.destroy();
       });
       this.physics.add.overlap(this.pac, this.food, (pac, food) => {
@@ -280,6 +279,13 @@ function sendGhostMovement(scene) {
     direction: scene.og.direction
   });
 }
+
+// function SendAteSmallDot(scene) {
+//   scene.socket.emit("ateSmallDot", {
+//     x: scene.dot.x,
+//     y: scene.dot.y
+//   });
+// }
 
 function resizeCanvas() {
   const canvas = document.querySelector("canvas");
