@@ -133,10 +133,8 @@ export default class Level1 extends Phaser.Scene {
     // this.scoreBoard.setDepth(3);
   }
   update() {
-    if (this.pac) console.log("in update", this.pac.big);
     checkWin(this);
     if (this.pac) {
-
       if (this.pac.playerNumber === 1) {
         this.og.trajectory();
         sendGhostMovement(this);
@@ -169,18 +167,14 @@ export default class Level1 extends Phaser.Scene {
         this.og.turnBlue();
         dots.destroy();
         pac.big = true;
-        console.log("before", this.pac.big);
         this.time.delayedCall(
           8000,
           () => {
-            console.log("testing");
             this.pac.big = false;
           },
           [],
           this
         );
-
-        console.log("after", pac.big);
       });
     }
   }
@@ -242,7 +236,6 @@ function addOtherPlayers(scene, player) {
   scene.physics.add.collider(otherPlayer, scene.collisionLayer);
   scene.physics.add.collider(otherPlayer, scene.pac, () => {
     if (otherPlayer.big === true) {
-      console.log("in other big");
       scene.pac.disableBody();
     }
   });

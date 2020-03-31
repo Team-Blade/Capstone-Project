@@ -4,7 +4,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     config.scene.add.existing(this);
     config.scene.physics.world.enable(this);
     this.setSize(42, 42, true);
-    this.setOrigin(0,0);
+    this.setOrigin(0, 0);
     this.scene = config.scene;
     this.key = config.key;
     this.playerNumber = config.playerNumber;
@@ -20,14 +20,13 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
   createAnimations() {
     if (this.big) {
-      console.log(this.body.offset, "in big");
       this.color = this.bigColor;
       this.vulnerable = false;
       this.setOffset(6, 6);
       this.canBeEaten = false;
     } else {
       this.color = this.key.slice(0, 2);
-      console.log(this.body.offset, "in small");
+
       this.setOffset(-5, -5);
       this.vulnerable = true;
       this.canBeEaten = true;
@@ -194,11 +193,31 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  checkSurroundingTiles(){
-    this.tileUp = this.scene.map.getTileAt(this.tilePositionX, this.tilePositionY - 1, false, 'mapBaseLayer');
-    this.tileDown = this.scene.map.getTileAt(this.tilePositionX, this.tilePositionY + 1, false, 'mapBaseLayer');
-    this.tileLeft = this.scene.map.getTileAt(this.tilePositionX - 1, this.tilePositionY, false, 'mapBaseLayer');
-    this.tileRight = this.scene.map.getTileAt(this.tilePositionX + 1, this.tilePositionY, false, 'mapBaseLayer');
+  checkSurroundingTiles() {
+    this.tileUp = this.scene.map.getTileAt(
+      this.tilePositionX,
+      this.tilePositionY - 1,
+      false,
+      "mapBaseLayer"
+    );
+    this.tileDown = this.scene.map.getTileAt(
+      this.tilePositionX,
+      this.tilePositionY + 1,
+      false,
+      "mapBaseLayer"
+    );
+    this.tileLeft = this.scene.map.getTileAt(
+      this.tilePositionX - 1,
+      this.tilePositionY,
+      false,
+      "mapBaseLayer"
+    );
+    this.tileRight = this.scene.map.getTileAt(
+      this.tilePositionX + 1,
+      this.tilePositionY,
+      false,
+      "mapBaseLayer"
+    );
   }
 
   death() {
