@@ -75,18 +75,14 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     // if(this.direction) {
     //   this.anims.play(this.direction, true);
     // }
-    const otherBigPlayers = this.scene.otherPlayers
-      .getChildren()
-      .some(otherPlayer => otherPlayer.big);
 
     if (this.scene.pac) {
       this.decideTarget();
-      console.log(otherBigPlayers);
       if (this.chaseTarget) {
         this.followPac();
       }
 
-      if (this.scene.pac.big === true || otherBigPlayers) {
+      if (this.vulnerable === true) {
         this.turnBlue();
       }
       //ghost wrap
@@ -206,7 +202,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   }
 
   turnBlue() {
-    console.log("in turn blue");
     this.createAnimation();
     this.anims.play("turnBlue", true);
     this.vulnerable = true;

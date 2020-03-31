@@ -99,7 +99,6 @@ export default class Level1 extends Phaser.Scene {
     this.socket.on("smallDotGone", dots => {
       let x = dots.x;
       let y = dots.y;
-      // console.log(dots, dots.x, dots.y);
       this.dots.getChildren().forEach(dot => {
         if (dot.x === x && dot.y === y) {
           dot.destroy();
@@ -187,14 +186,17 @@ export default class Level1 extends Phaser.Scene {
       });
       this.physics.add.overlap(this.pac, this.bigDots, (pac, dots) => {
         this.socket.emit("ateBigDot", { x: dots.x, y: dots.y }, socket.roomId);
-        this.og.turnBlue();
-
         dots.destroy();
         pac.big = true;
+        pac.vulnerable = false
+        this.og.vulnerable = true;
         this.time.delayedCall(
-          8000,
+          5000,
           () => {
             this.pac.big = false;
+            this.pac.vulnerable = true;
+            this.og.vulnerable = false;
+            // console.log(this.pac.big, this.pac.vulnerable, this.og.vulnerable);
           },
           [],
           this
@@ -227,14 +229,16 @@ function addPlayer(scene, player) {
     // pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
   });
   scene.physics.add.collider(scene.pac, scene.otherPlayers, (pac, other) => {
-    if (!scene.pac.big && other.big) scene.pac.disableBody(true, true);
+    if (!pac.big && other.big) {
+      pac.disableBody(true, true)
+      delete scene.playersAlive[pac.playerNumber]
+    }
   });
   scene.physics.add.overlap(scene.pac, scene.og, () => {
-    if (scene.pac.vulnerable === true) {
+    if (!scene.pac.big && scene.og.vulnerable === false) {
       scene.pac.disableBody(true, true);
       delete scene.playersAlive[scene.pac.playerNumber];
     } else {
-      // scene.og.vulnerable = true;
       scene.og.disableBody(true, true);
     }
   });
@@ -257,11 +261,14 @@ function addOtherPlayers(scene, player) {
   otherPlayer.tilePositionY = scene.map.worldToTileY(otherPlayer.y);
   scene.physics.add.collider(otherPlayer, scene.collisionLayer);
   scene.physics.add.collider(otherPlayer, scene.pac, () => {
-    if (!otherPlayer.big && scene.pac.big) otherPlayer.disableBody(true, true);
+    if (!otherPlayer.big && scene.pac.big) {
+      otherPlayer.disableBody(true, true);
+      delete scene.playersAlive[otherPlayer.playerNumber];
+    }
   });
 
   scene.physics.add.collider(otherPlayer, scene.og, () => {
-    if (otherPlayer.vulnerable === true) {
+    if (!otherPlayer.big && scene.og.vulnerable === false) {
       otherPlayer.disableBody(true, true);
       delete scene.playersAlive[otherPlayer.playerNumber];
     } else {
@@ -277,6 +284,7 @@ function addOtherPlayers(scene, player) {
 function checkWin(scene) {
   const playersAlive = Object.keys(scene.playersAlive);
   if (playersAlive.length === 1) {
+    console.log('WINNER: player', playersAlive[0]);
   }
 }
 
