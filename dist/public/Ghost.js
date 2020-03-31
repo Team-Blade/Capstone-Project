@@ -13,6 +13,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.tilePositionY = this.scene.map.worldToTileY(this.y);
     this.vulnerable = false;
     this.chaseTarget = "";
+    this.decideTarget = this.findPac();
   }
 
   createAnimation() {
@@ -81,8 +82,11 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       // console.log("ghostx", this.tilePositionX);
       // console.log("pacy", this.scene.pac.tilePositionY);
       // console.log("ghosty", this.tilePositionY);
-      
-      this.followPac(this.findPac());
+      this.decideTarget();
+
+      if (this.chaseTarget){
+        this.followPac();
+      }
       //ghost wrap
       this.wrap();
 
@@ -93,6 +97,21 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   }
 
   findPac() {
+    let count = 0
+
+    return function () {
+      if (count >= 5){
+        count = 0;
+        return this.lockOnTarget();
+      }
+      else{
+        count += 1;
+        console.log('hi', count);
+      }
+    }
+  }
+
+  lockOnTarget () {
     let shortestDistance;
     if (this.chaseTarget) {
       const targetX = this.chaseTarget.tilePositionX;
@@ -107,17 +126,19 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
         this.chaseTarget = this.scene.playersAlive[num];
       }
     }
+
+
     return this.chaseTarget
   }
 
-  followPac (target) {
-    if (this.tilePositionX === target.tilePositionX) {
+  followPac () {
+    if (this.tilePositionX === this.chaseTarget.tilePositionX) {
       this.setVelocityY(0);
     }
-    if (this.tilePositionY === target.tilePositionY) {
+    if (this.tilePositionY === this.chaseTarget.tilePositionY) {
       this.setVelocityX(0);
     }
-    if (this.tilePositionX > target.tilePositionX) {
+    if (this.tilePositionX > this.chaseTarget.tilePositionX) {
       if (this.tilePositionY > 14 || this.tilePositionY < 0) {
         this.setVelocityX(0);
       } else {
@@ -126,7 +147,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
         this.direction = "moveLeft";
       }
     }
-    if (this.tilePositionX < target.tilePositionX) {
+    if (this.tilePositionX < this.chaseTarget.tilePositionX) {
       if (this.tilePositionY > 14 || this.tilePositionY < 0) {
         this.setVelocityX(0);
       } else {
@@ -136,10 +157,10 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       }
       // this.setVelocityX(140);
     }
-    if (this.tilePositionY < target.tilePositionY) {
+    if (this.tilePositionY < this.chaseTarget.tilePositionY) {
       if (
-        this.tilePositionY + 1 + (15 - target.tilePositionY) <
-        target.tilePositionY - this.tilePositionY + 1
+        this.tilePositionY + 1 + (15 - this.chaseTarget.tilePositionY) <
+        this.chaseTarget.tilePositionY - this.tilePositionY + 1
       ) {
         this.setVelocityY(-140);
         this.move("up");
@@ -150,10 +171,10 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
         this.direction = "moveDown";
       }
     }
-    if (this.tilePositionY > target.tilePositionY + 1) {
+    if (this.tilePositionY > this.chaseTarget.tilePositionY + 1) {
       if (
-        15 - this.tilePositionY + target.tilePositionY + 1 <
-        this.tilePositionY - target.tilePositionY + 1
+        15 - this.tilePositionY + this.chaseTarget.tilePositionY + 1 <
+        this.tilePositionY - this.chaseTarget.tilePositionY + 1
       ) {
         this.setVelocityY(140);
         this.move("down");
