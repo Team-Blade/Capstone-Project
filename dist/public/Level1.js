@@ -314,11 +314,6 @@ export default class Level1 extends Phaser.Scene {
       }
     });
 
-    this.food.getChildren().forEach(foodItem => {
-      foodItem.setSize(30, 30);
-    });
-
-    console.log(this.food);
     // candy
 
     this.collisionLayerFoodDots.forEachTile(tile => {
@@ -350,7 +345,7 @@ export default class Level1 extends Phaser.Scene {
     });
 
     this.bigDots.getChildren().forEach(dot => {
-      dot.setSize(45, 45);
+      dot.setSize(40, 40);
     });
 
     //peach
@@ -390,6 +385,9 @@ export default class Level1 extends Phaser.Scene {
         const y = tile.getCenterY();
         const foodItem = this.food.create(x, y, "egg");
       }
+    });
+    this.food.getChildren().forEach(foodItem => {
+      foodItem.setSize(40, 40);
     });
 
     window.addEventListener("resize", resizeCanvas);
@@ -475,6 +473,10 @@ export default class Level1 extends Phaser.Scene {
         food.destroy();
       });
       this.physics.add.overlap(this.pac, this.bigDots, (pac, dots) => {
+        setTimeout(pac => {
+          // pac.big = false;
+          console.log("in settimeout", console.log(pac));
+        }, 8000);
         this.og.turnBlue();
         dots.destroy();
         pac.big = true;
