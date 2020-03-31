@@ -175,6 +175,7 @@ export default class Level1 extends Phaser.Scene {
       this.physics.add.overlap(this.pac, this.bigDots, (pac, dots) => {
         this.og.turnBlue();
         dots.destroy();
+        setTimeout(pac => (pac.big = false), 8000);
         console.log("before", pac.big);
         pac.big = true;
         console.log("after", pac.big);
