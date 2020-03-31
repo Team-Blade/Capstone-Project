@@ -74,7 +74,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   trajectory() {
     // if(this.direction) {
     //   this.anims.play(this.direction, true);
-    //
     // }
 
     if (this.scene.pac) {
@@ -82,6 +81,10 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
 
       if (this.chaseTarget) {
         this.followPac();
+      }
+
+      if (this.scene.pac.big === true){
+        this.turnBlue();
       }
       //ghost wrap
       this.wrap();
@@ -105,17 +108,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   }
 
   lockOnTarget() {
-    let shortestDistance;
-    if (this.chaseTarget) {
-      const targetX = this.chaseTarget.tilePositionX;
-      const targetY = this.chaseTarget.tilePositionY;
-      shortestDistance = Phaser.Math.Between(
-        targetX,
-        targetY,
-        this.tilePositionX,
-        this.tilePositionY
-      );
-    }
+    const distancesToGhost = {};
     for (let num in this.scene.playersAlive) {
       const distance = Phaser.Math.Between(
         this.scene.playersAlive[num].tilePositionX,
@@ -123,12 +116,15 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
         this.tilePositionX,
         this.tilePositionY
       );
-
-      if (distance < shortestDistance || !shortestDistance) {
-        shortestDistance = distance;
-        this.chaseTarget = this.scene.playersAlive[num];
-      }
+      distancesToGhost[distance] = num;
     }
+    const shortestDistance = Math.min(...Object.keys(distancesToGhost));
+    const closest = distancesToGhost[shortestDistance];
+    
+    if (this.scene.playersAlive[closest] && this.scene.playersAlive[closest]!==this.chaseTarget){
+      this.chaseTarget = this.scene.playersAlive[closest];
+    }
+
     return this.chaseTarget;
   }
 

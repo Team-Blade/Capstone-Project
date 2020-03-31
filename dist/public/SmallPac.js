@@ -14,6 +14,8 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.big = false;
     this.vulnerable = true;
     this.direction = "";
+    this.timer = 8000;
+    this.countDownStarted = false;
     // this.positiveVelocity = 180;
     // this.negativeVelocity = this.velocity * -1;
   }
