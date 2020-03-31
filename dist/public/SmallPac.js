@@ -4,7 +4,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     config.scene.add.existing(this);
     config.scene.physics.world.enable(this);
     this.setSize(42, 42, true);
-    this.setOrigin(-0.177, -0.177);
+    this.setOrigin(0,0);
     this.scene = config.scene;
     this.key = config.key;
     this.playerNumber = config.playerNumber;
@@ -136,8 +136,8 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   updateTilePosition() {
-    this.tilePositionX = this.scene.map.worldToTileX(this.x) + 1;
-    this.tilePositionY = this.scene.map.worldToTileY(this.y) + 1;
+    this.tilePositionX = this.scene.map.worldToTileX(this.x);
+    this.tilePositionY = this.scene.map.worldToTileY(this.y);
   }
 
   wrap() {
@@ -151,6 +151,14 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   trajectory() {
+    // this.checkSurroundingTiles();
+    // console.log(
+    //   'pac:', 'x=', this.tilePositionX, 'y=', this.tilePositionY,
+    //   'up:', this.tileUp,
+    //   'down', this.tileDown,
+    //   'left', this.tileLeft,
+    //   'right', this.tileRight
+    // )
     //animate pac-man consistently
     if (this.direction) {
       this.move(this.direction);
@@ -185,6 +193,14 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       this.anims.play(`${this.color}right`, true);
     }
   }
+
+  checkSurroundingTiles(){
+    this.tileUp = this.scene.map.getTileAt(this.tilePositionX, this.tilePositionY - 1, false, 'mapBaseLayer');
+    this.tileDown = this.scene.map.getTileAt(this.tilePositionX, this.tilePositionY + 1, false, 'mapBaseLayer');
+    this.tileLeft = this.scene.map.getTileAt(this.tilePositionX - 1, this.tilePositionY, false, 'mapBaseLayer');
+    this.tileRight = this.scene.map.getTileAt(this.tilePositionX + 1, this.tilePositionY, false, 'mapBaseLayer');
+  }
+
   death() {
     this.createAnimations();
     this.anims.play("death");

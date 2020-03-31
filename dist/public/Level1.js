@@ -136,10 +136,12 @@ export default class Level1 extends Phaser.Scene {
     if (this.pac) console.log("in update", this.pac.big);
     checkWin(this);
     if (this.pac) {
+
       if (this.pac.playerNumber === 1) {
         this.og.trajectory();
         sendGhostMovement(this);
       }
+
       this.pac.trajectory();
 
       this.otherPlayersArray.forEach(player => {
@@ -156,11 +158,6 @@ export default class Level1 extends Phaser.Scene {
         tileY: this.map.worldToTileY(this.pac.y),
         scale: this.pac.scale
       };
-
-      // this.directions[Phaser.UP] = this.map.getTileAt(this.pac.tilePositionX, this.pac.tilePositionY - 1);
-      // this.directions[Phaser.DOWN] = this.map.getTileAt(this.pac.tilePositionX, this.pac.tilePositionY + 1);
-      // this.directions[Phaser.LEFT] = this.map.getTileAt(this.pac.tilePositionX - 1, this.pac.tilePositionY);
-      // this.directions[Phaser.RIGHT] = this.map.getTileAt(this.pac.tilePositionX + 1, this.pac.tilePositionY);
 
       this.physics.add.overlap(this.pac, this.dots, (pac, dots) => {
         dots.destroy();
@@ -195,8 +192,8 @@ function addPlayer(scene, player) {
 
   scene.pac = new SmallPac({
     scene: scene,
-    x: scene.map.tileToWorldX(x),
-    y: scene.map.tileToWorldY(y),
+    x: scene.map.tileToWorldX(x) + 5.5,
+    y: scene.map.tileToWorldY(y) + 5.5,
     key: `${scene[playerNumber].color}sclosed`,
     playerNumber: playerNumber
   });
