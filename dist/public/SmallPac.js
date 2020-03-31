@@ -4,7 +4,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     config.scene.add.existing(this);
     config.scene.physics.world.enable(this);
     this.setSize(42, 42, true);
-    this.setOrigin(-0.2, -0.2);
+    this.setOrigin(-0.177, -0.177);
     this.scene = config.scene;
     this.key = config.key;
     this.playerNumber = config.playerNumber;
@@ -16,9 +16,6 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.direction = "";
     // this.positiveVelocity = 180;
     // this.negativeVelocity = this.velocity * -1;
-    if (this.big) {
-      this.setOffset(6, 6);
-    }
   }
   createAnimations() {
     if (this.big) {
@@ -127,12 +124,12 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  updateTilePosition (){
+  updateTilePosition() {
     this.tilePositionX = this.scene.map.worldToTileX(this.x) + 1;
     this.tilePositionY = this.scene.map.worldToTileY(this.y) + 1;
   }
 
-  wrap () {
+  wrap() {
     if (this.tilePositionY >= 15 && this.body.velocity.y > 0) {
       this.y = this.scene.map.tileToWorldY(-1);
     }
@@ -142,10 +139,10 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  trajectory () {
+  trajectory() {
     //animate pac-man consistently
     if (this.direction) {
-    this.move(this.direction);
+      this.move(this.direction);
     }
     //change the direction pac man is facing in animation
     this.changePacFace();
@@ -178,6 +175,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
   }
   death() {
+    this.createAnimations();
     this.anims.play("death");
   }
 }
