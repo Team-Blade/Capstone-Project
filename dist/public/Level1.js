@@ -105,9 +105,37 @@ export default class Level1 extends Phaser.Scene {
       this.og.move(ghost.direction);
       this.og.wrap();
     });
+
     this.socket.on("smallDotGone", dots => {
-      console.log("inside socket.on(`smallDotGone`)", dots);
-      dots.destroy();
+      let x = dots.x;
+      let y = dots.y;
+      // console.log(dots, dots.x, dots.y);
+      this.dots.getChildren().forEach(dot => {
+        if (dot.x === x && dot.y === y) {
+          dot.destroy();
+        }
+      });
+    });
+    this.socket.on("foodGone", food => {
+      let x = food.x;
+      let y = food.y;
+      this.food.getChildren().forEach(foodItem => {
+        if (foodItem.x === x && foodItem.y === y) {
+          foodItem.destroy();
+        }
+      });
+    });
+    this.socket.on("bigDotGone", dots => {
+      let x = dots.x;
+      let y = dots.y;
+      console.log("big dot gone", dots, x, y);
+      console.log(this.dots);
+      this.bigDots.getChildren().forEach(dot => {
+        if (dot.x === x && dot.y === y) {
+          console.log(dot.x, dot.y);
+          dot.destroy();
+        }
+      });
     });
 
     // this.ghosts.add(this.pg);
@@ -164,14 +192,15 @@ export default class Level1 extends Phaser.Scene {
       // this.directions[Phaser.RIGHT] = this.map.getTileAt(this.pac.tilePositionX + 1, this.pac.tilePositionY);
 
       this.physics.add.overlap(this.pac, this.dots, (pac, dots) => {
-        console.log("OVERLAP", this.dots);
-        this.socket.emit("ateSmallDot", dots);
+        this.socket.emit("ateSmallDot", { x: dots.x, y: dots.y });
         dots.destroy();
       });
       this.physics.add.overlap(this.pac, this.food, (pac, food) => {
+        this.socket.emit("ateFood", { x: food.x, y: food.y });
         food.destroy();
       });
       this.physics.add.overlap(this.pac, this.bigDots, (pac, dots) => {
+        this.socket.emit("ateBigDot", { x: dots.x, y: dots.y });
         this.og.turnBlue();
         dots.destroy();
         setTimeout(pac => (pac.big = false), 8000);

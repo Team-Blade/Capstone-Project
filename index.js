@@ -102,7 +102,14 @@ io.on("connection", socket => {
     socket.broadcast.emit("ghostMove", ghost);
   });
   socket.on("ateSmallDot", dots => {
-    socket.broadcast.emit("eatSomething", dots);
+    socket.broadcast.emit("smallDotGone", dots);
+  });
+  socket.on("ateFood", food => {
+    socket.broadcast.emit("foodGone", food);
+  });
+  socket.on("ateBigDot", dots => {
+    console.log("DOTS", dots);
+    socket.broadcast.emit("bigDotGone", dots);
   });
 });
 
