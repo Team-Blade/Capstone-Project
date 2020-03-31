@@ -20,12 +20,15 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
   createAnimations() {
     if (this.big) {
+      console.log(this.body.offset, "in big");
       this.color = this.bigColor;
       this.vulnerable = false;
       this.setOffset(6, 6);
       this.canBeEaten = false;
     } else {
       this.color = this.key.slice(0, 2);
+      console.log(this.body.offset, "in small");
+      this.setOffset(-5, -5);
       this.vulnerable = true;
       this.canBeEaten = true;
     }
