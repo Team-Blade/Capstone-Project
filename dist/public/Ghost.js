@@ -12,6 +12,8 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.tilePositionX = this.scene.map.worldToTileX(this.x);
     this.tilePositionY = this.scene.map.worldToTileY(this.y);
     this.vulnerable = false;
+    this.chaseTarget = "";
+    this.decideTarget = this.findPac();
   }
 
   createAnimation() {
@@ -80,8 +82,11 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       // console.log("ghostx", this.tilePositionX);
       // console.log("pacy", this.scene.pac.tilePositionY);
       // console.log("ghosty", this.tilePositionY);
-      
-      this.followPac();
+      this.decideTarget();
+
+      if (this.chaseTarget){
+        this.followPac();
+      }
       //ghost wrap
       this.wrap();
 
@@ -91,58 +96,90 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
+  findPac() {
+    let count = 0
+
+    return function () {
+      if (count >= 15){
+        count = 0;
+        return this.lockOnTarget();
+      }
+      else{
+        count += 1;
+      }
+    }
+  }
+
+  lockOnTarget () {
+    let shortestDistance;
+    if (this.chaseTarget) {
+      const targetX = this.chaseTarget.tilePositionX;
+      const targetY = this.chaseTarget.tilePositionY;
+      shortestDistance = Phaser.Math.Between(targetX, targetY, this.tilePositionX, this.tilePositionY);
+    }
+    for (let num in this.scene.playersAlive){
+      const distance = Phaser.Math.Between(this.scene.playersAlive[num].tilePositionX, this.scene.playersAlive[num].tilePositionY, this.tilePositionX, this.tilePositionY);
+      console.log('calculating distance', num, distance);
+      if (distance < shortestDistance || !shortestDistance) {
+        shortestDistance = distance;
+        this.chaseTarget = this.scene.playersAlive[num];
+      }
+    }
+    return this.chaseTarget
+  }
+
   followPac () {
-    if (this.tilePositionX === this.scene.pac.tilePositionX) {
+    if (this.tilePositionX === this.chaseTarget.tilePositionX) {
       this.setVelocityY(0);
     }
-    if (this.tilePositionY === this.scene.pac.tilePositionY) {
+    if (this.tilePositionY === this.chaseTarget.tilePositionY) {
       this.setVelocityX(0);
     }
-    if (this.tilePositionX > this.scene.pac.tilePositionX) {
+    if (this.tilePositionX > this.chaseTarget.tilePositionX) {
       if (this.tilePositionY > 14 || this.tilePositionY < 0) {
         this.setVelocityX(0);
       } else {
         this.setVelocityX(-140);
         this.move("left");
-        this.direction = "moveLeft";
+        this.direction = "left";
       }
     }
-    if (this.tilePositionX < this.scene.pac.tilePositionX) {
+    if (this.tilePositionX < this.chaseTarget.tilePositionX) {
       if (this.tilePositionY > 14 || this.tilePositionY < 0) {
         this.setVelocityX(0);
       } else {
         this.setVelocityX(140);
         this.move("right");
-        this.direction = "moveRight";
+        this.direction = "right";
       }
       // this.setVelocityX(140);
     }
-    if (this.tilePositionY < this.scene.pac.tilePositionY) {
+    if (this.tilePositionY < this.chaseTarget.tilePositionY) {
       if (
-        this.tilePositionY + 1 + (15 - this.scene.pac.tilePositionY) <
-        this.scene.pac.tilePositionY - this.tilePositionY + 1
+        this.tilePositionY + 1 + (15 - this.chaseTarget.tilePositionY) <
+        this.chaseTarget.tilePositionY - this.tilePositionY + 1
       ) {
         this.setVelocityY(-140);
         this.move("up");
-        this.direction = "moveUp";
+        this.direction = "up";
       } else {
         this.setVelocityY(140);
         this.move("down");
-        this.direction = "moveDown";
+        this.direction = "down";
       }
     }
-    if (this.tilePositionY > this.scene.pac.tilePositionY + 1) {
+    if (this.tilePositionY > this.chaseTarget.tilePositionY + 1) {
       if (
-        15 - this.tilePositionY + this.scene.pac.tilePositionY + 1 <
-        this.tilePositionY - this.scene.pac.tilePositionY + 1
+        15 - this.tilePositionY + this.chaseTarget.tilePositionY + 1 <
+        this.tilePositionY - this.chaseTarget.tilePositionY + 1
       ) {
         this.setVelocityY(140);
         this.move("down");
-        this.direction = "moveDown";
+        this.direction = "down";
       } else {
         this.setVelocityY(-140);
         this.move("up");
-        this.direction = "moveUp";
+        this.direction = "up";
       }
     }
   }
