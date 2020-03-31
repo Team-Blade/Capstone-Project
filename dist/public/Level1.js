@@ -37,10 +37,6 @@ export default class Level1 extends Phaser.Scene {
       "map",
       "/public/assets/newMapWithFoodDots4.json"
     );
-    // this.load.spritesheet("pacYellow", "/public/assets/royale.png", {
-    //   frameWidth: 32,
-    //   frameHeight: 28
-    // });
   }
 
   create() {
@@ -84,14 +80,7 @@ export default class Level1 extends Phaser.Scene {
     window.addEventListener("resize", resizeCanvas);
 
     resizeCanvas();
-    //sprite movement yellow pacman
-    // this.pg = new Ghost({
-    //   scene: scene,
-    //   key: "pg1",
-    //   x: scene.map.tileToWorldX(17),
-    //   y: scene.map.tileToWorldY(7.5),
-    //   game: this.game
-    // });
+
     this.og = new Ghost({
       scene: scene,
       key: "og1",
@@ -101,6 +90,7 @@ export default class Level1 extends Phaser.Scene {
     });
 
     this.socket.on("ghostMove", ghost => {
+      this.og.vulnerable = ghost.vulnerable;
       this.og.setPosition(ghost.x, ghost.y);
       this.og.move(ghost.direction);
       this.og.wrap();
@@ -128,11 +118,8 @@ export default class Level1 extends Phaser.Scene {
     this.socket.on("bigDotGone", dots => {
       let x = dots.x;
       let y = dots.y;
-      console.log("big dot gone", dots, x, y);
-      console.log(this.dots);
       this.bigDots.getChildren().forEach(dot => {
         if (dot.x === x && dot.y === y) {
-          console.log(dot.x, dot.y);
           dot.destroy();
         }
       });
@@ -153,6 +140,7 @@ export default class Level1 extends Phaser.Scene {
           otherPlayer.setPosition(playerInfo.x, playerInfo.y);
           otherPlayer.big = playerInfo.big;
           otherPlayer.move(playerInfo.direction);
+          otherPlayer.vulnerable = playerInfo.vulnerable;
         }
       });
     });
@@ -181,18 +169,26 @@ export default class Level1 extends Phaser.Scene {
         tileY: this.map.worldToTileY(this.pac.y),
         scale: this.pac.scale
       };
+      if (this.og.vulnerable) {
+        this.og.turnBlue();
+      }
 
       this.physics.add.overlap(this.pac, this.dots, (pac, dots) => {
-        this.socket.emit("ateSmallDot", { x: dots.x, y: dots.y });
+        this.socket.emit(
+          "ateSmallDot",
+          { x: dots.x, y: dots.y },
+          socket.roomId
+        );
         dots.destroy();
       });
       this.physics.add.overlap(this.pac, this.food, (pac, food) => {
-        this.socket.emit("ateFood", { x: food.x, y: food.y });
+        this.socket.emit("ateFood", { x: food.x, y: food.y }, socket.roomId);
         food.destroy();
       });
       this.physics.add.overlap(this.pac, this.bigDots, (pac, dots) => {
-        this.socket.emit("ateBigDot", { x: dots.x, y: dots.y });
+        this.socket.emit("ateBigDot", { x: dots.x, y: dots.y }, socket.roomId);
         this.og.turnBlue();
+
         dots.destroy();
         pac.big = true;
         this.time.delayedCall(
@@ -230,20 +226,18 @@ function addPlayer(scene, player) {
     //had to take it cause because it was throwing an error on player2, could not read frames
     // pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
   });
-  scene.physics.add.collider(scene.pac, scene.otherPlayers);
+  scene.physics.add.collider(scene.pac, scene.otherPlayers, (pac, other) => {
+    if (!scene.pac.big && other.big) scene.pac.disableBody(true, true);
+  });
   scene.physics.add.overlap(scene.pac, scene.og, () => {
     if (scene.pac.vulnerable === true) {
       scene.pac.disableBody(true, true);
       delete scene.playersAlive[scene.pac.playerNumber];
     } else {
-      scene.og.vulnerable = true;
+      // scene.og.vulnerable = true;
       scene.og.disableBody(true, true);
     }
   });
-  // scene.directions[Phaser.UP] = scene.map.getTileAt(scene.pac.tilePositionX, scene.pac.tilePositionY - 1);
-  // scene.directions[Phaser.DOWN] = scene.map.getTileAt(scene.pac.tilePositionX, scene.pac.tilePositionY + 1);
-  // scene.directions[Phaser.LEFT] = scene.map.getTileAt(scene.pac.tilePositionX - 1, scene.pac.tilePositionY);
-  // scene.directions[Phaser.RIGHT] = scene.map.getTileAt(scene.pac.tilePositionX + 1, scene.pac.tilePositionY);
 }
 function addOtherPlayers(scene, player) {
   const x = scene[player.playerNumber].startPositions.x;
@@ -263,13 +257,16 @@ function addOtherPlayers(scene, player) {
   otherPlayer.tilePositionY = scene.map.worldToTileY(otherPlayer.y);
   scene.physics.add.collider(otherPlayer, scene.collisionLayer);
   scene.physics.add.collider(otherPlayer, scene.pac, () => {
-    if (otherPlayer.big === true) {
-      scene.pac.disableBody();
-    }
+    if (!otherPlayer.big && scene.pac.big) otherPlayer.disableBody(true, true);
   });
+
   scene.physics.add.collider(otherPlayer, scene.og, () => {
-    otherPlayer.disableBody(true, true);
-    delete scene.playersAlive[otherPlayer.playerNumber];
+    if (otherPlayer.vulnerable === true) {
+      otherPlayer.disableBody(true, true);
+      delete scene.playersAlive[otherPlayer.playerNumber];
+    } else {
+      scene.og.disableBody(true, true);
+    }
   });
   scene.otherPlayersArray.push(otherPlayer);
   scene.playersAlive[playerNumber] = otherPlayer;
@@ -296,25 +293,24 @@ function sendMovementInfo(scene) {
       x: scene.pac.x,
       y: scene.pac.y,
       direction: scene.pac.direction,
-      big: scene.pac.big
+      big: scene.pac.big,
+      vulnerable: scene.pac.vulnerable
     });
   }
 }
 
 function sendGhostMovement(scene) {
-  scene.socket.emit("ghostMovement", {
-    x: scene.og.x,
-    y: scene.og.y,
-    direction: scene.og.direction
-  });
+  scene.socket.emit(
+    "ghostMovement",
+    {
+      x: scene.og.x,
+      y: scene.og.y,
+      direction: scene.og.direction,
+      vulnerable: scene.og.vulnerable
+    },
+    socket.roomId
+  );
 }
-
-// function SendAteSmallDot(scene) {
-//   scene.socket.emit("ateSmallDot", {
-//     x: scene.dot.x,
-//     y: scene.dot.y
-//   });
-// }
 
 function resizeCanvas() {
   const canvas = document.querySelector("canvas");

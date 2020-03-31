@@ -87,29 +87,29 @@ io.on("connection", socket => {
   });
 
   socket.on("playerMovement", movementData => {
-    const { x, y, socketId, roomId, direction, big } = movementData;
+    const { x, y, socketId, roomId, direction, big, vulnerable } = movementData;
     if (roomId) {
       player = rooms[roomId].players[socketId];
       player.x = x;
       player.y = y;
       player.direction = direction;
       player.big = big;
+      player.vulnerable = vulnerable;
       socket.broadcast.emit("playerMoved", player);
     }
   });
 
-  socket.on("ghostMovement", ghost => {
-    socket.broadcast.emit("ghostMove", ghost);
+  socket.on("ghostMovement", (ghost, roomId) => {
+    socket.in(roomId).emit("ghostMove", ghost);
   });
-  socket.on("ateSmallDot", dots => {
-    socket.broadcast.emit("smallDotGone", dots);
+  socket.on("ateSmallDot", (dots, roomId) => {
+    socket.in(roomId).emit("smallDotGone", dots);
   });
-  socket.on("ateFood", food => {
-    socket.broadcast.emit("foodGone", food);
+  socket.on("ateFood", (food, roomId) => {
+    socket.in(roomId).emit("foodGone", food);
   });
-  socket.on("ateBigDot", dots => {
-    console.log("DOTS", dots);
-    socket.broadcast.emit("bigDotGone", dots);
+  socket.on("ateBigDot", (bigDots, roomId) => {
+    socket.in(roomId).emit("bigDotGone", bigDots);
   });
 });
 
