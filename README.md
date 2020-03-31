@@ -1,10 +1,12 @@
 ![pm3](https://user-images.githubusercontent.com/34702996/77866706-1e2d2e80-7202-11ea-9044-f3af32ea78cc.jpg)
-**DISCLAIMER**
-All graphics are the property of Namco Bandai Games.
+
 
 # PAC-MAN BATTLE ROYALE
 
 Pac-Man Battle Royale is a maze chase online video game inspired by the 17th arcade game in Pac-Man's series developed by Namco Bandai Games.
+
+**DISCLAIMER**
+All graphics are the property of Namco Bandai Games.
 
 ```
 Game Link : dot-eater.herokuapp.com
