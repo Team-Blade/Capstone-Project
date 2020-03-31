@@ -4,7 +4,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     config.scene.add.existing(this);
     config.scene.physics.world.enable(this);
     this.setSize(42, 42, true);
-    this.setOrigin(0,0);
+    this.setOrigin(0, 0);
     this.scene = config.scene;
     this.key = config.key;
     this.playerNumber = config.playerNumber;
@@ -14,14 +14,22 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.big = false;
     this.vulnerable = true;
     this.direction = "";
-    this.timer = 8000;
-    this.countDownStarted = false;
+    this.canBeEaten = true;
     // this.positiveVelocity = 180;
     // this.negativeVelocity = this.velocity * -1;
   }
   createAnimations() {
     if (this.big) {
       this.color = this.bigColor;
+      this.vulnerable = false;
+      this.setOffset(6, 6);
+      this.canBeEaten = false;
+    } else {
+      this.color = this.key.slice(0, 2);
+
+      this.setOffset(-5, -5);
+      this.vulnerable = true;
+      this.canBeEaten = true;
     }
     this.scene.anims.create({
       key: `${this.color}left`,
@@ -185,11 +193,31 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  checkSurroundingTiles(){
-    this.tileUp = this.scene.map.getTileAt(this.tilePositionX, this.tilePositionY - 1, false, 'mapBaseLayer');
-    this.tileDown = this.scene.map.getTileAt(this.tilePositionX, this.tilePositionY + 1, false, 'mapBaseLayer');
-    this.tileLeft = this.scene.map.getTileAt(this.tilePositionX - 1, this.tilePositionY, false, 'mapBaseLayer');
-    this.tileRight = this.scene.map.getTileAt(this.tilePositionX + 1, this.tilePositionY, false, 'mapBaseLayer');
+  checkSurroundingTiles() {
+    this.tileUp = this.scene.map.getTileAt(
+      this.tilePositionX,
+      this.tilePositionY - 1,
+      false,
+      "mapBaseLayer"
+    );
+    this.tileDown = this.scene.map.getTileAt(
+      this.tilePositionX,
+      this.tilePositionY + 1,
+      false,
+      "mapBaseLayer"
+    );
+    this.tileLeft = this.scene.map.getTileAt(
+      this.tilePositionX - 1,
+      this.tilePositionY,
+      false,
+      "mapBaseLayer"
+    );
+    this.tileRight = this.scene.map.getTileAt(
+      this.tilePositionX + 1,
+      this.tilePositionY,
+      false,
+      "mapBaseLayer"
+    );
   }
 
   death() {
