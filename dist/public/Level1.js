@@ -133,14 +133,8 @@ export default class Level1 extends Phaser.Scene {
     // this.scoreBoard.setDepth(3);
   }
   update() {
-    if (this.pac && this.pac.big === true) {
-      this.pac.vulnerable = false;
-      this.pac.setOffset(6, 6);
-    }
     checkWin(this);
-
     if (this.pac) {
-
       if (this.pac.playerNumber === 1) {
         this.og.trajectory();
         sendGhostMovement(this);
@@ -172,11 +166,15 @@ export default class Level1 extends Phaser.Scene {
       this.physics.add.overlap(this.pac, this.bigDots, (pac, dots) => {
         this.og.turnBlue();
         dots.destroy();
-        setTimeout(pac => (pac.big = false), 8000);
-        console.log("before", pac.big);
         pac.big = true;
-        console.log('pac is big')
-        console.log("after", pac.big);
+        this.time.delayedCall(
+          8000,
+          () => {
+            this.pac.big = false;
+          },
+          [],
+          this
+        );
       });
     }
   }
@@ -236,7 +234,11 @@ function addOtherPlayers(scene, player) {
   otherPlayer.tilePositionX = scene.map.worldToTileX(otherPlayer.x);
   otherPlayer.tilePositionY = scene.map.worldToTileY(otherPlayer.y);
   scene.physics.add.collider(otherPlayer, scene.collisionLayer);
-  scene.physics.add.collider(otherPlayer, scene.pac);
+  scene.physics.add.collider(otherPlayer, scene.pac, () => {
+    if (otherPlayer.big === true) {
+      scene.pac.disableBody();
+    }
+  });
   scene.physics.add.collider(otherPlayer, scene.og, () => {
     otherPlayer.disableBody(true, true);
     delete scene.playersAlive[otherPlayer.playerNumber];
