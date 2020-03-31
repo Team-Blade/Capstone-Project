@@ -88,13 +88,20 @@ io.on("connection", socket => {
 
   socket.on("playerMovement", movementData => {
     const { x, y, socketId, roomId, direction, big } = movementData;
-    player = rooms[roomId].players[socketId];
-    player.x = x;
-    player.y = y;
-    player.direction = direction;
-    player.big = big;
-    socket.broadcast.emit("playerMoved", player);
+    if(roomId){
+      player = rooms[roomId].players[socketId];
+      player.x = x;
+      player.y = y;
+      player.direction = direction;
+      player.big = big;
+      socket.broadcast.emit("playerMoved", player);
+    }
   });
+
+  socket.on("ghostMovement", ghost => {
+    socket.broadcast.emit("ghostMove", ghost);
+  })
+
 });
 
 const PORT = process.env.PORT || 8080;

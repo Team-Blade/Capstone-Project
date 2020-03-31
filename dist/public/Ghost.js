@@ -100,13 +100,12 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     let count = 0
 
     return function () {
-      if (count >= 5){
+      if (count >= 15){
         count = 0;
         return this.lockOnTarget();
       }
       else{
         count += 1;
-        console.log('hi', count);
       }
     }
   }
@@ -126,8 +125,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
         this.chaseTarget = this.scene.playersAlive[num];
       }
     }
-
-
     return this.chaseTarget
   }
 
@@ -144,7 +141,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       } else {
         this.setVelocityX(-140);
         this.move("left");
-        this.direction = "moveLeft";
+        this.direction = "left";
       }
     }
     if (this.tilePositionX < this.chaseTarget.tilePositionX) {
@@ -153,7 +150,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       } else {
         this.setVelocityX(140);
         this.move("right");
-        this.direction = "moveRight";
+        this.direction = "right";
       }
       // this.setVelocityX(140);
     }
@@ -164,11 +161,11 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       ) {
         this.setVelocityY(-140);
         this.move("up");
-        this.direction = "moveUp";
+        this.direction = "up";
       } else {
         this.setVelocityY(140);
         this.move("down");
-        this.direction = "moveDown";
+        this.direction = "down";
       }
     }
     if (this.tilePositionY > this.chaseTarget.tilePositionY + 1) {
@@ -178,11 +175,11 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       ) {
         this.setVelocityY(140);
         this.move("down");
-        this.direction = "moveDown";
+        this.direction = "down";
       } else {
         this.setVelocityY(-140);
         this.move("up");
-        this.direction = "moveUp";
+        this.direction = "up";
       }
     }
   }
