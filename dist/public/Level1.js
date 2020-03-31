@@ -2,7 +2,7 @@ import Ghost from "./Ghost.js";
 import SmallPac from "./SmallPac.js";
 import { socket } from "../../client/App";
 import loadImages from "./imagesToLoad";
-import setUpLayers from "./setUpLayers"
+import setUpLayers from "./setUpLayers";
 
 export default class Level1 extends Phaser.Scene {
   constructor() {
@@ -30,7 +30,6 @@ export default class Level1 extends Phaser.Scene {
     this.playersAlive = {};
   }
   preload() {
-    console.log('working')
     //loads image for tileset
     loadImages(this);
     //loads image of map
@@ -67,7 +66,6 @@ export default class Level1 extends Phaser.Scene {
       scene.otherPlayers.getChildren().forEach(otherPlayer => {
         if (playerId === otherPlayer.playerId) {
           // otherPlayer.destroy();
-          console.log(playerId, 'disconnected not destroyed');
         }
       });
     });
@@ -102,12 +100,11 @@ export default class Level1 extends Phaser.Scene {
       game: this.game
     });
 
-    this.socket.on("ghostMove", (ghost)=>{
-      console.log('i hear the ghost is moving', ghost);
+    this.socket.on("ghostMove", ghost => {
       this.og.setPosition(ghost.x, ghost.y);
       this.og.move(ghost.direction);
       this.og.wrap();
-    })
+    });
 
     // this.ghosts.add(this.pg);
     this.ghosts.add(this.og);
@@ -143,15 +140,14 @@ export default class Level1 extends Phaser.Scene {
     checkWin(this);
 
     if (this.pac) {
-      if(this.pac.playerNumber === 1){
-        console.log('follow ghost of player 1');
+      if (this.pac.playerNumber === 1) {
         this.og.trajectory();
         sendGhostMovement(this);
       }
       this.pac.trajectory();
 
       this.otherPlayersArray.forEach(player => {
-        player.wrap()
+        player.wrap();
         player.updateTilePosition();
       });
 
@@ -171,20 +167,17 @@ export default class Level1 extends Phaser.Scene {
       // this.directions[Phaser.RIGHT] = this.map.getTileAt(this.pac.tilePositionX + 1, this.pac.tilePositionY);
 
       this.physics.add.overlap(this.pac, this.dots, (pac, dots) => {
-        console.log("Are you working?");
         dots.destroy();
       });
       this.physics.add.overlap(this.pac, this.food, (pac, food) => {
         food.destroy();
       });
       this.physics.add.overlap(this.pac, this.bigDots, (pac, dots) => {
-        setTimeout(pac => {
-          // pac.big = false;
-          console.log("in settimeout", console.log(pac));
-        }, 8000);
         this.og.turnBlue();
         dots.destroy();
+        console.log("before", pac.big);
         pac.big = true;
+        console.log("after", pac.big);
       });
     }
   }
@@ -214,7 +207,6 @@ function addPlayer(scene, player) {
   });
   scene.physics.add.collider(scene.pac, scene.otherPlayers);
   scene.physics.add.overlap(scene.pac, scene.og, () => {
-    console.log("cant touch this");
     if (scene.pac.vulnerable === true) {
       scene.pac.disableBody(true, true);
       delete scene.playersAlive[scene.pac.playerNumber];
@@ -247,7 +239,6 @@ function addOtherPlayers(scene, player) {
   scene.physics.add.collider(otherPlayer, scene.collisionLayer);
   scene.physics.add.collider(otherPlayer, scene.pac);
   scene.physics.add.collider(otherPlayer, scene.og, () => {
-    console.log("cant touch this");
     otherPlayer.disableBody(true, true);
     delete scene.playersAlive[otherPlayer.playerNumber];
   });
@@ -260,7 +251,6 @@ function addOtherPlayers(scene, player) {
 function checkWin(scene) {
   const playersAlive = Object.keys(scene.playersAlive);
   if (playersAlive.length === 1) {
-    console.log("WINNER:", `player${playersAlive[0]}`);
   }
 }
 
@@ -287,7 +277,7 @@ function sendGhostMovement(scene) {
     x: scene.og.x,
     y: scene.og.y,
     direction: scene.og.direction
-  })
+  });
 }
 
 function resizeCanvas() {

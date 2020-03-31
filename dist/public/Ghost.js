@@ -74,17 +74,13 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   trajectory() {
     // if(this.direction) {
     //   this.anims.play(this.direction, true);
-    //   console.log('playing', this.direction)
+    //
     // }
 
     if (this.scene.pac) {
-      // console.log("pacx", this.scene.pac.tilePositionX);
-      // console.log("ghostx", this.tilePositionX);
-      // console.log("pacy", this.scene.pac.tilePositionY);
-      // console.log("ghosty", this.tilePositionY);
       this.decideTarget();
 
-      if (this.chaseTarget){
+      if (this.chaseTarget) {
         this.followPac();
       }
       //ghost wrap
@@ -96,38 +92,47 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   }
 
   findPac() {
-    let count = 0
+    let count = 0;
 
-    return function () {
-      if (count >= 15){
+    return function() {
+      if (count >= 15) {
         count = 0;
         return this.lockOnTarget();
-      }
-      else{
+      } else {
         count += 1;
       }
-    }
+    };
   }
 
-  lockOnTarget () {
+  lockOnTarget() {
     let shortestDistance;
     if (this.chaseTarget) {
       const targetX = this.chaseTarget.tilePositionX;
       const targetY = this.chaseTarget.tilePositionY;
-      shortestDistance = Phaser.Math.Between(targetX, targetY, this.tilePositionX, this.tilePositionY);
+      shortestDistance = Phaser.Math.Between(
+        targetX,
+        targetY,
+        this.tilePositionX,
+        this.tilePositionY
+      );
     }
-    for (let num in this.scene.playersAlive){
-      const distance = Phaser.Math.Between(this.scene.playersAlive[num].tilePositionX, this.scene.playersAlive[num].tilePositionY, this.tilePositionX, this.tilePositionY);
-      console.log('calculating distance', num, distance);
+    for (let num in this.scene.playersAlive) {
+      const distance = Phaser.Math.Between(
+        this.scene.playersAlive[num].tilePositionX,
+        this.scene.playersAlive[num].tilePositionY,
+        this.tilePositionX,
+        this.tilePositionY
+      );
+
       if (distance < shortestDistance || !shortestDistance) {
         shortestDistance = distance;
         this.chaseTarget = this.scene.playersAlive[num];
       }
     }
-    return this.chaseTarget
+    return this.chaseTarget;
   }
 
-  followPac () {
+  followPac() {
     if (this.tilePositionX === this.chaseTarget.tilePositionX) {
       this.setVelocityY(0);
     }
