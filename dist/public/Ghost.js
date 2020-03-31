@@ -12,12 +12,8 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.tilePositionX = this.scene.map.worldToTileX(this.x);
     this.tilePositionY = this.scene.map.worldToTileY(this.y);
     this.vulnerable = false;
-<<<<<<< HEAD
-    this.scene.physics.add.collider(this, this.scene.pac);
-=======
     this.chaseTarget = "";
     this.decideTarget = this.findPac();
->>>>>>> master
   }
 
   createAnimation() {
