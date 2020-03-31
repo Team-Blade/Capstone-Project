@@ -62,7 +62,7 @@ function setUpLayers (scene) {
     });
 
     scene.dots.getChildren().forEach(dot => {
-      dot.setSize(35, 35);
+      dot.setSize(30, 30);
     });
 
     // candy
@@ -76,7 +76,7 @@ function setUpLayers (scene) {
     });
 
     scene.dots.getChildren().forEach(dot => {
-      dot.setSize(45, 45);
+      dot.setSize(30, 30);
     });
 
     // burger
@@ -90,7 +90,7 @@ function setUpLayers (scene) {
     });
 
     scene.dots.getChildren().forEach(dot => {
-      dot.setSize(45, 45);
+      dot.setSize(30, 30);
     });
 
     // papaya
@@ -104,7 +104,7 @@ function setUpLayers (scene) {
     });
 
     scene.dots.getChildren().forEach(dot => {
-      dot.setSize(45, 45);
+      dot.setSize(30, 30);
     });
 
     //peach
@@ -117,7 +117,7 @@ function setUpLayers (scene) {
     });
 
     scene.dots.getChildren().forEach(dot => {
-      dot.setSize(45, 45);
+      dot.setSize(30, 30);
     });
 
     //pizza slice
@@ -131,7 +131,7 @@ function setUpLayers (scene) {
     });
 
     scene.dots.getChildren().forEach(dot => {
-      dot.setSize(45, 45);
+      dot.setSize(30, 30);
     });
 
     //cake Slice
@@ -145,7 +145,7 @@ function setUpLayers (scene) {
     });
 
     scene.dots.getChildren().forEach(dot => {
-      dot.setSize(45, 45);
+      dot.setSize(30, 30);
     });
 
     //egg
@@ -159,7 +159,7 @@ function setUpLayers (scene) {
     });
 
     scene.dots.getChildren().forEach(dot => {
-      dot.setSize(45, 45);
+      dot.setSize(30, 30);
     });
 
 
