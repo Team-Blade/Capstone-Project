@@ -59,7 +59,7 @@ class App extends React.Component {
         players: allPlayers
       });
     });
-
+    //listening for new players
     games.doc(code).onSnapshot(doc => {
       const players = doc.data().players;
       this.setState({ players });
@@ -72,10 +72,6 @@ class App extends React.Component {
     let name = this.state.name;
     let code = this.state.code;
 
-    // let players = {};
-    // players[name] = { score: 0 };
-    // games.doc(code).set({ players }, { merge: true });
-
     socket.emit("joinRoom", code, name);
     socket.on("gameAlreadyStarted", roomId => {
       alert("Sorry, the game for this code has already started...");
@@ -84,6 +80,7 @@ class App extends React.Component {
     socket.on("newPlayers", allPlayers => {
       games.doc(code).set({ players: allPlayers }, { merge: true });
     });
+    //listening for new players
     games.doc(code).onSnapshot(doc => {
       const players = doc.data().players;
       this.setState({ players });
