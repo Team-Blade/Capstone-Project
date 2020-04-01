@@ -11,8 +11,15 @@ body {
 nav {
   padding: 75px;
   padding-left: 0px;
+  padding-bottom: 0px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+nav > div {
+  align-self: flex-end;
 }
 
 main {
@@ -118,7 +125,8 @@ button:hover {
 }
 
 div > p {
-  font-size: small;
+  font-size: x-small;
+  color: gold;
 }
 
 h2 {
@@ -135,10 +143,6 @@ h2 {
   justify-content: space-around;
   background-color: black;
   /* border: gold solid 2px; */
-}
-
-#players {
-  display: flex;
 }
 
 h3 {

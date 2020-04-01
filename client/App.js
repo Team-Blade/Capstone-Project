@@ -75,6 +75,7 @@ class App extends React.Component {
     socket.emit("joinRoom", code, name);
     socket.on("gameAlreadyStarted", roomId => {
       alert("Sorry, the game for this code has already started...");
+      window.location.reload(false);
     });
 
     socket.on("newPlayers", allPlayers => {
@@ -101,14 +102,21 @@ class App extends React.Component {
           <nav>
             <ScoreBoard players={this.state.players}></ScoreBoard>
             {this.state.buttonClickedName === "create" ? (
-              <button
-                className="start-button"
-                type="submit"
-                onClick={this.startGame}
-                open={false}
-              >
-                START!
-              </button>
+              <div id="game-start">
+                <p>
+                  Wait for all
+                  <br />
+                  players...
+                </p>
+                <button
+                  className="start-button"
+                  type="submit"
+                  onClick={this.startGame}
+                  open={false}
+                >
+                  START!
+                </button>
+              </div>
             ) : null}
           </nav>
           <div>
