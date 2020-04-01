@@ -83,6 +83,9 @@ class App extends React.Component {
     socket.emit("joinRoom", code);
     // store the room id in the socket for future use
     socket.roomId = code;
+    socket.on("gameAlreadyStarted", roomId => {
+      alert("Sorry, the game for this code has already started...");
+    });
   }
 
   startGame() {
@@ -100,6 +103,16 @@ class App extends React.Component {
         <main id="main">
           <nav>
             <ScoreBoard players={this.state.players}></ScoreBoard>
+            {this.state.buttonClickedName === "create" ? (
+              <button
+                className="start-button"
+                type="submit"
+                onClick={this.startGame}
+                open={false}
+              >
+                START!
+              </button>
+            ) : null}
           </nav>
           <div>
             {!this.state.beginGameButtonClicked ? (
@@ -138,6 +151,7 @@ class App extends React.Component {
                       type="text"
                       name="name"
                       placeholder="Player Name"
+                      maxLength="8"
                       onChange={this.handleNameChange}
                       required={(true, "Name is required")}
                     />
@@ -176,21 +190,23 @@ class App extends React.Component {
           {/* Popup for game creator */}
           {this.state.buttonClickedName === "create" ? (
             <Popup open closeOnDocumentClick={false}>
-              <div className="init-game-create">
-                <div>
-                  <p>Game code:</p>
-                  <br />
-                  <h2>{this.state.code}</h2>
+              {close => (
+                <div className="init-game-create">
+                  <div>
+                    <p>Game code:</p>
+                    <br />
+                    <h2>{this.state.code}</h2>
+                  </div>
+                  <button
+                    onClick={() => {
+                      console.log("Enter Game Room");
+                      close();
+                    }}
+                  >
+                    Enter Game Room
+                  </button>
                 </div>
-                <button
-                  className="start-button"
-                  type="submit"
-                  onClick={this.startGame}
-                  open={false}
-                >
-                  START!
-                </button>
-              </div>
+              )}
             </Popup>
           ) : null}
 
@@ -201,6 +217,7 @@ class App extends React.Component {
                 <input
                   type="text"
                   placeholder="Game Code Here"
+                  maxLength="4"
                   onChange={() => this.handleCodeChange(event)}
                 />
                 <button

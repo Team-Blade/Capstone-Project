@@ -13,32 +13,39 @@ app.get("/", function(req, res) {
 });
 
 const joinRoom = (socket, room) => {
-  //if it's not at capacity (Max 4)
-  if (room.numberOfPlayers < 4) {
-    //store the socket in a socket array
-    room.sockets.push(socket);
-    //increase # of players in room by 1
-    room.numberOfPlayers += 1;
-    socket.join(room.id, () => {
-      room.players[socket.id] = {
-        rotation: 0,
-        x: 0,
-        y: 0,
-        playerId: socket.id,
-        playerNumber: room.numberOfPlayers
-      };
+  //if the room has not started yet
+  console.log("has the room started when joining room?", room.started);
+  if (!room.started) {
+    //if it's not at capacity (Max 4)
+    if (room.numberOfPlayers < 4) {
+      //store the socket in a socket array
+      room.sockets.push(socket);
+      //increase # of players in room by 1
+      room.numberOfPlayers += 1;
+      socket.join(room.id, () => {
+        room.players[socket.id] = {
+          rotation: 0,
+          x: 0,
+          y: 0,
+          playerId: socket.id,
+          playerNumber: room.numberOfPlayers
+        };
+        console.log(
+          socket.id,
+          `Player${room.players[socket.id].playerNumber}`,
+          "Joined",
+          room.id
+        );
+      });
+    } else {
       console.log(
-        socket.id,
-        `Player${room.players[socket.id].playerNumber}`,
-        "Joined",
-        room.id
+        "This room is at capacity. No. of players right now:",
+        room.numberOfPlayers
       );
-    });
+    }
   } else {
-    console.log(
-      "This room is at capacity. No. of players right now:",
-      room.numberOfPlayers
-    );
+    console.log("Room", room.id, "has already started");
+    socket.emit("gameAlreadyStarted", room.id);
   }
 };
 
@@ -48,6 +55,7 @@ class Room {
     this.numberOfPlayers = 0;
     this.sockets = [];
     this.players = {};
+    this.started = false;
   }
 }
 
@@ -72,6 +80,7 @@ io.on("connection", socket => {
   });
 
   socket.on("startGame", roomId => {
+    rooms[roomId].started = true;
     io.in(roomId).emit("currentPlayers", rooms[roomId].players);
     // socket.in(roomId).emit("newPlayer", rooms[roomId].players[socket.id]);
   });
@@ -111,12 +120,12 @@ io.on("connection", socket => {
   socket.on("ateBigDot", (bigDots, roomId) => {
     socket.in(roomId).emit("bigDotGone", bigDots);
   });
-  socket.on("ghostDeath", (roomId) => {
+  socket.on("ghostDeath", roomId => {
     socket.in(roomId).emit("ghostDied");
-  })
+  });
   socket.on("selfDeath", (roomId, playerNumber) => {
     socket.in(roomId).emit("someoneDied", playerNumber);
-  })
+  });
 });
 
 const PORT = process.env.PORT || 8080;
