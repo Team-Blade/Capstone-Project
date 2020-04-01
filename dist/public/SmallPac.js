@@ -106,17 +106,18 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   changePacDirection() {
-    if (this.scene.cursors.up.isDown) {
+    if (this.scene.cursors.up.isDown && this.checkDirection("up")) {
       this.move("up");
       this.direction = "up";
     }
-    if (this.scene.cursors.down.isDown) {
+    if (this.scene.cursors.down.isDown && this.checkDirection("down")) {
       this.move("down");
       this.direction = "down";
     }
 
     if (
       this.scene.cursors.left.isDown &&
+      this.checkDirection("left") &&
       this.tilePositionY > 0 &&
       this.tilePositionY < 14
     ) {
@@ -125,6 +126,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
     if (
       this.scene.cursors.right.isDown &&
+      this.checkDirection("right") &&
       this.tilePositionY > 0 &&
       this.tilePositionY < 14
     ) {
@@ -179,15 +181,19 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.createAnimations();
     if (direction === `up`) {
       this.setVelocityY(-180);
+      this.setVelocityX(0);
       this.anims.play(`${this.color}up`, true);
     } else if (direction === `down`) {
       this.setVelocityY(180);
+      this.setVelocityX(0);
       this.anims.play(`${this.color}down`, true);
     } else if (direction === `left`) {
       this.setVelocityX(-180);
+      this.setVelocityY(0);
       this.anims.play(`${this.color}left`, true);
     } else if (direction === `right`) {
       this.setVelocityX(180);
+      this.setVelocityY(0);
       this.anims.play(`${this.color}right`, true);
     }
   }
@@ -203,12 +209,19 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   // }
 
   checkDirection(turnTo) {
-    if (!this[`tile${direction}`].collides 
-        && this.direction !== turnTo
-        && this.turnTo !== turnTo) {
-          this.turnTo = turnTo;
-          this.turnPoint.x = this.tilePositionX + 0.5;
-          this.turnPoint.y = this.tilePositionY + 0.5;
+    if(
+      this[`tile${turnTo}`] &&
+      !this[`tile${turnTo}`].collides &&
+      this.direction !== turnTo &&
+      this.turnTo !== turnTo
+      ){
+        this.turnTo = turnTo;
+        this.turnPoint.x = this.tilePositionX + 0.5;
+        this.turnPoint.y = this.tilePositionY + 0.5;
+        return true;
+    }
+    else {
+      return false;
     }
   }
 
