@@ -13,7 +13,7 @@ export default function addOtherPlayers(scene, player) {
     playerNumber: playerNumber
   });
 
-  otherPlayer.setScale(scene.collisionLayer.scale * 1.4);
+  otherPlayer.setScale(scene.collisionLayer.scale * 2.1);
   otherPlayer.tilePositionX = scene.map.worldToTileX(otherPlayer.x);
   otherPlayer.tilePositionY = scene.map.worldToTileY(otherPlayer.y);
   scene.physics.add.collider(otherPlayer, scene.collisionLayer);
