@@ -100,7 +100,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     let count = 0;
 
     return function() {
-      if (count >= 10) {
+      if (count >= 17) {
         count = 0;
         return this.lockOnTarget();
       } else {

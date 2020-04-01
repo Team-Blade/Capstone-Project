@@ -125,12 +125,19 @@ export default class Level1 extends Phaser.Scene {
   update() {
     //CHECK WIN
     checkWin(this);
-    //IF GHOST IS DEAD
-    if (this.og.dead) {
+    //IF GHOST IS DEAD TELL EVERYONE AND DISABLE GHOST;
+    if (this.og.dead && this.og.body.enable) {
+      this.socket.emit("ghostDeath", socket.roomId);
       this.og.disableBody(true, true);
     }
+    //IF GHOST IS VULNERABLE, TURN BLUE
+    //IF YOU ARE SMALL AND OTHER PLAYERS ARE ALSO SMALL, MAKE GHOST NOT VULERABLE
     if (this.og.vulnerable) {
       this.og.turnBlue();
+      const playersAreSmall = this.otherPlayersArray.every(player => !player.big);
+      if (playersAreSmall && !this.pac.big){
+        this.og.vulnerable = false;
+      }
     }
     //IF PAC EXISTS
     if (this.pac) {
@@ -145,15 +152,9 @@ export default class Level1 extends Phaser.Scene {
 
       //IF YOU ARE PLAYER 1
       if (this.pac.playerNumber === 1) {
-        //IF GHOST IS DEAD TELL EVERYONE
-        if(this.og.dead){
-          this.socket.emit("ghostDeath", socket.roomId);
-        }
         //ELSE LET EVERYONE KNOW WHERE GHOST SHOULD BE
-        else{
-          this.og.trajectory();
-          sendGhostMovement(this);
-        }
+        this.og.trajectory();
+        sendGhostMovement(this);
       }
       //IF YOU ARE DEAD TELL EVERYONE AND DELETE YOURSELF
       if (this.pac.dead && this.playersAlive[this.pac.playerNumber]) {
@@ -170,6 +171,10 @@ export default class Level1 extends Phaser.Scene {
           delete this.playersAlive[player.playerNumber];
         }
         else {
+          //IF SOMEONE IS BIG AND GHOST IS NOT VULNERABLE, MAKE GHOST VULNERABLE
+          if (player.big && !this.og.vulnerable) {
+            this.og.vulnerable = true;
+          }
           player.wrap();
           player.updateTilePosition();
         }
