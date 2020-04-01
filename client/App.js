@@ -109,7 +109,7 @@ class App extends React.Component {
                   players...
                 </p>
                 <button
-                  className="start-button"
+                  className="start-game-button"
                   type="submit"
                   onClick={this.startGame}
                   open={false}
@@ -117,7 +117,13 @@ class App extends React.Component {
                   START!
                 </button>
               </div>
-            ) : null}
+            ) : (
+              <p>
+                Waiting for the
+                <br />
+                game to start...
+              </p>
+            )}
           </nav>
           <div>
             {!this.state.beginGameButtonClicked ? (
@@ -198,11 +204,15 @@ class App extends React.Component {
               {close => (
                 <div className="init-game-create">
                   <div>
-                    <p>Game code:</p>
+                    <div>Share this code</div>
                     <br />
-                    <h2>{this.state.code}</h2>
+                    with friends
+                    <div>
+                      <h2>{this.state.code}</h2>
+                    </div>
                   </div>
                   <button
+                    className="enter-game-button"
                     onClick={() => {
                       close();
                     }}
