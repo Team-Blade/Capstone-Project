@@ -7,7 +7,8 @@ import {
   listenForPlayerMovement,
   listenForGhostMovement,
   listenForDotActivity,
-  listenForGhostDeath
+  listenForGhostDeath,
+  listenForSomeonesDeath
 } 
   from "./socketListeners"
 import addPlayer from "./addPlayer"
@@ -52,7 +53,6 @@ export default class Level1 extends Phaser.Scene {
 
   create() {
     // this.directions = {};
-
     const scene = this;
 
     this.otherPlayers = this.physics.add.group();
@@ -67,9 +67,9 @@ export default class Level1 extends Phaser.Scene {
         }
       });
     });
-    this.socket.on("newPlayer", playerInfo => {
-      addOtherPlayers(scene, playerInfo);
-    });
+    // this.socket.on("newPlayer", playerInfo => {
+    //   addOtherPlayers(scene, playerInfo);
+    // });
     this.socket.on("disconnect", playerId => {
       scene.otherPlayers.getChildren().forEach(otherPlayer => {
         if (playerId === otherPlayer.playerId) {
@@ -96,8 +96,8 @@ export default class Level1 extends Phaser.Scene {
     this.og = new Ghost({
       scene: scene,
       key: "og1",
-      x: scene.map.tileToWorldX(15),
-      y: scene.map.tileToWorldY(7.5),
+      x: scene.map.tileToWorldX(15) + 5.5,
+      y: scene.map.tileToWorldY(7) + 5.5,
       game: this.game
     });
 
@@ -108,6 +108,9 @@ export default class Level1 extends Phaser.Scene {
     listenForPlayerMovement(this);
 
     listenForGhostDeath(this);
+
+    listenForSomeonesDeath(this);
+    
     // this.ghosts.add(this.pg);
     this.ghosts.add(this.og);
     this.og.setBounce(0, 1);
@@ -117,40 +120,61 @@ export default class Level1 extends Phaser.Scene {
     //processes DOM input events if true
     this.input.enabled = true;
     this.cursors = this.input.keyboard.createCursorKeys();
+
   }
   update() {
+    //CHECK WIN
     checkWin(this);
+    //IF GHOST IS DEAD
     if (this.og.dead) {
       this.og.disableBody(true, true);
     }
+    if (this.og.vulnerable) {
+      this.og.turnBlue();
+    }
+    //IF PAC EXISTS
     if (this.pac) {
+
+      //IF YOU ARE ALIVE
+      if (!this.pac.dead) {
+        //UPDATE TRAJECTORY
+        this.pac.trajectory();
+        //SEND EVERYONE YOUR MOVES
+        sendMovementInfo(this);
+      }
+
+      //IF YOU ARE PLAYER 1
       if (this.pac.playerNumber === 1) {
-        this.og.trajectory();
-        sendGhostMovement(this);
+        //IF GHOST IS DEAD TELL EVERYONE
         if(this.og.dead){
           this.socket.emit("ghostDeath", socket.roomId);
         }
+        //ELSE LET EVERYONE KNOW WHERE GHOST SHOULD BE
+        else{
+          this.og.trajectory();
+          sendGhostMovement(this);
+        }
       }
-
-      this.pac.trajectory();
-
+      //IF YOU ARE DEAD TELL EVERYONE AND DELETE YOURSELF
+      if (this.pac.dead && this.playersAlive[this.pac.playerNumber]) {
+        this.pac.disableBody(true, true);
+        this.socket.emit("selfDeath", socket.roomId, this.pac.playerNumber);
+        delete this.playersAlive[this.pac.playerNumber]
+      }
+      //FOR EACH PLAYER
       this.otherPlayersArray.forEach(player => {
-        player.wrap();
-        player.updateTilePosition();
+        //IF YOU HEAR SOMEONE IS DEAD, DISABLE THEM AND DELETE THEM
+        if (player.dead && this.playersAlive[player.playerNumber]) {
+          player.death();
+          player.disableBody(true,true)
+          delete this.playersAlive[player.playerNumber];
+        }
+        else {
+          player.wrap();
+          player.updateTilePosition();
+        }
       });
 
-      sendMovementInfo(this);
-
-      this.pac.oldPosition = {
-        x: this.pac.x,
-        y: this.pac.y,
-        tileX: this.map.worldToTileX(this.pac.x),
-        tileY: this.map.worldToTileY(this.pac.y),
-        scale: this.pac.scale
-      };
-      if (this.og.vulnerable) {
-        this.og.turnBlue();
-      }
     }
   }
 }

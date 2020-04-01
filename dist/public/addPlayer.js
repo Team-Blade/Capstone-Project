@@ -26,14 +26,16 @@ export default function addPlayer(scene, player) {
   });
   scene.physics.add.collider(scene.pac, scene.otherPlayers, (pac, other) => {
     if (!pac.big && other.big) {
-      pac.disableBody(true, true)
-      delete scene.playersAlive[pac.playerNumber]
+      pac.dead = true;
+      // pac.disableBody(true, true)
+      // delete scene.playersAlive[pac.playerNumber]
     }
   });
   scene.physics.add.overlap(scene.pac, scene.og, () => {
     if (!scene.pac.big && scene.og.vulnerable === false) {
-      scene.pac.disableBody(true, true);
-      delete scene.playersAlive[scene.pac.playerNumber];
+      scene.pac.dead = true;
+      // scene.pac.disableBody(true, true);
+      // delete scene.playersAlive[scene.pac.playerNumber];
     } else {
       scene.og.dead = true;
     }

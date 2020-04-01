@@ -73,7 +73,7 @@ io.on("connection", socket => {
 
   socket.on("startGame", roomId => {
     io.in(roomId).emit("currentPlayers", rooms[roomId].players);
-    socket.in(roomId).emit("newPlayer", rooms[roomId].players[socket.id]);
+    // socket.in(roomId).emit("newPlayer", rooms[roomId].players[socket.id]);
   });
 
   socket.on("disconnect", () => {
@@ -113,6 +113,9 @@ io.on("connection", socket => {
   });
   socket.on("ghostDeath", (roomId) => {
     socket.in(roomId).emit("ghostDied");
+  })
+  socket.on("selfDeath", (roomId, playerNumber) => {
+    socket.in(roomId).emit("someoneDied", playerNumber);
   })
 });
 

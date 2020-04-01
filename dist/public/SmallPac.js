@@ -189,6 +189,16 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
+  // updateOldPosition() {
+  //   this.oldPosition = {
+  //     x: this.x,
+  //     y: this.y,
+  //     tileX: this.map.worldToTileX(this.x),
+  //     tileY: this.map.worldToTileY(this.y),
+  //     scale: this.scale
+  //   };
+  // }
+
   checkSurroundingTiles() {
     this.tileUp = this.scene.map.getTileAt(
       this.tilePositionX,
@@ -217,6 +227,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   death() {
+    console.log('inside death')
     this.createAnimations();
     this.anims.play("death");
   }

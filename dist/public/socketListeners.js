@@ -28,6 +28,12 @@ export function listenForGhostDeath (scene) {
   })
 }
 
+export function listenForSomeonesDeath (scene) {
+  scene.socket.on("someoneDied", (playerNumber) => {
+    scene.playersAlive[playerNumber].dead = true;
+  })
+}
+
 export function listenForDotActivity (scene) {
   scene.socket.on("smallDotGone", dots => {
     let x = dots.x;
