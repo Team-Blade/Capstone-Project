@@ -14,6 +14,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.vulnerable = false;
     this.chaseTarget = "";
     this.decideTarget = this.findPac();
+    this.dead = false;
   }
 
   createAnimation() {
@@ -97,7 +98,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     let count = 0;
 
     return function() {
-      if (count >= 15) {
+      if (count >= 10) {
         count = 0;
         return this.lockOnTarget();
       } else {

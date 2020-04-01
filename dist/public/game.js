@@ -15,6 +15,9 @@ const config = {
       debug: false
     }
   },
+  dom: {
+    createContainer: true
+  },
   scene: [Level1]
 };
 const game = new Phaser.Game(config);

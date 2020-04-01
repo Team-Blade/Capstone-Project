@@ -95,7 +95,7 @@ io.on("connection", socket => {
       player.direction = direction;
       player.big = big;
       player.vulnerable = vulnerable;
-      socket.broadcast.emit("playerMoved", player);
+      socket.in(roomId).emit("playerMoved", player);
     }
   });
 
@@ -111,6 +111,9 @@ io.on("connection", socket => {
   socket.on("ateBigDot", (bigDots, roomId) => {
     socket.in(roomId).emit("bigDotGone", bigDots);
   });
+  socket.on("ghostDeath", (roomId) => {
+    socket.in(roomId).emit("ghostDied");
+  })
 });
 
 const PORT = process.env.PORT || 8080;
