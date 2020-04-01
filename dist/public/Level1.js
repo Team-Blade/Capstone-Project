@@ -9,12 +9,11 @@ import {
   listenForDotActivity,
   listenForGhostDeath,
   listenForSomeonesDeath
-} 
-  from "./socketListeners"
-import addPlayer from "./addPlayer"
-import addOtherPlayers from "./otherPlayers"
-import {sendMovementInfo, sendGhostMovement} from "./socketEmiters"
-import checkWin from "./checkWin"
+} from "./socketListeners";
+import addPlayer from "./addPlayer";
+import addOtherPlayers from "./otherPlayers";
+import { sendMovementInfo, sendGhostMovement } from "./socketEmiters";
+import checkWin from "./checkWin";
 
 export default class Level1 extends Phaser.Scene {
   constructor() {
@@ -110,7 +109,7 @@ export default class Level1 extends Phaser.Scene {
     listenForGhostDeath(this);
 
     listenForSomeonesDeath(this);
-    
+
     // this.ghosts.add(this.pg);
     this.ghosts.add(this.og);
     this.og.setBounce(0, 1);
@@ -120,7 +119,6 @@ export default class Level1 extends Phaser.Scene {
     //processes DOM input events if true
     this.input.enabled = true;
     this.cursors = this.input.keyboard.createCursorKeys();
-
   }
   update() {
     //CHECK WIN
@@ -134,7 +132,6 @@ export default class Level1 extends Phaser.Scene {
     }
     //IF PAC EXISTS
     if (this.pac) {
-
       //IF YOU ARE ALIVE
       if (!this.pac.dead) {
         //UPDATE TRAJECTORY
@@ -146,11 +143,11 @@ export default class Level1 extends Phaser.Scene {
       //IF YOU ARE PLAYER 1
       if (this.pac.playerNumber === 1) {
         //IF GHOST IS DEAD TELL EVERYONE
-        if(this.og.dead){
+        if (this.og.dead) {
           this.socket.emit("ghostDeath", socket.roomId);
         }
         //ELSE LET EVERYONE KNOW WHERE GHOST SHOULD BE
-        else{
+        else {
           this.og.trajectory();
           sendGhostMovement(this);
         }
@@ -159,22 +156,20 @@ export default class Level1 extends Phaser.Scene {
       if (this.pac.dead && this.playersAlive[this.pac.playerNumber]) {
         this.pac.disableBody(true, true);
         this.socket.emit("selfDeath", socket.roomId, this.pac.playerNumber);
-        delete this.playersAlive[this.pac.playerNumber]
+        delete this.playersAlive[this.pac.playerNumber];
       }
       //FOR EACH PLAYER
       this.otherPlayersArray.forEach(player => {
         //IF YOU HEAR SOMEONE IS DEAD, DISABLE THEM AND DELETE THEM
         if (player.dead && this.playersAlive[player.playerNumber]) {
           player.death();
-          player.disableBody(true,true)
+          player.disableBody(true, true);
           delete this.playersAlive[player.playerNumber];
-        }
-        else {
+        } else {
           player.wrap();
           player.updateTilePosition();
         }
       });
-
     }
   }
 }
@@ -184,7 +179,6 @@ function resizeCanvas() {
   canvas.style.width = `${(window.innerWidth / 1860) * 1860}px`;
   canvas.style.height = `${(window.innerWidth / 1860) * 900}px`;
 }
-
 
 // function sendMovementInfo(scene) {
 //   let x = scene.pac.x;
