@@ -212,16 +212,21 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     if(this[`tile${turnTo}`] &&
       !this[`tile${turnTo}`].collides &&
       this.direction !== turnTo){
-        
+
         this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
         this.turnPoint.y = this.scene.map.tileToWorldY(this.tilePositionY + 0.57);
   
-        if (Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, 3) &&
-            Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, 3)){
+        if (Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, 13.7) &&
+            Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, 13.7)){
               console.log('passed2'); 
               this.x = this.turnPoint.x;
               this.y = this.turnPoint.y;
               return true;
+        }
+        else {
+          console.log('not passed');
+          console.log(this.x, this.turnPoint.x);
+          console.log(this.y, this.turnPoint.y)
         }
     }
     else {
