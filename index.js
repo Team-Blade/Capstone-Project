@@ -73,7 +73,7 @@ io.on("connection", socket => {
 
   socket.on("startGame", roomId => {
     io.in(roomId).emit("currentPlayers", rooms[roomId].players);
-    socket.in(roomId).emit("newPlayer", rooms[roomId].players[socket.id]);
+    // socket.in(roomId).emit("newPlayer", rooms[roomId].players[socket.id]);
   });
 
   socket.on("disconnect", () => {
@@ -87,14 +87,36 @@ io.on("connection", socket => {
   });
 
   socket.on("playerMovement", movementData => {
-    const { x, y, socketId, roomId, direction, big } = movementData;
-    player = rooms[roomId].players[socketId];
-    player.x = x;
-    player.y = y;
-    player.direction = direction;
-    player.big = big;
-    socket.broadcast.emit("playerMoved", player);
+    const { x, y, socketId, roomId, direction, big, vulnerable } = movementData;
+    if (roomId) {
+      player = rooms[roomId].players[socketId];
+      player.x = x;
+      player.y = y;
+      player.direction = direction;
+      player.big = big;
+      player.vulnerable = vulnerable;
+      socket.in(roomId).emit("playerMoved", player);
+    }
   });
+
+  socket.on("ghostMovement", (ghost, roomId) => {
+    socket.in(roomId).emit("ghostMove", ghost);
+  });
+  socket.on("ateSmallDot", (dots, roomId) => {
+    socket.in(roomId).emit("smallDotGone", dots);
+  });
+  socket.on("ateFood", (food, roomId) => {
+    socket.in(roomId).emit("foodGone", food);
+  });
+  socket.on("ateBigDot", (bigDots, roomId) => {
+    socket.in(roomId).emit("bigDotGone", bigDots);
+  });
+  socket.on("ghostDeath", (roomId) => {
+    socket.in(roomId).emit("ghostDied");
+  })
+  socket.on("selfDeath", (roomId, playerNumber) => {
+    socket.in(roomId).emit("someoneDied", playerNumber);
+  })
 });
 
 const PORT = process.env.PORT || 8080;

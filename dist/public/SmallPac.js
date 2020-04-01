@@ -4,7 +4,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     config.scene.add.existing(this);
     config.scene.physics.world.enable(this);
     this.setSize(42, 42, true);
-    this.setOrigin(-0.177, -0.177);
+    this.setOrigin(0, 0);
     this.scene = config.scene;
     this.key = config.key;
     this.playerNumber = config.playerNumber;
@@ -14,15 +14,18 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.big = false;
     this.vulnerable = true;
     this.direction = "";
-    // this.positiveVelocity = 180;
-    // this.negativeVelocity = this.velocity * -1;
-    if (this.big) {
-      this.setOffset(6, 6);
-    }
+    this.dead = false;
   }
   createAnimations() {
     if (this.big) {
       this.color = this.bigColor;
+      this.vulnerable = false;
+      this.setOffset(6, 6);
+    } else {
+      this.color = this.key.slice(0, 2);
+
+      this.setOffset(-5, -5);
+      this.vulnerable = true;
     }
     this.scene.anims.create({
       key: `${this.color}left`,
@@ -127,12 +130,12 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  updateTilePosition (){
-    this.tilePositionX = this.scene.map.worldToTileX(this.x) + 1;
-    this.tilePositionY = this.scene.map.worldToTileY(this.y) + 1;
+  updateTilePosition() {
+    this.tilePositionX = this.scene.map.worldToTileX(this.x);
+    this.tilePositionY = this.scene.map.worldToTileY(this.y);
   }
 
-  wrap () {
+  wrap() {
     if (this.tilePositionY >= 15 && this.body.velocity.y > 0) {
       this.y = this.scene.map.tileToWorldY(-1);
     }
@@ -142,10 +145,18 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  trajectory () {
+  trajectory() {
+    // this.checkSurroundingTiles();
+    // console.log(
+    //   'pac:', 'x=', this.tilePositionX, 'y=', this.tilePositionY,
+    //   'up:', this.tileUp,
+    //   'down', this.tileDown,
+    //   'left', this.tileLeft,
+    //   'right', this.tileRight
+    // )
     //animate pac-man consistently
     if (this.direction) {
-    this.move(this.direction);
+      this.move(this.direction);
     }
     //change the direction pac man is facing in animation
     this.changePacFace();
@@ -177,7 +188,47 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       this.anims.play(`${this.color}right`, true);
     }
   }
+
+  // updateOldPosition() {
+  //   this.oldPosition = {
+  //     x: this.x,
+  //     y: this.y,
+  //     tileX: this.map.worldToTileX(this.x),
+  //     tileY: this.map.worldToTileY(this.y),
+  //     scale: this.scale
+  //   };
+  // }
+
+  checkSurroundingTiles() {
+    this.tileUp = this.scene.map.getTileAt(
+      this.tilePositionX,
+      this.tilePositionY - 1,
+      false,
+      "mapBaseLayer"
+    );
+    this.tileDown = this.scene.map.getTileAt(
+      this.tilePositionX,
+      this.tilePositionY + 1,
+      false,
+      "mapBaseLayer"
+    );
+    this.tileLeft = this.scene.map.getTileAt(
+      this.tilePositionX - 1,
+      this.tilePositionY,
+      false,
+      "mapBaseLayer"
+    );
+    this.tileRight = this.scene.map.getTileAt(
+      this.tilePositionX + 1,
+      this.tilePositionY,
+      false,
+      "mapBaseLayer"
+    );
+  }
+
   death() {
+    console.log('inside death')
+    this.createAnimations();
     this.anims.play("death");
   }
 }
