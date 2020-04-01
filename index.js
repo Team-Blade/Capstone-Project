@@ -12,7 +12,7 @@ app.get("/", function(req, res) {
   res.sendFile(path.join(__dirname, "dist/index.html"));
 });
 
-const joinRoom = (socket, room) => {
+const joinRoom = (socket, room, name) => {
   //if the room has not started yet
   console.log("has the room started when joining room?", room.started);
   if (!room.started) {
@@ -27,6 +27,7 @@ const joinRoom = (socket, room) => {
           rotation: 0,
           x: 0,
           y: 0,
+          name: name,
           playerId: socket.id,
           playerNumber: room.numberOfPlayers
         };
@@ -36,6 +37,7 @@ const joinRoom = (socket, room) => {
           "Joined",
           room.id
         );
+        socket.emit("newPlayers", room.players);
       });
     } else {
       console.log(
@@ -62,18 +64,18 @@ class Room {
 io.on("connection", socket => {
   console.log("a user connected", socket.id);
 
-  socket.on("createRoom", roomId => {
+  socket.on("createRoom", (roomId, name) => {
     room = new Room(roomId);
 
     rooms[roomId] = room;
     // have the socket join the room they've just created.
-    joinRoom(socket, room);
+    joinRoom(socket, room, name);
   });
 
-  socket.on("joinRoom", roomId => {
+  socket.on("joinRoom", (roomId, name) => {
     const room = rooms[roomId];
     if (room) {
-      joinRoom(socket, room);
+      joinRoom(socket, room, name);
     } else {
       console.log("Sorry, game room:", roomId, "not found");
     }

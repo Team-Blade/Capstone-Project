@@ -53,6 +53,14 @@ export default class Level1 extends Phaser.Scene {
   create() {
     // this.directions = {};
     const scene = this;
+    const scoreBoard = this.add.dom(
+      400,
+      600,
+      "div",
+      "background-color: lime; width: 220px; height: 100px; font: 48px Arial",
+      "PLAYERS"
+    );
+    this.add.text(0, 0, "PLAYER TEXT");
 
     this.otherPlayers = this.physics.add.group();
     this.ghosts = this.physics.add.group();

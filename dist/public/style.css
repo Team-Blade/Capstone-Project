@@ -149,3 +149,16 @@ h3 {
 .popup-overlay {
   background: rgba(0, 0, 0, 0);
 }
+
+#player1 {
+  color: yellow;
+}
+#player2 {
+  color: red;
+}
+#player3 {
+  color: blue;
+}
+#player5 {
+  color: fuchsia;
+}

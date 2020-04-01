@@ -26,7 +26,7 @@ class App extends React.Component {
       name: "",
       buttonClickedName: "",
       code: "",
-      players: []
+      players: {}
     };
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleCodeChange = this.handleCodeChange.bind(this);
@@ -46,24 +46,24 @@ class App extends React.Component {
   createGame() {
     //generate a game code
     const code = randomString();
-
-    this.setState({
-      buttonClicked: false,
-      name: "",
-      buttonClickedName: "create",
-      code
-    });
-    //sending player to database
     let name = this.state.name;
-    let players = {};
-    players[name] = { score: 0 };
-    games.doc(code).set({ players }, { merge: true });
+    socket.emit("createRoom", code, name);
+    //sending player to database & updating state
+    socket.on("newPlayers", allPlayers => {
+      games.doc(code).set({ players: allPlayers }, { merge: true });
+      this.setState({
+        buttonClicked: false,
+        name: "",
+        buttonClickedName: "create",
+        code,
+        players: allPlayers
+      });
+    });
+
     games.doc(code).onSnapshot(doc => {
-      const players = Object.keys(doc.data().players);
+      const players = doc.data().players;
       this.setState({ players });
     });
-
-    socket.emit("createRoom", code);
     // store the room id in the socket for future use
     socket.roomId = code;
   }
@@ -72,29 +72,29 @@ class App extends React.Component {
     let name = this.state.name;
     let code = this.state.code;
 
-    let players = {};
-    players[name] = { score: 0 };
-    games.doc(code).set({ players }, { merge: true });
-    games.doc(code).onSnapshot(doc => {
-      const players = Object.keys(doc.data().players);
-      this.setState({ players });
-    });
+    // let players = {};
+    // players[name] = { score: 0 };
+    // games.doc(code).set({ players }, { merge: true });
 
-    socket.emit("joinRoom", code);
-    // store the room id in the socket for future use
-    socket.roomId = code;
+    socket.emit("joinRoom", code, name);
     socket.on("gameAlreadyStarted", roomId => {
       alert("Sorry, the game for this code has already started...");
     });
+
+    socket.on("newPlayers", allPlayers => {
+      games.doc(code).set({ players: allPlayers }, { merge: true });
+    });
+    games.doc(code).onSnapshot(doc => {
+      const players = doc.data().players;
+      this.setState({ players });
+    });
+    // store the room id in the socket for future use
+    socket.roomId = code;
   }
 
   startGame() {
-    //fetching players in game collection
-    games.doc(this.state.code).onSnapshot(doc => {
-      const players = Object.keys(doc.data().players);
-      this.setState({ buttonClickedName: "", players });
-      socket.emit("startGame", this.state.code);
-    });
+    this.setState({ buttonClickedName: "" });
+    socket.emit("startGame", this.state.code);
   }
 
   render() {
@@ -199,7 +199,6 @@ class App extends React.Component {
                   </div>
                   <button
                     onClick={() => {
-                      console.log("Enter Game Room");
                       close();
                     }}
                   >
