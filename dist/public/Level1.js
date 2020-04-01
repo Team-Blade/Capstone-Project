@@ -20,19 +20,19 @@ export default class Level1 extends Phaser.Scene {
   constructor() {
     super({ key: "Level1" });
     this["1"] = {
-      startPositions: { x: 12, y: 5 },
+      startPositions: { x: 12.57, y: 5.57 },
       color: "y"
     };
     this["2"] = {
-      startPositions: { x: 18, y: 5 },
+      startPositions: { x: 18.57, y: 5.57 },
       color: "r"
     };
     this["3"] = {
-      startPositions: { x: 12, y: 9 },
+      startPositions: { x: 12.57, y: 9.57 },
       color: "b"
     };
     this["4"] = {
-      startPositions: { x: 18, y: 9 },
+      startPositions: { x: 18.57, y: 9.57 },
       color: "p"
     };
 
@@ -40,6 +40,8 @@ export default class Level1 extends Phaser.Scene {
     this.otherPlayersArray = [];
 
     this.playersAlive = {};
+
+    this.winner = "";
   }
   preload() {
     //loads image for tileset
@@ -97,7 +99,7 @@ export default class Level1 extends Phaser.Scene {
       scene: scene,
       key: "og1",
       x: scene.map.tileToWorldX(15) + 5.5,
-      y: scene.map.tileToWorldY(7) + 5.5,
+      y: scene.map.tileToWorldY(8) + 5.5,
       game: this.game
     });
 
@@ -124,8 +126,15 @@ export default class Level1 extends Phaser.Scene {
   }
   update() {
     //CHECK WIN
-    checkWin(this);
+    if (!this.winner) {
+      checkWin(this);
+    }
     //IF GHOST IS DEAD TELL EVERYONE AND DISABLE GHOST;
+
+    if (!this.og.dead) {
+      this.og.setOffset(7, 7);
+    }
+
     if (this.og.dead && this.og.body.enable) {
       this.socket.emit("ghostDeath", socket.roomId);
       this.og.disableBody(true, true);
@@ -148,10 +157,11 @@ export default class Level1 extends Phaser.Scene {
         this.pac.trajectory();
         //SEND EVERYONE YOUR MOVES
         sendMovementInfo(this);
+        this.pac.big ? this.pac.setOffset(21, 21) : this.pac.setOffset(7, 7);
       }
 
-      //IF YOU ARE PLAYER 1
-      if (this.pac.playerNumber === 1) {
+      //IF YOU ARE PLAYER 1 AND GHOST IS ALIVE
+      if (this.pac.playerNumber === 1 && !this.og.dead) {
         //ELSE LET EVERYONE KNOW WHERE GHOST SHOULD BE
         this.og.trajectory();
         sendGhostMovement(this);
@@ -189,90 +199,3 @@ function resizeCanvas() {
   canvas.style.width = `${(window.innerWidth / 1860) * 1860}px`;
   canvas.style.height = `${(window.innerWidth / 1860) * 900}px`;
 }
-
-
-// function sendMovementInfo(scene) {
-//   let x = scene.pac.x;
-//   let y = scene.pac.y;
-//   const moving =
-//     scene.pac.oldPosition &&
-//     (x !== scene.pac.oldPosition.x || y !== scene.pac.oldPosition.y);
-//   if (moving) {
-//     scene.socket.emit("playerMovement", {
-//       roomId: socket.roomId,
-//       socketId: socket.id,
-//       x: scene.pac.x,
-//       y: scene.pac.y,
-//       direction: scene.pac.direction,
-//       big: scene.pac.big,
-//       vulnerable: scene.pac.vulnerable
-//     });
-//   }
-// }
-
-// function sendGhostMovement(scene) {
-//   scene.socket.emit(
-//     "ghostMovement",
-//     {
-//       x: scene.og.x,
-//       y: scene.og.y,
-//       direction: scene.og.direction,
-//       vulnerable: scene.og.vulnerable
-//     },
-//     socket.roomId
-//   );
-// }
-
-// function listenForPlayerMovement(scene){
-//   scene.socket.on("playerMoved", playerInfo => {
-//       scene.otherPlayers.getChildren().forEach(otherPlayer => {
-//         if (playerInfo.playerId === otherPlayer.playerId) {
-//           otherPlayer.setPosition(playerInfo.x, playerInfo.y);
-//           otherPlayer.big = playerInfo.big;
-//           otherPlayer.move(playerInfo.direction);
-//           otherPlayer.vulnerable = playerInfo.vulnerable;
-//         }
-//       });
-//     });
-// }
-
-// function listenForGhostMovement(scene) {
-
-//   scene.socket.on("ghostMove", ghost => {
-//   scene.og.vulnerable = ghost.vulnerable;
-//   scene.og.setPosition(ghost.x, ghost.y);
-//   scene.og.move(ghost.direction);
-//   scene.og.wrap();
-//   });
-
-// }
-
-// function listenForDotActivity (scene) {
-//   scene.socket.on("smallDotGone", dots => {
-//     let x = dots.x;
-//     let y = dots.y;
-//     scene.dots.getChildren().forEach(dot => {
-//       if (dot.x === x && dot.y === y) {
-//         dot.destroy();
-//       }
-//     });
-//   });
-//   scene.socket.on("foodGone", food => {
-//     let x = food.x;
-//     let y = food.y;
-//     scene.food.getChildren().forEach(foodItem => {
-//       if (foodItem.x === x && foodItem.y === y) {
-//         foodItem.destroy();
-//       }
-//     });
-//   });
-//   scene.socket.on("bigDotGone", dots => {
-//     let x = dots.x;
-//     let y = dots.y;
-//     scene.bigDots.getChildren().forEach(dot => {
-//       if (dot.x === x && dot.y === y) {
-//         dot.destroy();
-//       }
-//     });
-//   });
-// }

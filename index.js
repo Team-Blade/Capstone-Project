@@ -78,17 +78,17 @@ io.on("connection", socket => {
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
-    if (socket.roomId) {
-      console.log("before, rooms", rooms);
-      delete rooms[socket.roomId].players[socket.id];
-      console.log("after, rooms", rooms);
-    }
+    // if (socket.roomId) {
+    //   console.log("before, rooms", rooms);
+    //   // delete rooms[socket.roomId].players[socket.id];
+    //   console.log("after, rooms", rooms);
+    // }
     io.emit("disconnect", socket.id);
   });
 
   socket.on("playerMovement", movementData => {
     const { x, y, socketId, roomId, direction, big, vulnerable } = movementData;
-    if (roomId) {
+    if (rooms[roomId]) {
       player = rooms[roomId].players[socketId];
       player.x = x;
       player.y = y;
@@ -96,6 +96,9 @@ io.on("connection", socket => {
       player.big = big;
       player.vulnerable = vulnerable;
       socket.in(roomId).emit("playerMoved", player);
+    }
+    else {
+      console.log('rooms[roomId] is false', 'rooms:', rooms, 'roomId:', roomId);
     }
   });
 

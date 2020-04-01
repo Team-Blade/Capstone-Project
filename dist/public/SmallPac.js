@@ -3,8 +3,9 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     super(config.scene, config.x, config.y, config.key, config.playerNumber);
     config.scene.add.existing(this);
     config.scene.physics.world.enable(this);
-    this.setSize(42, 42, true);
-    this.setOrigin(0, 0);
+    // this.setSize(60, 60, true)
+    this.setCircle(7, 7, 7);
+    // this.setOrigin(0.5, 0.5);
     this.scene = config.scene;
     this.key = config.key;
     this.playerNumber = config.playerNumber;
@@ -15,16 +16,18 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.vulnerable = true;
     this.direction = "";
     this.dead = false;
+    this.turnPoint = {};
+    this.turnTo = "";
   }
   createAnimations() {
     if (this.big) {
       this.color = this.bigColor;
       this.vulnerable = false;
-      this.setOffset(6, 6);
+      this.setOffset(21, 21);
     } else {
       this.color = this.key.slice(0, 2);
 
-      this.setOffset(-5, -5);
+      this.setOffset(7, 7);
       this.vulnerable = true;
     }
     this.scene.anims.create({
@@ -146,7 +149,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   trajectory() {
-    // this.checkSurroundingTiles();
+    this.checkSurroundingTiles();
     // console.log(
     //   'pac:', 'x=', this.tilePositionX, 'y=', this.tilePositionY,
     //   'up:', this.tileUp,
@@ -199,26 +202,36 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   //   };
   // }
 
+  checkDirection(turnTo) {
+    if (!this[`tile${direction}`].collides 
+        && this.direction !== turnTo
+        && this.turnTo !== turnTo) {
+          this.turnTo = turnTo;
+          this.turnPoint.x = this.tilePositionX + 0.5;
+          this.turnPoint.y = this.tilePositionY + 0.5;
+    }
+  }
+
   checkSurroundingTiles() {
-    this.tileUp = this.scene.map.getTileAt(
+    this['tileup'] = this.scene.map.getTileAt(
       this.tilePositionX,
       this.tilePositionY - 1,
       false,
       "mapBaseLayer"
     );
-    this.tileDown = this.scene.map.getTileAt(
+    this['tiledown'] = this.scene.map.getTileAt(
       this.tilePositionX,
       this.tilePositionY + 1,
       false,
       "mapBaseLayer"
     );
-    this.tileLeft = this.scene.map.getTileAt(
+    this['tileleft'] = this.scene.map.getTileAt(
       this.tilePositionX - 1,
       this.tilePositionY,
       false,
       "mapBaseLayer"
     );
-    this.tileRight = this.scene.map.getTileAt(
+    this['tileright'] = this.scene.map.getTileAt(
       this.tilePositionX + 1,
       this.tilePositionY,
       false,
