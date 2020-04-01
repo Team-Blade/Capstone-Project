@@ -3,8 +3,9 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     super(config.scene, config.x, config.y, config.key, config.playerNumber);
     config.scene.add.existing(this);
     config.scene.physics.world.enable(this);
-    this.setSize(42, 42, true);
-    this.setOrigin(0, 0);
+    // this.setSize(60, 60, true)
+    this.setCircle(7, 7, 7);
+    // this.setOrigin(0.5, 0.5);
     this.scene = config.scene;
     this.key = config.key;
     this.playerNumber = config.playerNumber;
@@ -15,16 +16,18 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.vulnerable = true;
     this.direction = "";
     this.dead = false;
+    this.turnPoint = {};
+    this.turnTo = "";
   }
   createAnimations() {
     if (this.big) {
       this.color = this.bigColor;
       this.vulnerable = false;
-      this.setOffset(6, 6);
+      this.setOffset(21, 21);
     } else {
       this.color = this.key.slice(0, 2);
 
-      this.setOffset(-5, -5);
+      this.setOffset(7, 7);
       this.vulnerable = true;
     }
     this.scene.anims.create({
@@ -103,17 +106,18 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   changePacDirection() {
-    if (this.scene.cursors.up.isDown) {
+    if (this.scene.cursors.up.isDown && this.checkDirection("up")) {
       this.move("up");
       this.direction = "up";
     }
-    if (this.scene.cursors.down.isDown) {
+    if (this.scene.cursors.down.isDown && this.checkDirection("down")) {
       this.move("down");
       this.direction = "down";
     }
 
     if (
       this.scene.cursors.left.isDown &&
+      this.checkDirection("left") &&
       this.tilePositionY > 0 &&
       this.tilePositionY < 14
     ) {
@@ -122,6 +126,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
     if (
       this.scene.cursors.right.isDown &&
+      this.checkDirection("right") &&
       this.tilePositionY > 0 &&
       this.tilePositionY < 14
     ) {
@@ -146,7 +151,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   trajectory() {
-    // this.checkSurroundingTiles();
+    this.checkSurroundingTiles();
     // console.log(
     //   'pac:', 'x=', this.tilePositionX, 'y=', this.tilePositionY,
     //   'up:', this.tileUp,
@@ -175,16 +180,20 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
     this.createAnimations();
     if (direction === `up`) {
-      this.setVelocityY(-180);
+      this.setVelocityY(-150);
+      this.setVelocityX(0);
       this.anims.play(`${this.color}up`, true);
     } else if (direction === `down`) {
-      this.setVelocityY(180);
+      this.setVelocityY(150);
+      this.setVelocityX(0);
       this.anims.play(`${this.color}down`, true);
     } else if (direction === `left`) {
-      this.setVelocityX(-180);
+      this.setVelocityX(-150);
+      this.setVelocityY(0);
       this.anims.play(`${this.color}left`, true);
     } else if (direction === `right`) {
-      this.setVelocityX(180);
+      this.setVelocityX(150);
+      this.setVelocityY(0);
       this.anims.play(`${this.color}right`, true);
     }
   }
@@ -199,26 +208,52 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   //   };
   // }
 
+  checkDirection(turnTo) {
+    if(this[`tile${turnTo}`] &&
+      !this[`tile${turnTo}`].collides &&
+      this.direction !== turnTo){
+
+        this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
+        this.turnPoint.y = this.scene.map.tileToWorldY(this.tilePositionY + 0.57);
+  
+        if (Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, 13.7) &&
+            Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, 13.7)){
+              console.log('passed2'); 
+              this.x = this.turnPoint.x;
+              this.y = this.turnPoint.y;
+              return true;
+        }
+        else {
+          console.log('not passed');
+          console.log(this.x, this.turnPoint.x);
+          console.log(this.y, this.turnPoint.y)
+        }
+    }
+    else {
+      return false;
+    }
+  }
+
   checkSurroundingTiles() {
-    this.tileUp = this.scene.map.getTileAt(
+    this['tileup'] = this.scene.map.getTileAt(
       this.tilePositionX,
       this.tilePositionY - 1,
       false,
       "mapBaseLayer"
     );
-    this.tileDown = this.scene.map.getTileAt(
+    this['tiledown'] = this.scene.map.getTileAt(
       this.tilePositionX,
       this.tilePositionY + 1,
       false,
       "mapBaseLayer"
     );
-    this.tileLeft = this.scene.map.getTileAt(
+    this['tileleft'] = this.scene.map.getTileAt(
       this.tilePositionX - 1,
       this.tilePositionY,
       false,
       "mapBaseLayer"
     );
-    this.tileRight = this.scene.map.getTileAt(
+    this['tileright'] = this.scene.map.getTileAt(
       this.tilePositionX + 1,
       this.tilePositionY,
       false,

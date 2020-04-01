@@ -8,12 +8,12 @@ export default function addPlayer(scene, player) {
 
   scene.pac = new SmallPac({
     scene: scene,
-    x: scene.map.tileToWorldX(x) + 5.5,
-    y: scene.map.tileToWorldY(y) + 5.5,
+    x: scene.map.tileToWorldX(x),
+    y: scene.map.tileToWorldY(y),
     key: `${scene[playerNumber].color}sclosed`,
     playerNumber: playerNumber
   });
-  scene.pac.setScale(scene.collisionLayer.scale * 1.4); //.99
+  scene.pac.setScale(scene.collisionLayer.scale * 2.1); //.99
   scene.pac.tilePositionX = scene.map.worldToTileX(scene.pac.x);
   scene.pac.tilePositionY = scene.map.worldToTileY(scene.pac.y);
 
