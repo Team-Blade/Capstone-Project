@@ -185,8 +185,12 @@ export default class Level1 extends Phaser.Scene {
           if (player.big && !this.og.vulnerable) {
             this.og.vulnerable = true;
           }
-          player.wrap();
-          player.updateTilePosition();
+          
+          if (!player.dead) {
+            player.big ? player.setOffset(21, 21) : player.setOffset(7, 7)
+            player.wrap();
+            player.updateTilePosition();
+          }
         }
       });
 
