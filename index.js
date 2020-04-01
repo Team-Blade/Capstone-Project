@@ -73,7 +73,7 @@ io.on("connection", socket => {
 
   socket.on("startGame", roomId => {
     io.in(roomId).emit("currentPlayers", rooms[roomId].players);
-    socket.in(roomId).emit("newPlayer", rooms[roomId].players[socket.id]);
+    // socket.in(roomId).emit("newPlayer", rooms[roomId].players[socket.id]);
   });
 
   socket.on("disconnect", () => {
@@ -95,7 +95,7 @@ io.on("connection", socket => {
       player.direction = direction;
       player.big = big;
       player.vulnerable = vulnerable;
-      socket.broadcast.emit("playerMoved", player);
+      socket.in(roomId).emit("playerMoved", player);
     }
   });
 
@@ -111,6 +111,12 @@ io.on("connection", socket => {
   socket.on("ateBigDot", (bigDots, roomId) => {
     socket.in(roomId).emit("bigDotGone", bigDots);
   });
+  socket.on("ghostDeath", (roomId) => {
+    socket.in(roomId).emit("ghostDied");
+  })
+  socket.on("selfDeath", (roomId, playerNumber) => {
+    socket.in(roomId).emit("someoneDied", playerNumber);
+  })
 });
 
 const PORT = process.env.PORT || 8080;
