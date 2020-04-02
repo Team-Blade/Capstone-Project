@@ -48,7 +48,7 @@ export default class Level1 extends Phaser.Scene {
     //loads image of map
     this.load.tilemapTiledJSON(
       "map",
-      "/public/assets/newMapWithFoodDots4.json"
+      "/public/assets/newMapWithFoodDots6.json"
     );
   }
 

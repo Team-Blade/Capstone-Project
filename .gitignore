@@ -4,3 +4,4 @@ dist/main.js
 dist/bundle.min.js
 dist/bundle.min.js.LICENSE.txt
 .DS_Store
+**/.DS_Store
