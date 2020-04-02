@@ -9,23 +9,39 @@ body {
   position: absolute;
 }
 nav {
-  padding: 75px;
+  padding: 100px;
   padding-left: 0px;
+  padding-bottom: 0px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.enter-game-button {
+  height: 100px;
+  font-size: medium;
+  margin-left: 40px;
+}
+
+nav > div {
+  align-self: flex-end;
 }
 
 main {
   font-family: "Press Start 2P", cursive;
 }
 
-.popup-overlay {
-  color: black;
-}
-
 .start-button {
   width: 150;
   height: 80;
+  font-size: large;
+  margin-top: 0px;
+  align-self: center;
+}
+
+.start-game-button {
+  width: 150;
   font-size: large;
   margin-top: 0px;
   align-self: center;
@@ -59,7 +75,7 @@ main {
 }
 .init-game-create {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   padding: 50px;
   background-color: black;
   color: gold;
@@ -77,7 +93,6 @@ input {
   height: 40px;
   width: 150px;
   font-weight: bolder;
-  /* font-size: larger; */
   color: 1919a6;
   text-align: center;
   transition: all 0.2s;
@@ -98,7 +113,6 @@ button {
   height: 40px;
   width: 125px;
   font-weight: bolder;
-  /* font-size: larger; */
   color: 1919a6;
   text-align: center;
   transition: all 0.2s;
@@ -118,7 +132,8 @@ button:hover {
 }
 
 div > p {
-  font-size: small;
+  font-size: x-small;
+  color: gold;
 }
 
 h2 {
@@ -126,6 +141,7 @@ h2 {
   align-self: center;
   border: solid;
   padding: 5px;
+  margin: 20px;
 }
 
 #player-container {
@@ -137,10 +153,26 @@ h2 {
 }
 
 h3 {
-  /* padding-left: 30px; */
   text-decoration: underline;
 }
 
 .popup-overlay {
   background: rgba(0, 0, 0, 0);
+}
+
+#player1 {
+  color: yellow;
+}
+#player2 {
+  color: red;
+}
+#player3 {
+  color: blue;
+}
+#player5 {
+  color: fuchsia;
+}
+
+#game-start {
+  margin-top: 100px;
 }

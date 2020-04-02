@@ -1,21 +1,24 @@
 import React from "react";
-import Popup from "reactjs-popup";
 
 const ScoreBoard = props => {
-  let count = 0;
-  let players = props.players.reverse();
+  let players = props.players;
+  let playersArr = Object.keys(props.players);
   return (
-    // <Popup open closeOnDocumentClick={false} position="right">
     <div id="player-container">
       <h3>PLAYERS: </h3>
-      <ul>
-        {players.map(player => {
-          count++;
-          return <li key={player}>{player}</li>;
-        })}
-      </ul>
+      <div id="players">
+        <ul>
+          {playersArr.map(player => {
+            console.log(player);
+            return (
+              <li key={player} id={`player${players[player].playerNumber}`}>
+                {players[player].name}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </div>
-    // </Popup>
   );
 };
 

@@ -26,7 +26,7 @@ class App extends React.Component {
       name: "",
       buttonClickedName: "",
       code: "",
-      players: []
+      players: {}
     };
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleCodeChange = this.handleCodeChange.bind(this);
@@ -46,20 +46,24 @@ class App extends React.Component {
   createGame() {
     //generate a game code
     const code = randomString();
-
-    this.setState({
-      buttonClicked: false,
-      name: "",
-      buttonClickedName: "create",
-      code
-    });
-    //sending player to database
     let name = this.state.name;
-    let players = {};
-    players[name] = { score: 0 };
-    games.doc(code).set({ players }, { merge: true });
-
-    socket.emit("createRoom", code);
+    socket.emit("createRoom", code, name);
+    //sending player to database & updating state
+    socket.on("newPlayers", allPlayers => {
+      games.doc(code).set({ players: allPlayers }, { merge: true });
+      this.setState({
+        buttonClicked: false,
+        name: "",
+        buttonClickedName: "create",
+        code,
+        players: allPlayers
+      });
+    });
+    //listening for new players
+    games.doc(code).onSnapshot(doc => {
+      const players = doc.data().players;
+      this.setState({ players });
+    });
     // store the room id in the socket for future use
     socket.roomId = code;
   }
@@ -68,26 +72,27 @@ class App extends React.Component {
     let name = this.state.name;
     let code = this.state.code;
 
-    let players = {};
-    players[name] = { score: 0 };
-    games.doc(code).set({ players }, { merge: true });
-    games.doc(code).onSnapshot(doc => {
-      const players = Object.keys(doc.data().players);
-      this.setState({ players });
+    socket.emit("joinRoom", code, name);
+    socket.on("gameAlreadyStarted", roomId => {
+      alert("Sorry, the game for this code has already started...");
+      window.location.reload(false);
     });
 
-    socket.emit("joinRoom", code);
+    socket.on("newPlayers", allPlayers => {
+      games.doc(code).set({ players: allPlayers }, { merge: true });
+    });
+    //listening for new players
+    games.doc(code).onSnapshot(doc => {
+      const players = doc.data().players;
+      this.setState({ players });
+    });
     // store the room id in the socket for future use
     socket.roomId = code;
   }
 
   startGame() {
-    //fetching players in game collection
-    games.doc(this.state.code).onSnapshot(doc => {
-      const players = Object.keys(doc.data().players);
-      this.setState({ buttonClickedName: "", players });
-      socket.emit("startGame", this.state.code);
-    });
+    this.setState({ buttonClickedName: "" });
+    socket.emit("startGame", this.state.code);
   }
 
   render() {
@@ -96,6 +101,29 @@ class App extends React.Component {
         <main id="main">
           <nav>
             <ScoreBoard players={this.state.players}></ScoreBoard>
+            {this.state.buttonClickedName === "create" ? (
+              <div id="game-start">
+                <p>
+                  Wait for all
+                  <br />
+                  players...
+                </p>
+                <button
+                  className="start-game-button"
+                  type="submit"
+                  onClick={this.startGame}
+                  open={false}
+                >
+                  START!
+                </button>
+              </div>
+            ) : (
+              <p>
+                Waiting for the
+                <br />
+                game to start...
+              </p>
+            )}
           </nav>
           <div>
             {!this.state.beginGameButtonClicked ? (
@@ -134,6 +162,7 @@ class App extends React.Component {
                       type="text"
                       name="name"
                       placeholder="Player Name"
+                      maxLength="8"
                       onChange={this.handleNameChange}
                       required={(true, "Name is required")}
                     />
@@ -172,21 +201,26 @@ class App extends React.Component {
           {/* Popup for game creator */}
           {this.state.buttonClickedName === "create" ? (
             <Popup open closeOnDocumentClick={false}>
-              <div className="init-game-create">
-                <div>
-                  <p>Game code:</p>
-                  <br />
-                  <h2>{this.state.code}</h2>
+              {close => (
+                <div className="init-game-create">
+                  <div>
+                    <div>Share this code</div>
+                    <br />
+                    with friends
+                    <div>
+                      <h2>{this.state.code}</h2>
+                    </div>
+                  </div>
+                  <button
+                    className="enter-game-button"
+                    onClick={() => {
+                      close();
+                    }}
+                  >
+                    Enter Game Room
+                  </button>
                 </div>
-                <button
-                  className="start-button"
-                  type="submit"
-                  onClick={this.startGame}
-                  open={false}
-                >
-                  START!
-                </button>
-              </div>
+              )}
             </Popup>
           ) : null}
 
@@ -197,6 +231,7 @@ class App extends React.Component {
                 <input
                   type="text"
                   placeholder="Game Code Here"
+                  maxLength="4"
                   onChange={() => this.handleCodeChange(event)}
                 />
                 <button
