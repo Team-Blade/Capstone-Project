@@ -7,7 +7,7 @@ const config = {
     width: 1860 * 0.7,
     height: 900 * 0.7
   },
-  resolution: window.deviePixelRatio,
+  resolution: window.devicePixelRatio,
   pixelArt: true,
   physics: {
     default: "arcade",

@@ -1,4 +1,4 @@
-import { socket } from "../../client/App";
+import { socket } from "../../components/App";
 
 export function sendMovementInfo(scene) {
   // let x = scene.pac.x;
