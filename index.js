@@ -85,9 +85,11 @@ io.on("connection", socket => {
     rooms[roomId].started = true;
     io.in(roomId).emit("currentPlayers", rooms[roomId].players);
   });
-  socket.on("restartGame", roomId => {
-    io.in(roomId).emit("enablePlayers", rooms[roomId].players);
-  });
+
+  // socket.on("restartGame", roomId => {
+  //   console.log("inside socket restartgame");
+  //   io.in(roomId).emit("enablePlayers", rooms[roomId].players);
+  // });
 
   socket.on("disconnect", () => {
     console.log("user disconnected");

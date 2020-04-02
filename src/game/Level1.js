@@ -66,19 +66,35 @@ export default class Level1 extends Phaser.Scene {
           addOtherPlayers(scene, players[playerId]);
         }
       });
+      this.create();
     });
 
-    this.socket.on("enablePlayers", roomId => {
-      this.otherPlayers.getChildren().forEach(otherPlayer => {
-        otherPlayer.disableBody(false, false);
-        const playerNumber = otherPlayer.playerNumber;
-        const x = this[playerNumber].startPositions.x;
-        const y = this[playerNumber].startPositions.y;
+    // this.socket.on("enablePlayers", roomId => {
+    //   // this.game.registry.destroy();
+    //   // console.log(this.scene);
+    //   // this.scene.start("Level1");
+    //   this.otherPlayers.getChildren().forEach(otherPlayer => {
+    //     otherPlayer.disableBody(false, false);
+    //     const playerNumber = otherPlayer.playerNumber;
+    //     const x = this[playerNumber].startPositions.x;
+    //     const y = this[playerNumber].startPositions.y;
 
-        otherPlayer.x = this.map.tileToWorldX(x);
-        otherPlayer.y = this.map.tileToWorldX(y);
-      });
-    });
+    //     otherPlayer.x = this.map.tileToWorldX(x);
+    //     otherPlayer.y = this.map.tileToWorldX(y);
+    //     otherPlayer.direction = "";
+    //   });
+    //   this.pac.disableBody(false, false);
+
+    //   const x = this[this.pac.playerNumber].startPositions.x;
+    //   const y = this[this.pac.playerNumber].startPositions.y;
+    //   this.pac.x = this.map.tileToWorldX(x);
+    //   this.pac.y = this.map.tileToWorldX(y);
+    //   this.pac.direction = "";
+    //   console.log("before", this.otherPlayersArray);
+    //   this.scene.restart();
+    //   console.log("after", this.otherPlayersArray);
+    //   console.log("enablePlayer", this);
+    // });
 
     this.socket.on("disconnect", playerId => {
       scene.otherPlayers.getChildren().forEach(otherPlayer => {
@@ -134,75 +150,76 @@ export default class Level1 extends Phaser.Scene {
   update() {
     //CHECK WIN
     if (!this.winner) {
-      checkWin(this);
-    }
-    //IF GHOST IS DEAD TELL EVERYONE AND DISABLE GHOST;
+      if (!checkWin(this)) {
+        if (!this.og.dead) {
+          this.og.setOffset(7, 7);
+        }
 
-    if (!this.og.dead) {
-      this.og.setOffset(7, 7);
-    }
-
-    if (this.og.dead && this.og.body.enable) {
-      this.socket.emit("ghostDeath", socket.roomId);
-      this.og.disableBody(true, true);
-    }
-    //IF GHOST IS VULNERABLE, TURN BLUE
-    //IF YOU ARE SMALL AND OTHER PLAYERS ARE ALSO SMALL, MAKE GHOST NOT VULERABLE
-    if (this.og.vulnerable) {
-      this.og.turnBlue();
-      const playersAreSmall = this.otherPlayersArray.every(
-        player => !player.big
-      );
-      if (playersAreSmall && !this.pac.big) {
-        this.og.vulnerable = false;
-      }
-    }
-    //IF PAC EXISTS
-    if (this.pac) {
-      //IF YOU ARE ALIVE
-      if (!this.pac.dead) {
-        //UPDATE TRAJECTORY
-        console.log(this);
-        this.pac.trajectory();
-        //SEND EVERYONE YOUR MOVES
-        sendMovementInfo(this);
-        this.pac.big ? this.pac.setOffset(21, 21) : this.pac.setOffset(7, 7);
-      }
-
-      //IF YOU ARE PLAYER 1 AND GHOST IS ALIVE
-      if (this.pac.playerNumber === 1 && !this.og.dead) {
-        //ELSE LET EVERYONE KNOW WHERE GHOST SHOULD BE
-        this.og.trajectory();
-        sendGhostMovement(this);
-      }
-      //IF YOU ARE DEAD TELL EVERYONE AND DELETE YOURSELF
-      if (this.pac.dead && this.playersAlive[this.pac.playerNumber]) {
-        this.pac.disableBody(true, true);
-        this.socket.emit("selfDeath", socket.roomId, this.pac.playerNumber);
-        delete this.playersAlive[this.pac.playerNumber];
-      }
-      //FOR EACH PLAYER
-      this.otherPlayersArray.forEach(player => {
-        //IF YOU HEAR SOMEONE IS DEAD, DISABLE THEM AND DELETE THEM
-        if (player.dead && this.playersAlive[player.playerNumber]) {
-          player.death();
-          player.disableBody(true, true);
-          delete this.playersAlive[player.playerNumber];
-        } else {
-          //IF SOMEONE IS BIG AND GHOST IS NOT VULNERABLE, MAKE GHOST VULNERABLE
-          if (player.big && !this.og.vulnerable) {
-            this.og.vulnerable = true;
-          }
-
-          if (!player.dead) {
-            player.big ? player.setOffset(21, 21) : player.setOffset(7, 7);
-            player.wrap();
-            player.updateTilePosition();
+        if (this.og.dead && this.og.body.enable) {
+          this.socket.emit("ghostDeath", socket.roomId);
+          this.og.disableBody(true, true);
+        }
+        //IF GHOST IS VULNERABLE, TURN BLUE
+        //IF YOU ARE SMALL AND OTHER PLAYERS ARE ALSO SMALL, MAKE GHOST NOT VULERABLE
+        if (this.og.vulnerable) {
+          this.og.turnBlue();
+          const playersAreSmall = this.otherPlayersArray.every(
+            player => !player.big
+          );
+          if (playersAreSmall && !this.pac.big) {
+            this.og.vulnerable = false;
           }
         }
-      });
+        //IF PAC EXISTS
+        if (this.pac) {
+          //IF YOU ARE ALIVE
+          if (!this.pac.dead) {
+            //UPDATE TRAJECTORY
+            this.pac.trajectory();
+            //SEND EVERYONE YOUR MOVES
+            sendMovementInfo(this);
+            this.pac.big
+              ? this.pac.setOffset(21, 21)
+              : this.pac.setOffset(7, 7);
+          }
+
+          //IF YOU ARE PLAYER 1 AND GHOST IS ALIVE
+          if (this.pac.playerNumber === 1 && !this.og.dead) {
+            //ELSE LET EVERYONE KNOW WHERE GHOST SHOULD BE
+            this.og.trajectory();
+            sendGhostMovement(this);
+          }
+          //IF YOU ARE DEAD TELL EVERYONE AND DELETE YOURSELF
+          if (this.pac.dead && this.playersAlive[this.pac.playerNumber]) {
+            this.pac.disableBody(true, true);
+            this.socket.emit("selfDeath", socket.roomId, this.pac.playerNumber);
+            delete this.playersAlive[this.pac.playerNumber];
+          }
+          //FOR EACH PLAYER
+          this.otherPlayersArray.forEach(player => {
+            //IF YOU HEAR SOMEONE IS DEAD, DISABLE THEM AND DELETE THEM
+            if (player.dead && this.playersAlive[player.playerNumber]) {
+              player.death();
+              player.disableBody(true, true);
+              delete this.playersAlive[player.playerNumber];
+            } else {
+              //IF SOMEONE IS BIG AND GHOST IS NOT VULNERABLE, MAKE GHOST VULNERABLE
+              if (player.big && !this.og.vulnerable) {
+                this.og.vulnerable = true;
+              }
+
+              if (!player.dead) {
+                player.big ? player.setOffset(21, 21) : player.setOffset(7, 7);
+                player.wrap();
+                player.updateTilePosition();
+              }
+            }
+          });
+        }
+      }
     }
   }
+  //IF GHOST IS DEAD TELL EVERYONE AND DISABLE GHOST;
 }
 
 function resizeCanvas() {

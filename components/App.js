@@ -119,7 +119,8 @@ class App extends React.Component {
             <ScoreBoard
               players={this.state.players}
               gameOver={this.state.gameOver}
-              restartGame={this.restartGame}
+              socket={socket}
+              startGame={this.startGame}
             />
             {this.state.buttonClickedName === "create" ? (
               <div id="game-start">

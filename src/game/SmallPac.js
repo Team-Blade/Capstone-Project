@@ -209,51 +209,52 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   // }
 
   checkDirection(turnTo) {
-    if(this[`tile${turnTo}`] &&
+    if (
+      this[`tile${turnTo}`] &&
       !this[`tile${turnTo}`].collides &&
-      this.direction !== turnTo){
+      this.direction !== turnTo
+    ) {
+      this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
+      this.turnPoint.y = this.scene.map.tileToWorldY(this.tilePositionY + 0.57);
 
-        this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
-        this.turnPoint.y = this.scene.map.tileToWorldY(this.tilePositionY + 0.57);
-  
-        if (Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, 13.7) &&
-            Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, 13.7)){
-              // console.log('passed2'); 
-              this.x = this.turnPoint.x;
-              this.y = this.turnPoint.y;
-              return true;
-        }
-        // else {
-        //   // console.log('not passed');
-        //   console.log(this.x, this.turnPoint.x);
-        //   console.log(this.y, this.turnPoint.y)
-        // }
-    }
-    else {
+      if (
+        Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, 13.7) &&
+        Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, 13.7)
+      ) {
+        console.log("passed2");
+        this.x = this.turnPoint.x;
+        this.y = this.turnPoint.y;
+        return true;
+      } else {
+        console.log("not passed");
+        console.log(this.x, this.turnPoint.x);
+        console.log(this.y, this.turnPoint.y);
+      }
+    } else {
       return false;
     }
   }
 
   checkSurroundingTiles() {
-    this['tileup'] = this.scene.map.getTileAt(
+    this["tileup"] = this.scene.map.getTileAt(
       this.tilePositionX,
       this.tilePositionY - 1,
       false,
       "mapBaseLayer"
     );
-    this['tiledown'] = this.scene.map.getTileAt(
+    this["tiledown"] = this.scene.map.getTileAt(
       this.tilePositionX,
       this.tilePositionY + 1,
       false,
       "mapBaseLayer"
     );
-    this['tileleft'] = this.scene.map.getTileAt(
+    this["tileleft"] = this.scene.map.getTileAt(
       this.tilePositionX - 1,
       this.tilePositionY,
       false,
       "mapBaseLayer"
     );
-    this['tileright'] = this.scene.map.getTileAt(
+    this["tileright"] = this.scene.map.getTileAt(
       this.tilePositionX + 1,
       this.tilePositionY,
       false,
@@ -262,7 +263,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   death() {
-    console.log('inside death')
+    console.log("inside death");
     this.createAnimations();
     this.anims.play("death");
   }

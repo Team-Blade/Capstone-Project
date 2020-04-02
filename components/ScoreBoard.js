@@ -10,7 +10,6 @@ const ScoreBoard = props => {
       <div id="players">
         <ul>
           {playersArr.map(player => {
-            console.log(player);
             return (
               <li key={player} id={`player${players[player].playerNumber}`}>
                 {players[player].name}
@@ -24,10 +23,9 @@ const ScoreBoard = props => {
           ? playersArr.map(player => {
               let playerId = players[player].playerNumber;
               if (playerId === 1) {
-                console.log(props.startGame);
                 return (
                   <div key={playerId}>
-                    <button onClick={() => props.restartGame()}>
+                    <button onClick={() => props.startGame()}>
                       Play Again?
                     </button>
                     <button onClick={() => window.location.reload(false)}>
