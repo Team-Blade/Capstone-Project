@@ -180,19 +180,19 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
     this.createAnimations();
     if (direction === `up`) {
-      this.setVelocityY(-150);
+      this.setVelocityY(-165);
       this.setVelocityX(0);
       this.anims.play(`${this.color}up`, true);
     } else if (direction === `down`) {
-      this.setVelocityY(150);
+      this.setVelocityY(165);
       this.setVelocityX(0);
       this.anims.play(`${this.color}down`, true);
     } else if (direction === `left`) {
-      this.setVelocityX(-150);
+      this.setVelocityX(-165);
       this.setVelocityY(0);
       this.anims.play(`${this.color}left`, true);
     } else if (direction === `right`) {
-      this.setVelocityX(150);
+      this.setVelocityX(165);
       this.setVelocityY(0);
       this.anims.play(`${this.color}right`, true);
     }
@@ -218,16 +218,16 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   
         if (Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, 13.7) &&
             Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, 13.7)){
-              console.log('passed2'); 
+              // console.log('passed2'); 
               this.x = this.turnPoint.x;
               this.y = this.turnPoint.y;
               return true;
         }
-        else {
-          console.log('not passed');
-          console.log(this.x, this.turnPoint.x);
-          console.log(this.y, this.turnPoint.y)
-        }
+        // else {
+        //   // console.log('not passed');
+        //   console.log(this.x, this.turnPoint.x);
+        //   console.log(this.y, this.turnPoint.y)
+        // }
     }
     else {
       return false;
