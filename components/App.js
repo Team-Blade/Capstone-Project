@@ -26,15 +26,20 @@ class App extends React.Component {
       name: "",
       buttonClickedName: "",
       code: "",
-      players: {}
+      players: {},
+      gameOver: false
     };
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleCodeChange = this.handleCodeChange.bind(this);
     this.createGame = this.createGame.bind(this);
     this.joinGame = this.joinGame.bind(this);
     this.startGame = this.startGame.bind(this);
+    this.restartGame = this.restartGame.bind(this);
+    this.eventListener = this.eventListener.bind(this);
   }
-
+  componentDidMount() {
+    this.eventListener();
+  }
   handleNameChange(event) {
     this.setState({ name: event.target.value });
   }
@@ -91,8 +96,19 @@ class App extends React.Component {
   }
 
   startGame() {
-    this.setState({ buttonClickedName: "" });
+    this.setState({ buttonClickedName: "", gameOver: false });
     socket.emit("startGame", this.state.code);
+  }
+  restartGame() {
+    this.setState({ buttonClickedName: "", gameOver: false });
+    socket.emit("restartGame", this.state.code);
+  }
+
+  eventListener() {
+    socket.on("playAgain", () => {
+      console.log("inside playAgain");
+      this.setState({ gameOver: true });
+    });
   }
 
   render() {
@@ -100,7 +116,11 @@ class App extends React.Component {
       <div id="main-wrapper">
         <main id="main">
           <nav>
-            <ScoreBoard players={this.state.players}></ScoreBoard>
+            <ScoreBoard
+              players={this.state.players}
+              gameOver={this.state.gameOver}
+              restartGame={this.restartGame}
+            />
             {this.state.buttonClickedName === "create" ? (
               <div id="game-start">
                 <p>
@@ -117,15 +137,7 @@ class App extends React.Component {
                   START!
                 </button>
               </div>
-            ) : null
-            // (
-            //   <p>
-            //     Waiting for the
-            //     <br />
-            //     game to start...
-            //   </p>
-            // )
-            }
+            ) : null}
           </nav>
           <div>
             {!this.state.beginGameButtonClicked ? (

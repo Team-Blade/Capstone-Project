@@ -4,5 +4,7 @@ export default function checkWin(scene) {
     scene.winner = `player${playersAlive[0]}`;
     console.log("WINNER:", scene.winner);
     scene.add.image(760, 280, `${scene.winner}`);
+    console.log(scene.socket);
+    scene.socket.emit("gameOver", scene.socket.roomId);
   }
 }

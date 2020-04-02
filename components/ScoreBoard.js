@@ -3,6 +3,7 @@ import React from "react";
 const ScoreBoard = props => {
   let players = props.players;
   let playersArr = Object.keys(props.players);
+  let gameOver = props.gameOver;
   return (
     <div id="player-container">
       <h3>PLAYERS: </h3>
@@ -17,6 +18,26 @@ const ScoreBoard = props => {
             );
           })}
         </ul>
+      </div>
+      <div>
+        {gameOver
+          ? playersArr.map(player => {
+              let playerId = players[player].playerNumber;
+              if (playerId === 1) {
+                console.log(props.startGame);
+                return (
+                  <div key={playerId}>
+                    <button onClick={() => props.restartGame()}>
+                      Play Again?
+                    </button>
+                    <button onClick={() => window.location.reload(false)}>
+                      Exit Game Room
+                    </button>
+                  </div>
+                );
+              }
+            })
+          : null}
       </div>
     </div>
   );

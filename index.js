@@ -84,7 +84,9 @@ io.on("connection", socket => {
   socket.on("startGame", roomId => {
     rooms[roomId].started = true;
     io.in(roomId).emit("currentPlayers", rooms[roomId].players);
-    // socket.in(roomId).emit("newPlayer", rooms[roomId].players[socket.id]);
+  });
+  socket.on("restartGame", roomId => {
+    io.in(roomId).emit("enablePlayers", rooms[roomId].players);
   });
 
   socket.on("disconnect", () => {
@@ -107,9 +109,8 @@ io.on("connection", socket => {
       player.big = big;
       player.vulnerable = vulnerable;
       socket.in(roomId).emit("playerMoved", player);
-    }
-    else {
-      console.log('rooms[roomId] is false', 'rooms:', rooms, 'roomId:', roomId);
+    } else {
+      console.log("rooms[roomId] is false", "rooms:", rooms, "roomId:", roomId);
     }
   });
 
@@ -131,8 +132,11 @@ io.on("connection", socket => {
   socket.on("selfDeath", (roomId, playerNumber) => {
     socket.in(roomId).emit("someoneDied", playerNumber);
   });
+  socket.on("gameOver", roomId => {
+    console.log("inside gameOver", roomId);
+    io.in(roomId).emit("playAgain");
+  });
 });
-
 const PORT = process.env.PORT || 8080;
 
 server.listen(PORT, () => {

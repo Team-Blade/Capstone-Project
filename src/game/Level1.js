@@ -53,7 +53,6 @@ export default class Level1 extends Phaser.Scene {
   }
 
   create() {
-    // this.directions = {};
     const scene = this;
 
     this.otherPlayers = this.physics.add.group();
@@ -68,9 +67,19 @@ export default class Level1 extends Phaser.Scene {
         }
       });
     });
-    // this.socket.on("newPlayer", playerInfo => {
-    //   addOtherPlayers(scene, playerInfo);
-    // });
+
+    this.socket.on("enablePlayers", roomId => {
+      this.otherPlayers.getChildren().forEach(otherPlayer => {
+        otherPlayer.disableBody(false, false);
+        const playerNumber = otherPlayer.playerNumber;
+        const x = this[playerNumber].startPositions.x;
+        const y = this[playerNumber].startPositions.y;
+
+        otherPlayer.x = this.map.tileToWorldX(x);
+        otherPlayer.y = this.map.tileToWorldX(y);
+      });
+    });
+
     this.socket.on("disconnect", playerId => {
       scene.otherPlayers.getChildren().forEach(otherPlayer => {
         if (playerId === otherPlayer.playerId) {
@@ -153,6 +162,7 @@ export default class Level1 extends Phaser.Scene {
       //IF YOU ARE ALIVE
       if (!this.pac.dead) {
         //UPDATE TRAJECTORY
+        console.log(this);
         this.pac.trajectory();
         //SEND EVERYONE YOUR MOVES
         sendMovementInfo(this);
