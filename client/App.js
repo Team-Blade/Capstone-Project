@@ -117,13 +117,15 @@ class App extends React.Component {
                   START!
                 </button>
               </div>
-            ) : (
-              <p>
-                Waiting for the
-                <br />
-                game to start...
-              </p>
-            )}
+            ) : null
+            // (
+            //   <p>
+            //     Waiting for the
+            //     <br />
+            //     game to start...
+            //   </p>
+            // )
+            }
           </nav>
           <div>
             {!this.state.beginGameButtonClicked ? (
