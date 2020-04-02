@@ -55,16 +55,15 @@ export default function addPlayer(scene, player) {
   scene.physics.add.overlap(scene.pac, scene.bigDots, (pac, dots) => {
     scene.socket.emit("ateBigDot", { x: dots.x, y: dots.y }, socket.roomId);
     dots.destroy();
+    scene.og.vulnerable = true;
     pac.big = true;
     pac.vulnerable = false
-    scene.og.vulnerable = true;
     scene.time.delayedCall(
       5000,
       () => {
+        scene.og.vulnerable = false;
         scene.pac.big = false;
         scene.pac.vulnerable = true;
-        scene.og.vulnerable = false;
-        // console.log(scene.pac.big, scene.pac.vulnerable, scene.og.vulnerable);
       },
       [],
       scene
