@@ -155,7 +155,7 @@ function loadImages (scene) {
 
     //dots and food preload images
 
-    scene.load.image("smallDot", "/public/assets/extract/GameMain219.png");
+    scene.load.image("smallDot", "/public/assets/extract/GameMain219Edit2.png");
     scene.load.image("largeDot", "/public/assets/extract/Common061.png");
     scene.load.image("candy", "/public/assets/food/GameMain004.png");
     scene.load.image("burger", "/public/assets/food/GameMain006.png");
@@ -164,6 +164,9 @@ function loadImages (scene) {
     scene.load.image("pizzaSlice", "/public/assets/food/GameMain011.png");
     scene.load.image("cakeSlice", "/public/assets/food/GameMain003.png");
     scene.load.image("egg", "/public/assets/food/GameMain014.png");
+    scene.load.image("banana", "/public/assets/food/GameMain001.png");
+
+
 
     //load ghost flashing images
     scene.load.image("ghostFlash1", "/public/assets/ghosts/GameMain214.png"); //blue 1
