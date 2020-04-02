@@ -1,5 +1,5 @@
 import SmallPac from "./SmallPac.js";
-import { socket } from "../../client/App";
+import { socket } from "../../components/App";
 
 export default function addPlayer(scene, player) {
   const playerNumber = player.playerNumber;

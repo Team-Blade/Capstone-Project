@@ -1,5 +1,5 @@
 import React from "react";
-import game from "../dist/public/game";
+import game from "../src/game/game";
 
 const Game = props => {
   return <div>{game}</div>;
