@@ -1,6 +1,6 @@
 import Ghost from "./Ghost.js";
 import SmallPac from "./SmallPac.js";
-import { socket } from "../../client/App";
+import { socket } from "../../components/App";
 import loadImages from "./imagesToLoad";
 import setUpLayers from "./setUpLayers";
 import {
