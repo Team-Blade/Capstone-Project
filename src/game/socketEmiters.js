@@ -6,16 +6,16 @@ export function sendMovementInfo(scene) {
   // const moving =
   //   scene.pac.oldPosition &&
   //   (x !== scene.pac.oldPosition.x || y !== scene.pac.oldPosition.y);
-    scene.socket.emit("playerMovement", {
-      roomId: socket.roomId,
-      socketId: socket.id,
-      x: scene.pac.x,
-      y: scene.pac.y,
-      direction: scene.pac.direction,
-      big: scene.pac.big,
-      vulnerable: scene.pac.vulnerable
-    });
-  }
+  scene.socket.emit("playerMovement", {
+    roomId: socket.roomId,
+    socketId: socket.id,
+    x: scene.pac.x,
+    y: scene.pac.y,
+    direction: scene.pac.direction,
+    big: scene.pac.big,
+    vulnerable: scene.pac.vulnerable
+  });
+
 }
 
 export function sendGhostMovement(scene) {
