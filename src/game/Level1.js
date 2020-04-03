@@ -114,7 +114,7 @@ export default class Level1 extends Phaser.Scene {
     //CHECK WIN
     if (!this.winner) {
       // if (!checkWin(this)) {
-      if (true){
+      if (true) {
         if (!this.og.dead) {
           this.og.setOffset(7, 7);
         }
@@ -160,7 +160,7 @@ export default class Level1 extends Phaser.Scene {
             //   () => {
             this.pac.disableBody(true, true);
             this.socket.emit("selfDeath", socket.roomId, this.pac.playerNumber);
-            delete this.playersAli.ve[this.pac.playerNumber];
+            delete this.playersAlive[this.pac.playerNumber];
             //   },
             //   [],
             //   this
