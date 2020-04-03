@@ -126,6 +126,16 @@ io.on("connection", socket => {
   socket.on("ateBigDot", (bigDots, roomId) => {
     socket.in(roomId).emit("bigDotGone", bigDots);
   });
+  socket.on("newSmallDot", (dot, roomId) => {
+    socket.in(roomId).emit("makeNewSmallDot", dot);
+  });
+  socket.on("newBigDot", (dot, roomId) => {
+    socket.in(roomId).emit("makeNewBigDot", dot);
+  });
+  socket.on("newFood", (food, roomId) => {
+    console.log("inside newFood listener");
+    socket.in(roomId).emit("makeNewFood", food);
+  });
   socket.on("ghostDeath", roomId => {
     socket.in(roomId).emit("ghostDied");
   });
