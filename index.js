@@ -85,6 +85,7 @@ io.on("connection", socket => {
   socket.on("startGame", roomId => {
     rooms[roomId].started = true;
     io.in(roomId).emit("currentPlayers", rooms[roomId].players);
+    io.in(roomId).emit("gameStarted");
   });
 
   socket.on("disconnect", () => {
