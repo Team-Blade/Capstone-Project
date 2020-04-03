@@ -6,7 +6,6 @@ export function sendMovementInfo(scene) {
   // const moving =
   //   scene.pac.oldPosition &&
   //   (x !== scene.pac.oldPosition.x || y !== scene.pac.oldPosition.y);
-  if (scene.pac.moving) {
     scene.socket.emit("playerMovement", {
       roomId: socket.roomId,
       socketId: socket.id,
