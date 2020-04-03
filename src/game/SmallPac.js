@@ -11,13 +11,14 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.playerNumber = config.playerNumber;
     this.color = this.key.slice(0, 2);
     this.bigColor = `${this.key.slice(0, 1)}b`;
-    this.moving = false;
+    this.moving = true;
     this.big = false;
     this.vulnerable = true;
     this.direction = "";
     this.dead = false;
     this.turnPoint = {};
     this.turnTo = "";
+    this.speed = 180;
     this.death = this.death.bind(this);
   }
   createAnimations() {
@@ -153,13 +154,9 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
 
   trajectory() {
     this.checkSurroundingTiles();
-    // console.log(
-    //   'pac:', 'x=', this.tilePositionX, 'y=', this.tilePositionY,
-    //   'up:', this.tileUp,
-    //   'down', this.tileDown,
-    //   'left', this.tileLeft,
-    //   'right', this.tileRight
-    // )
+    
+    this.setTurnPoint();
+    this.centerPac();
     //animate pac-man consistently
     if (this.direction) {
       this.move(this.direction);
@@ -181,33 +178,23 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
     this.createAnimations();
     if (direction === `up`) {
-      this.setVelocityY(-165);
+      this.setVelocityY(-this.speed);
       this.setVelocityX(0);
       this.anims.play(`${this.color}up`, true);
     } else if (direction === `down`) {
-      this.setVelocityY(165);
+      this.setVelocityY(this.speed);
       this.setVelocityX(0);
       this.anims.play(`${this.color}down`, true);
     } else if (direction === `left`) {
-      this.setVelocityX(-165);
+      this.setVelocityX(-this.speed);
       this.setVelocityY(0);
       this.anims.play(`${this.color}left`, true);
     } else if (direction === `right`) {
-      this.setVelocityX(165);
+      this.setVelocityX(this.speed);
       this.setVelocityY(0);
       this.anims.play(`${this.color}right`, true);
     }
   }
-
-  // updateOldPosition() {
-  //   this.oldPosition = {
-  //     x: this.x,
-  //     y: this.y,
-  //     tileX: this.map.worldToTileX(this.x),
-  //     tileY: this.map.worldToTileY(this.y),
-  //     scale: this.scale
-  //   };
-  // }
 
   checkDirection(turnTo) {
     if (
@@ -215,20 +202,49 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       !this[`tile${turnTo}`].collides &&
       this.direction !== turnTo
     ) {
-      this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
-      this.turnPoint.y = this.scene.map.tileToWorldY(this.tilePositionY + 0.57);
 
-      if (
-        Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, 13.7) &&
-        Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, 13.7)
-      ) {
-        this.x = this.turnPoint.x;
-        this.y = this.turnPoint.y;
-        return true;
-      } else {
+      if (this.fuzzyEqualXY(11)){
+            this.snapToTurnPoint();
+            return true;
       }
-    } else {
+      // else {
+      //   // console.log('not passed');
+      //   console.log(this.x, this.turnPoint.x);
+      //   console.log(this.y, this.turnPoint.y)
+      // }
+    }
+    else {
       return false;
+    }
+  }
+
+  setTurnPoint() {
+    this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
+    this.turnPoint.y = this.scene.map.tileToWorldY(this.tilePositionY + 0.57);
+  }
+
+  snapToTurnPoint() {
+    this.x = this.turnPoint.x;
+    this.y = this.turnPoint.y;
+  }
+
+  fuzzyEqualXY(threshold) {
+    const fuzzy = Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, threshold)
+           &&
+           Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, threshold)
+    return fuzzy
+  }
+
+  centerPac() {
+
+    if (this.body.velocity.x !== this.turnPoint.x && this.body.velocity.y !== 0){
+      this.x = this.turnPoint.x;
+    }
+    if (this.body.velocity.y !== this.turnPoint.y && this.body.velocity.x !== 0){
+      this.y = this.turnPoint.y;
+    }
+    else if (this.body.velocity.x === 0 && this.body.velocity.y === 0 && !this.fuzzyEqualXY(25)) {
+      this.snapToTurnPoint();
     }
   }
 
@@ -257,6 +273,14 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       false,
       "mapBaseLayer"
     );
+
+    if (this.direction && this[`tile${this.direction}`] && this[`tile${this.direction}`].collides){
+      setTimeout(() => {
+        this.snapToTurnPoint();
+        this.direction = "";
+      }, 33)
+
+    }
   }
 
   death() {

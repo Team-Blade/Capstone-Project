@@ -2,7 +2,6 @@ import SmallPac from "./SmallPac.js";
 import { socket } from "../../components/App";
 
 export default function addPlayer(scene, player) {
-  console.log("in add player");
   const playerNumber = player.playerNumber;
   const x = scene[playerNumber].startPositions.x;
   const y = scene[playerNumber].startPositions.y;
@@ -20,8 +19,9 @@ export default function addPlayer(scene, player) {
 
   scene.playersAlive[playerNumber] = scene.pac;
 
-  scene.physics.add.collider(scene.pac, scene.collisionLayer, (pac, layer) => {
-    pac.moving = false;
+  scene.physics.add.overlap(scene.pac, scene.collisionLayer, (pac, layer) => {
+    pac.setVelocity(0, 0);
+    // pac.moving = false;
     //had to take it cause because it was throwing an error on player2, could not read frames
     // pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
   });
@@ -30,6 +30,8 @@ export default function addPlayer(scene, player) {
       pac.dead = true;
       // pac.disableBody(true, true)
       // delete scene.playersAlive[pac.playerNumber]
+    }
+    else {
     }
   });
   scene.physics.add.overlap(scene.pac, scene.og, () => {

@@ -66,10 +66,8 @@ export function listenForDotActivity(scene) {
   scene.socket.on("currentPlayers", players => {
     if (calledRecently === false) {
       calledRecently = true;
-      console.log(players);
       Object.keys(players).forEach(playerId => {
         if (playerId === scene.socket.id) {
-          console.log("thi is passing", playerId, scene.socket.id);
           addPlayer(scene, players[playerId]);
         } else {
           addOtherPlayers(scene, players[playerId]);
