@@ -9,12 +9,6 @@ function loadImages(scene) {
   scene.load.image("pinksquare", "/public/assets/pinksquare.jpeg");
   scene.load.image("blacksquare", "public/assets/blacksquare.png");
 
-  //winner pac images
-  scene.load.image("player1", "/public/assets/winner/GameMain290.png");
-  scene.load.image("player4", "/public/assets/winner/GameMain291.png");
-  scene.load.image("player3", "/public/assets/winner/GameMain292.png");
-  scene.load.image("player2", "/public/assets/winner/GameMain293.png");
-
   //pacman yellow small pre-load images
   scene.load.image("ysclosed", "/public/assets/yellowSmall/GameMain020.png");
   scene.load.image("ysleft1", "/public/assets/yellowSmall/GameMain023.png");
@@ -160,7 +154,7 @@ function loadImages(scene) {
 
   //dots and food preload images
 
-  scene.load.image("smallDot", "/public/assets/extract/GameMain219.png");
+  scene.load.image("smallDot", "/public/assets/extract/GameMain219Edit2.png");
   scene.load.image("largeDot", "/public/assets/extract/Common061.png");
   scene.load.image("candy", "/public/assets/food/GameMain004.png");
   scene.load.image("burger", "/public/assets/food/GameMain006.png");
@@ -169,6 +163,7 @@ function loadImages(scene) {
   scene.load.image("pizzaSlice", "/public/assets/food/GameMain011.png");
   scene.load.image("cakeSlice", "/public/assets/food/GameMain003.png");
   scene.load.image("egg", "/public/assets/food/GameMain014.png");
+  scene.load.image("banana", "/public/assets/food/GameMain001.png");
 
   //load ghost flashing images
   scene.load.image("ghostFlash1", "/public/assets/ghosts/GameMain214.png"); //blue 1

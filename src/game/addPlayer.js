@@ -51,7 +51,60 @@ export default function addPlayer(scene, player) {
   scene.physics.add.overlap(scene.pac, scene.food, (pac, food) => {
     scene.socket.emit("ateFood", { x: food.x, y: food.y }, socket.roomId);
     food.destroy();
-  });
+
+    //if remaining food length is zero
+    if (scene.food.getChildren().length === 0) {
+
+      function callFood(){
+        const allFood = ["banana", "cakeSlice", "papaya", "burger", "peach", "egg", "pizzaSlice", "candy" ];
+        const randomFood = allFood[Math.floor(Math.random() * allFood.length)];
+        return randomFood
+      }
+
+
+      scene.collisionLayerFoodDots.forEachTile(tile => {
+        if (tile.index === 9) {
+          const x = tile.getCenterX();
+          const y = tile.getCenterY();
+          const dot = scene.dots.create(x, y, "smallDot");
+        }
+      });
+
+
+      //large dots
+      scene.collisionLayerFoodDots.forEachTile(tile => {
+        if (tile.index === 5) {
+          const x = tile.getCenterX();
+          const y = tile.getCenterY();
+
+          if(((x===862.4) && (y===145.6)) ){
+
+          const dot = scene.bigDots.create(x, y, "largeDot");}
+
+          else if(((x===442.4) && (y===481.6)) ) {
+
+            const dot = scene.bigDots.create(x, y, "largeDot");}
+        }
+      });
+
+      scene.collisionLayerFoodDots.forEachTile(tile => {
+
+        if (tile.index === 6 ||tile.index === 7 ||tile.index === 8 ) {
+          const x = tile.getCenterX();
+          const y = tile.getCenterY();
+          const foodItem = scene.food.create(x, y, callFood());
+        }
+      });
+
+      //food destroyed after renewed
+      scene.physics.add.overlap(scene.pac, scene.food, (pac, food) => {
+        scene.socket.emit("ateFood", { x: food.x, y: food.y }, socket.roomId);
+        food.destroy();
+
+      });
+    };
+  })
+
   scene.physics.add.overlap(scene.pac, scene.bigDots, (pac, dots) => {
     scene.socket.emit("ateBigDot", { x: dots.x, y: dots.y }, socket.roomId);
     dots.destroy();
