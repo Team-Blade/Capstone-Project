@@ -4,7 +4,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     config.scene.add.existing(this);
     config.scene.physics.world.enable(this);
     this.scene = config.scene;
-    this.setSize(28, 28, true)
+    this.setSize(28, 28, true);
     // .setOrigin(0,0)
     // .setOffset(-0.05,-0.05)
     this.setCircle(7,7,7)
@@ -85,6 +85,8 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     if (this.scene.pac) {
       this.checkSurroundingTiles();
       this.decideTarget();
+      // this.setTurnPoint();
+      // this.centerGhost();
       if (this.chaseTarget) {
         this.followPac();
       }
@@ -98,6 +100,40 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       //UPDATE TILE POSITION
       this.updateTilePosition();
     }
+  }
+
+  setTurnPoint() {
+    this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
+    this.turnPoint.y = this.scene.map.tileToWorldY(this.tilePositionY + 0.57);
+  }
+
+  snapToTurnPoint() {
+    this.x = this.turnPoint.x;
+    this.y = this.turnPoint.y;
+  }
+
+  fuzzyEqualXY(threshold) {
+    const fuzzy = Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, threshold)
+           &&
+           Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, threshold)
+    return fuzzy
+  }
+
+  centerGhost() {
+    
+    // if (this.x !== this.turnPoint.x && this.body.velocity.y !== 0){
+    //   this.x = this.turnPoint.x;
+    // }
+    // if (this.y !== this.turnPoint.y && this.body.velocity.x !== 0){
+    //   this.y = this.turnPoint.y;
+    // }
+    // else if (this.body.velocity.x === 0 &&
+    //          this.body.velocity.y === 0 &&
+    //          !this.fuzzyEqualXY(25) &&
+    //          (!this.tilePositionY >= 15 || !this.tilePositionY <= -1)) {
+
+    //             this.snapToTurnPoint();
+    // }
   }
 
   findPac() {

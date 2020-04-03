@@ -25,13 +25,39 @@ export default function addPlayer(scene, player) {
     //had to take it cause because it was throwing an error on player2, could not read frames
     // pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
   });
-  scene.physics.add.collider(scene.pac, scene.otherPlayers, (pac, other) => {
+  scene.physics.add.overlap(scene.pac, scene.otherPlayers, (pac, other) => {
     if (!pac.big && other.big) {
       pac.dead = true;
       // pac.disableBody(true, true)
       // delete scene.playersAlive[pac.playerNumber]
     }
     else {
+      pac.colliding = true;
+      pac.direction === "left" ? pac.setVelocityX(400) : null;
+      pac.direction === "right" ? pac.setVelocityX(-400) : null;
+      pac.direction === "up" ? pac.setVelocityY(400) : null;
+      pac.direction === "down" ? pac.setVelocityY(-400) : null;
+      console.log('here here pac.body.velocity', pac.body.velocity);
+      // if (pac.direction === "left" || pac.direction === "right") {
+      //   pac.setVelocityX(pac.body.velocity.x * -2)
+      //   console.log('velocity x', pac.body.velocity.x);
+      // }
+      // if (pac.direction === "up" || pac.direction === "down") {
+      //   pac.setVelocityY(pac.body.velocity.y * -2)
+      //   console.log('velocity y', pac.body.velocity.y);
+      // }
+      // else if (!pac.direction || (pac.body.velocity.x === 0 && pac.body.velocity.y === 0)){
+      //   if (other.direction === "left" || other.direction === "right") {
+      //     // pac.setVelocityX(other.body.velocity.x * 2)
+      //   }
+      //   else if (other.direction === "up" || other.direction === "down") {
+      //     // pac.setVelocityY(other.body.velocity.y * 2)
+      //   }
+      // }
+      setTimeout(()=> {
+        pac.colliding = false;
+        pac.setVelocity(0,0)
+      }, 1000);
     }
   });
   scene.physics.add.overlap(scene.pac, scene.og, () => {

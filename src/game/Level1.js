@@ -67,22 +67,9 @@ export default class Level1 extends Phaser.Scene {
     this.otherPlayers = this.physics.add.group();
     this.ghosts = this.physics.add.group();
 
-    // this.socket.on("currentPlayers", players => {
-    //   console.log(players)
-    //   Object.keys(players).forEach(playerId => {
-    //     if (playerId === scene.socket.id) {
-    //       console.log("thi is passing", playerId, scene.socket.id);
-    //       addPlayer(scene, players[playerId]);
-    //     } else {
-    //       addOtherPlayers(scene, players[playerId]);
-    //     }
-    //   });
-    // });
-
     this.socket.on("disconnect", playerId => {
       scene.otherPlayers.getChildren().forEach(otherPlayer => {
         if (playerId === otherPlayer.playerId) {
-          // otherPlayer.destroy();
         }
       });
     });
@@ -131,16 +118,12 @@ export default class Level1 extends Phaser.Scene {
     //processes DOM input events if true
     this.input.enabled = true;
     this.cursors = this.input.keyboard.createCursorKeys();
-
-
-
-
   }
   update() {
     //CHECK WIN
     if (!this.winner) {
       // if (!checkWin(this)) {
-      if (true) {
+      if (true){
         if (!this.og.dead) {
           this.og.setOffset(7, 7);
         }
@@ -183,6 +166,9 @@ export default class Level1 extends Phaser.Scene {
           }
           //IF YOU ARE DEAD TELL EVERYONE AND DELETE YOURSELF
           if (this.pac.dead && this.playersAlive[this.pac.playerNumber]) {
+            // this.time.delayedCall(
+            //   400,
+            //   () => {
             this.pac.disableBody(true, true);
             this.socket.emit("selfDeath", socket.roomId, this.pac.playerNumber);
             delete this.playersAlive[this.pac.playerNumber];
@@ -197,7 +183,7 @@ export default class Level1 extends Phaser.Scene {
               player.createAnimations();
               console.log("in dead check", player);
               this.time.delayedCall(
-                300,
+                400,
                 () => {
                   player.disableBody(true, true);
                   delete this.playersAlive[player.playerNumber];
