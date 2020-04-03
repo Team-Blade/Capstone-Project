@@ -32,10 +32,10 @@ export default function addPlayer(scene, player) {
       // delete scene.playersAlive[pac.playerNumber]
     } else {
       pac.colliding = true;
-      pac.direction === "left" ? pac.setVelocityX(400) : null;
-      pac.direction === "right" ? pac.setVelocityX(-400) : null;
-      pac.direction === "up" ? pac.setVelocityY(400) : null;
-      pac.direction === "down" ? pac.setVelocityY(-400) : null;
+      pac.direction === "left" ? pac.setVelocityX(900) : null;
+      pac.direction === "right" ? pac.setVelocityX(-900) : null;
+      pac.direction === "up" ? pac.setVelocityY(900) : null;
+      pac.direction === "down" ? pac.setVelocityY(-900) : null;
       console.log("here here pac.body.velocity", pac.body.velocity);
       // if (pac.direction === "left" || pac.direction === "right") {
       //   pac.setVelocityX(pac.body.velocity.x * -2)

@@ -90,6 +90,27 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     });
   }
 
+  trajectory() {
+    this.checkSurroundingTiles();
+    
+    this.setTurnPoint();
+    this.centerPac();
+    //animate pac-man consistently
+    if (this.direction && !this.colliding) {
+      this.move(this.direction);
+    }
+    //change the direction pac man is facing in animation
+    this.changePacFace();
+    //change direction pac man is headed
+    if (!this.colliding) {
+      this.changePacDirection();
+    }
+    //update tile position property of pacman
+    this.updateTilePosition();
+    //makes sure pacman wraps and stays on map
+    this.wrap();
+  }
+
   changePacFace() {
     if (this.body.velocity.x > 0) {
       this.direction = "right";
@@ -151,27 +172,6 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     if (this.tilePositionY < 0 && this.body.velocity.y < 0) {
       this.y = this.scene.map.tileToWorldY(15);
     }
-  }
-
-  trajectory() {
-    this.checkSurroundingTiles();
-    
-    this.setTurnPoint();
-    this.centerPac();
-    //animate pac-man consistently
-    if (this.direction && !this.colliding) {
-      this.move(this.direction);
-    }
-    //change the direction pac man is facing in animation
-    this.changePacFace();
-    //change direction pac man is headed
-    if (!this.colliding) {
-      this.changePacDirection();
-    }
-    //update tile position property of pacman
-    this.updateTilePosition();
-    //makes sure pacman wraps and stays on map
-    this.wrap();
   }
 
   move(direction) {

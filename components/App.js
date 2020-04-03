@@ -75,7 +75,7 @@ class App extends React.Component {
 
   joinGame() {
     let name = this.state.name;
-    let code = this.state.code;
+    let code = this.state.code.toUpperCase();
 
     socket.emit("joinRoom", code, name);
     socket.on("invalidRoom", roomId => {
@@ -156,7 +156,9 @@ class App extends React.Component {
                 </button>
                 <p>
                   Game Code:
-                  {this.state.code}
+                </p>
+                <p style={{fontSize: '17'}}>
+                {this.state.code}
                 </p>
               </div>
             ) : null}
