@@ -9,6 +9,12 @@ function loadImages(scene) {
   scene.load.image("pinksquare", "/public/assets/pinksquare.jpeg");
   scene.load.image("blacksquare", "/public/assets/blacksquare.png");
 
+  //countdown numbers
+  scene.load.image("1", "/public/assets/countdown/GameMain281.png");
+  scene.load.image("2", "/public/assets/countdown/GameMain282.png");
+  scene.load.image("3", "/public/assets/countdown/GameMain283.png");
+  scene.load.image("fight", "/public/assets/countdown/GameMain306.png");
+
   //winner images
   scene.load.image("player1", "/public/assets/winner/GameMain290.png");
   scene.load.image("player2", "/public/assets/winner/GameMain293.png");

@@ -1,7 +1,10 @@
 import addPlayer from "./addPlayer";
 import addOtherPlayers from "./otherPlayers";
+import loadImages from "./imagesToLoad";
 let calledRecently = false;
+
 export function listenForPlayerMovement(scene) {
+  loadImages(scene);
   scene.socket.on("playerMoved", playerInfo => {
     scene.otherPlayers.getChildren().forEach(otherPlayer => {
       if (playerInfo.playerId === otherPlayer.playerId) {
@@ -63,19 +66,37 @@ export function listenForDotActivity(scene) {
       }
     });
   });
+
   scene.socket.on("currentPlayers", players => {
-    if (calledRecently === false) {
-      calledRecently = true;
-      Object.keys(players).forEach(playerId => {
-        if (playerId === scene.socket.id) {
-          addPlayer(scene, players[playerId]);
-        } else {
-          addOtherPlayers(scene, players[playerId]);
+    scene.countdown = scene.add.sprite(655, 280, "3");
+    scene.anims.create({
+      key: "countdown",
+      frameRate: 1,
+      frames: [{ key: "3" }, { key: "2" }, { key: "1" }, { key: "fight" }],
+      repeat: 0
+    });
+    scene.countdown.anims.play("countdown", true);
+    scene.time.delayedCall(
+      4000,
+      () => {
+        scene.countdown.destroy();
+
+        if (calledRecently === false) {
+          calledRecently = true;
+          Object.keys(players).forEach(playerId => {
+            if (playerId === scene.socket.id) {
+              addPlayer(scene, players[playerId]);
+            } else {
+              addOtherPlayers(scene, players[playerId]);
+            }
+          });
+          setTimeout(() => {
+            calledRecently = false;
+          }, 3000);
         }
-      });
-      setTimeout(() => {
-        calledRecently = false;
-      }, 3000);
-    }
+      },
+      [],
+      scene
+    );
   });
 }
