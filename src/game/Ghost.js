@@ -85,8 +85,8 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     if (this.scene.pac) {
       this.checkSurroundingTiles();
       this.decideTarget();
-      this.setTurnPoint();
-      this.centerGhost();
+      // this.setTurnPoint();
+      // this.centerGhost();
       if (this.chaseTarget) {
         this.followPac();
       }
