@@ -77,7 +77,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   }
   trajectory() {
     // if(this.direction) {
-    //   this.anims.play(this.direction, true);
+    //   this.move(this.direction);
     // }
 
     if (this.scene.pac) {
@@ -134,29 +134,39 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     return this.chaseTarget;
   }
 
+  go(direction) {
+    let velocity = 130;
+
+    direction === "left" || direction === "up" ? velocity *= (-1) : null;
+
+    direction === "left" || direction === "right" ? this.setVelocityX(velocity) : null;
+    direction === "up" || direction === "down" ? this.setVelocityY(velocity) : null;
+
+    this.move(direction);
+
+    this.direction = direction;
+
+  }
+
   followPac() {
     if (this.tilePositionX === this.chaseTarget.tilePositionX) {
-      this.setVelocityY(0);
+      this.vulnerable ? null : this.setVelocityY(0);
     }
     if (this.tilePositionY === this.chaseTarget.tilePositionY) {
-      this.setVelocityX(0);
+      this.vulnerable ? null : this.setVelocityX(0);
     }
     if (this.tilePositionX > this.chaseTarget.tilePositionX) {
       if (this.tilePositionY > 14 || this.tilePositionY < 0) {
         this.setVelocityX(0);
       } else {
-        this.setVelocityX(-110);
-        this.move("left");
-        this.direction = "left";
+        this.vulnerable ? this.go("right") : this.go("left");
       }
     }
     if (this.tilePositionX < this.chaseTarget.tilePositionX) {
       if (this.tilePositionY > 14 || this.tilePositionY < 0) {
         this.setVelocityX(0);
       } else {
-        this.setVelocityX(110);
-        this.move("right");
-        this.direction = "right";
+        this.vulnerable ? this.go("left") : this.go("right");
       }
       // this.setVelocityX(110);
     }
@@ -165,13 +175,9 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
         this.tilePositionY + 1 + (15 - this.chaseTarget.tilePositionY) <
         this.chaseTarget.tilePositionY - this.tilePositionY + 1
       ) {
-        this.setVelocityY(-110);
-        this.move("up");
-        this.direction = "up";
+        this.vulnerable ? this.go("down") : this.go("up");
       } else {
-        this.setVelocityY(110);
-        this.move("down");
-        this.direction = "down";
+        this.vulnerable ? this.go("up") : this.go("down");
       }
     }
     if (this.tilePositionY > this.chaseTarget.tilePositionY + 1) {
@@ -179,13 +185,9 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
         15 - this.tilePositionY + this.chaseTarget.tilePositionY + 1 <
         this.tilePositionY - this.chaseTarget.tilePositionY + 1
       ) {
-        this.setVelocityY(110);
-        this.move("down");
-        this.direction = "down";
+        this.vulnerable ? this.go("up") : this.go("down");
       } else {
-        this.setVelocityY(-110);
-        this.move("up");
-        this.direction = "up";
+        this.vulnerable ? this.go("down") : this.go("up");
       }
     }
   }

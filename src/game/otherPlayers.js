@@ -24,7 +24,7 @@ export default function addOtherPlayers(scene, player) {
     }
   }*/);
 
-  scene.physics.add.collider(otherPlayer, scene.og/*, () => {
+  scene.physics.add.overlap(otherPlayer, scene.og/*, () => {
     if (!otherPlayer.big && scene.og.vulnerable === false) {
       otherPlayer.disableBody(true, true);
       delete scene.playersAlive[otherPlayer.playerNumber];
