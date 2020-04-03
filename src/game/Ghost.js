@@ -4,10 +4,11 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     config.scene.add.existing(this);
     config.scene.physics.world.enable(this);
     this.scene = config.scene;
-    // this.setSize(42, 42, true)
-    // .setOrigin(0,0)
-    this.setCircle(7)
-    .setScale(this.scene.collisionLayer.scale * 2.1);
+    this.setSize(28, 28, true)
+    .setOrigin(0,0)
+    .setOffset(-0.05,-0.05)
+    // this.setCircle(7)
+    .setScale(this.scene.collisionLayer.scale * 2.1 /* * 2.1*/);
     this.key = config.key.slice(0, -1);
     this.game = config.game;
     this.name = this.key;
@@ -17,7 +18,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.vulnerable = false;
     this.chaseTarget = "";
     this.decideTarget = this.findPac();
-    this.dead = true;
+    this.dead = false;
     this.turnTo = "";
     this.turnPoint = {};
   }

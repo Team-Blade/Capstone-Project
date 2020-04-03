@@ -97,8 +97,10 @@ export default class Level1 extends Phaser.Scene {
     this.og = new Ghost({
       scene: scene,
       key: "og1",
-      x: scene.map.tileToWorldX(15.571),
-      y: scene.map.tileToWorldY(7.56),
+      x: scene.map.tileToWorldX(15),
+      y: scene.map.tileToWorldY(8),
+      // x: scene.map.tileToWorldX(15.571),
+      // y: scene.map.tileToWorldY(7.56),
       game: this.game
     });
 
@@ -129,9 +131,9 @@ export default class Level1 extends Phaser.Scene {
     }
     //IF GHOST IS DEAD TELL EVERYONE AND DISABLE GHOST;
 
-    if (!this.og.dead) {
-      this.og.setOffset(7, 7);
-    }
+    // if (!this.og.dead) {
+    //   this.og.setOffset(7, 7);
+    // }
 
     if (this.og.dead && this.og.body.enable) {
       this.socket.emit("ghostDeath", socket.roomId);
