@@ -58,15 +58,17 @@ export default class Level1 extends Phaser.Scene {
     this.otherPlayers = this.physics.add.group();
     this.ghosts = this.physics.add.group();
 
-    this.socket.on("currentPlayers", players => {
-      Object.keys(players).forEach(playerId => {
-        if (playerId === scene.socket.id) {
-          addPlayer(scene, players[playerId]);
-        } else {
-          addOtherPlayers(scene, players[playerId]);
-        }
-      });
-    });
+    // this.socket.on("currentPlayers", players => {
+    //   console.log(players)
+    //   Object.keys(players).forEach(playerId => {
+    //     if (playerId === scene.socket.id) {
+    //       console.log("thi is passing", playerId, scene.socket.id);
+    //       addPlayer(scene, players[playerId]);
+    //     } else {
+    //       addOtherPlayers(scene, players[playerId]);
+    //     }
+    //   });
+    // });
 
     this.socket.on("disconnect", playerId => {
       scene.otherPlayers.getChildren().forEach(otherPlayer => {

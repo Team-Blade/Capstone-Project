@@ -1,5 +1,7 @@
-
-export function listenForPlayerMovement(scene){
+import addPlayer from "./addPlayer";
+import addOtherPlayers from "./otherPlayers";
+let calledRecently = false;
+export function listenForPlayerMovement(scene) {
   scene.socket.on("playerMoved", playerInfo => {
     scene.otherPlayers.getChildren().forEach(otherPlayer => {
       if (playerInfo.playerId === otherPlayer.playerId) {
@@ -11,30 +13,29 @@ export function listenForPlayerMovement(scene){
     });
   });
 }
-  
+
 export function listenForGhostMovement(scene) {
   scene.socket.on("ghostMove", ghost => {
-  scene.og.vulnerable = ghost.vulnerable;
-  scene.og.setPosition(ghost.x, ghost.y);
-  scene.og.move(ghost.direction);
-  scene.og.wrap();
+    scene.og.vulnerable = ghost.vulnerable;
+    scene.og.setPosition(ghost.x, ghost.y);
+    scene.og.move(ghost.direction);
+    scene.og.wrap();
   });
-
 }
 
-export function listenForGhostDeath (scene) {
-  scene.socket.on("ghostDied", ()=> {
+export function listenForGhostDeath(scene) {
+  scene.socket.on("ghostDied", () => {
     scene.og.dead = true;
-  })
+  });
 }
 
-export function listenForSomeonesDeath (scene) {
-  scene.socket.on("someoneDied", (playerNumber) => {
+export function listenForSomeonesDeath(scene) {
+  scene.socket.on("someoneDied", playerNumber => {
     scene.playersAlive[playerNumber].dead = true;
-  })
+  });
 }
 
-export function listenForDotActivity (scene) {
+export function listenForDotActivity(scene) {
   scene.socket.on("smallDotGone", dots => {
     let x = dots.x;
     let y = dots.y;
@@ -61,5 +62,22 @@ export function listenForDotActivity (scene) {
         dot.destroy();
       }
     });
+  });
+  scene.socket.on("currentPlayers", players => {
+    if (calledRecently === false) {
+      calledRecently = true;
+      console.log(players);
+      Object.keys(players).forEach(playerId => {
+        if (playerId === scene.socket.id) {
+          console.log("thi is passing", playerId, scene.socket.id);
+          addPlayer(scene, players[playerId]);
+        } else {
+          addOtherPlayers(scene, players[playerId]);
+        }
+      });
+      setTimeout(() => {
+        calledRecently = false;
+      }, 3000);
+    }
   });
 }

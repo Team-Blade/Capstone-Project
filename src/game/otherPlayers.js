@@ -1,6 +1,7 @@
 import SmallPac from "./SmallPac.js";
 
 export default function addOtherPlayers(scene, player) {
+  console.log("add other playerss");
   const x = scene[player.playerNumber].startPositions.x;
   const y = scene[player.playerNumber].startPositions.y;
   const playerNumber = player.playerNumber;
