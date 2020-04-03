@@ -4,11 +4,22 @@ export default function checkWin(scene) {
     scene.winner = `player${playersAlive[0]}`;
     console.log("WINNER:", scene.winner);
     scene.add.image(760, 280, `${scene.winner}`);
-    scene.socket.emit("gameOver", scene.socket.roomId);
-    scene.pac = false;
-    scene.playersAlive = {};
-    scene.winner = "";
-    scene.scene.restart();
+    scene.time.delayedCall(
+      5000,
+      () => {
+        scene.socket.emit("gameOver", scene.socket.roomId);
+        scene.playersAlive = {};
+        scene.otherPlayers.clear(true, true);
+        scene.pac.dead = true;
+        scene.pac.destroy();
+        scene.winner = "";
+        scene.gameOver = true;
+        scene.otherPlayersArray = [];
+        scene.scene.restart();
+      },
+      [],
+      scene
+    );
 
     return true;
   } else {

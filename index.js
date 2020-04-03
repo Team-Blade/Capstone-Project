@@ -46,7 +46,7 @@ const joinRoom = (socket, room, name) => {
       );
     }
   } else {
-    console.log("Room", room.id, "is invalide or has already started");
+    console.log("Room", room.id, "is invalid or has already started");
     socket.emit("gameAlreadyStarted", room.id);
   }
 };

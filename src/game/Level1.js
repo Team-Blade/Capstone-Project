@@ -180,7 +180,7 @@ export default class Level1 extends Phaser.Scene {
                 this.og.vulnerable = true;
               }
 
-              if (!player.dead) {
+              if (!player.dead && this.scene.gameOver === false) {
                 player.big ? player.setOffset(21, 21) : player.setOffset(7, 7);
                 player.wrap();
                 player.updateTilePosition();
