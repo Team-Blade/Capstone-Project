@@ -97,8 +97,8 @@ export default class Level1 extends Phaser.Scene {
     this.og = new Ghost({
       scene: scene,
       key: "og1",
-      x: scene.map.tileToWorldX(15) + 5.5,
-      y: scene.map.tileToWorldY(8) + 5.5,
+      x: scene.map.tileToWorldX(15.571),
+      y: scene.map.tileToWorldY(7.56),
       game: this.game
     });
 
@@ -125,7 +125,7 @@ export default class Level1 extends Phaser.Scene {
   update() {
     //CHECK WIN
     if (!this.winner) {
-      checkWin(this);
+      // checkWin(this);
     }
     //IF GHOST IS DEAD TELL EVERYONE AND DISABLE GHOST;
 

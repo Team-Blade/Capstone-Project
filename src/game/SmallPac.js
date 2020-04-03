@@ -18,6 +18,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.dead = false;
     this.turnPoint = {};
     this.turnTo = "";
+    this.speed = 180;
   }
   createAnimations() {
     if (this.big) {
@@ -180,19 +181,19 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
     this.createAnimations();
     if (direction === `up`) {
-      this.setVelocityY(-165);
+      this.setVelocityY(-this.speed);
       this.setVelocityX(0);
       this.anims.play(`${this.color}up`, true);
     } else if (direction === `down`) {
-      this.setVelocityY(165);
+      this.setVelocityY(this.speed);
       this.setVelocityX(0);
       this.anims.play(`${this.color}down`, true);
     } else if (direction === `left`) {
-      this.setVelocityX(-165);
+      this.setVelocityX(-this.speed);
       this.setVelocityY(0);
       this.anims.play(`${this.color}left`, true);
     } else if (direction === `right`) {
-      this.setVelocityX(165);
+      this.setVelocityX(this.speed);
       this.setVelocityY(0);
       this.anims.play(`${this.color}right`, true);
     }
@@ -216,8 +217,8 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
         this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
         this.turnPoint.y = this.scene.map.tileToWorldY(this.tilePositionY + 0.57);
   
-        if (Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, 13.7) &&
-            Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, 13.7)){
+        if (Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, 11) &&
+            Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, 11)){
               // console.log('passed2'); 
               this.x = this.turnPoint.x;
               this.y = this.turnPoint.y;
@@ -259,6 +260,16 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       false,
       "mapBaseLayer"
     );
+
+    if (this.direction && this[`tile${this.direction}`] && this[`tile${this.direction}`].collides){
+      this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
+      this.turnPoint.y = this.scene.map.tileToWorldY(this.tilePositionY + 0.57);
+      setTimeout(() => {
+        this.x = this.turnPoint.x;
+        this.y = this.turnPoint.y;
+      }, 45)
+
+    }
   }
 
   death() {

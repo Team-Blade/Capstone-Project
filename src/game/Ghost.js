@@ -18,6 +18,8 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.chaseTarget = "";
     this.decideTarget = this.findPac();
     this.dead = false;
+    this.turnTo = "";
+    this.turnPoint = {};
   }
 
   createAnimation() {
@@ -76,11 +78,11 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     }
   }
   trajectory() {
-    // if(this.direction) {
-    //   this.move(this.direction);
-    // }
-
+    if(this.direction) {
+      this.move(this.direction);
+    }
     if (this.scene.pac) {
+      this.checkSurroundingTiles();
       this.decideTarget();
       if (this.chaseTarget) {
         this.followPac();
@@ -135,15 +137,22 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   }
 
   go(direction) {
+
     let velocity = 130;
 
     direction === "left" || direction === "up" ? velocity *= (-1) : null;
-
-    direction === "left" || direction === "right" ? this.setVelocityX(velocity) : null;
-    direction === "up" || direction === "down" ? this.setVelocityY(velocity) : null;
+    
+    
+    if ((direction === "left" || direction === "right")) {
+      this.setVelocityX(velocity);
+      // this.setVelocityY(0);
+    }
+    if (direction === "up" || direction === "down") {
+      this.setVelocityY(velocity);
+      // this.setVelocityX(0);
+    }
 
     this.move(direction);
-
     this.direction = direction;
 
   }
@@ -155,6 +164,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     if (this.tilePositionY === this.chaseTarget.tilePositionY) {
       this.vulnerable ? null : this.setVelocityX(0);
     }
+
     if (this.tilePositionX > this.chaseTarget.tilePositionX) {
       if (this.tilePositionY > 14 || this.tilePositionY < 0) {
         this.setVelocityX(0);
@@ -168,7 +178,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       } else {
         this.vulnerable ? this.go("left") : this.go("right");
       }
-      // this.setVelocityX(110);
     }
     if (this.tilePositionY < this.chaseTarget.tilePositionY) {
       if (
@@ -205,6 +214,63 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   updateTilePosition() {
     this.tilePositionX = this.scene.map.worldToTileX(this.x);
     this.tilePositionY = this.scene.map.worldToTileY(this.y);
+  }
+
+  checkDirection(turnTo) {
+    if(this[`tile${turnTo}`] &&
+      !this[`tile${turnTo}`].collides &&
+      this.direction !== turnTo){
+        return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  snapToTurnPoint() {
+    this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
+    this.turnPoint.y = this.scene.map.tileToWorldY(this.tilePositionY + 0.57);
+
+    if (Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, 13.7) &&
+      Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, 13.7)){
+        // console.log('passed2');
+        // console.log('x:', 'gh', this.x, this.turnPoint.x);
+        // console.log('y:', 'gh', this.y, this.turnPoint.y); 
+        this.x = this.turnPoint.x;
+        this.y = this.turnPoint.y;
+    }
+    else {
+      // console.log('not passed');
+      // console.log('x:', 'gh', this.x, this.turnPoint.x);
+      // console.log('y:', 'gh', this.y, this.turnPoint.y);
+    }
+  }
+
+  checkSurroundingTiles() {
+    this['tileup'] = this.scene.map.getTileAt(
+      this.tilePositionX,
+      this.tilePositionY - 1,
+      false,
+      "mapBaseLayer"
+    );
+    this['tiledown'] = this.scene.map.getTileAt(
+      this.tilePositionX,
+      this.tilePositionY + 1,
+      false,
+      "mapBaseLayer"
+    );
+    this['tileleft'] = this.scene.map.getTileAt(
+      this.tilePositionX - 1,
+      this.tilePositionY,
+      false,
+      "mapBaseLayer"
+    );
+    this['tileright'] = this.scene.map.getTileAt(
+      this.tilePositionX + 1,
+      this.tilePositionY,
+      false,
+      "mapBaseLayer"
+    );
   }
 
   turnBlue() {
