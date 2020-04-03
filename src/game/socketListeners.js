@@ -1,5 +1,6 @@
 import addPlayer from "./addPlayer";
 import addOtherPlayers from "./otherPlayers";
+
 let calledRecently = false;
 export function listenForPlayerMovement(scene) {
   scene.socket.on("playerMoved", playerInfo => {
@@ -26,6 +27,7 @@ export function listenForGhostMovement(scene) {
 export function listenForGhostDeath(scene) {
   scene.socket.on("ghostDied", () => {
     scene.og.dead = true;
+
   });
 }
 
@@ -76,6 +78,10 @@ export function listenForDotActivity(scene) {
       setTimeout(() => {
         calledRecently = false;
       }, 3000);
+      let startSound = scene.sound.add('game_start')
+      startSound.play();
+      scene.sound.add('intro').stop();
+
     }
   });
 }

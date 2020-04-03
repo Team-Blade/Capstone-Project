@@ -118,7 +118,6 @@ export default function addPlayer(scene, player) {
     dots.destroy();
     let powerPelletSound = scene.sound.add('powerPellet',2)
     powerPelletSound.play();
-    powerPelletSound.setRate(0.35)
 
     scene.og.vulnerable = true;
     pac.big = true;
