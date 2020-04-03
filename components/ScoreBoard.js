@@ -30,7 +30,7 @@ const ScoreBoard = props => {
             <div key={socket.id}>
               <button onClick={() => props.startGame()}>Play Again?</button>
               <button
-                id="exit-room-button"
+                className="exit-room-button"
                 onClick={() => {
                   socket.emit("exitGameRoom", gameCode);
                   games.doc(gameCode).delete(); //removing game from db
@@ -43,6 +43,7 @@ const ScoreBoard = props => {
           ) : (
             <button
               key={socket.id}
+              className="exit-room-button"
               onClick={() => {
                 socket.emit("exitGameRoom", gameCode);
                 games.doc(gameCode).delete(); //removing game from db
