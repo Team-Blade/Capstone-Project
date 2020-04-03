@@ -151,6 +151,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   trajectory() {
+    console.log(this.scene);
     this.checkSurroundingTiles();
     // console.log(
     //   'pac:', 'x=', this.tilePositionX, 'y=', this.tilePositionY,

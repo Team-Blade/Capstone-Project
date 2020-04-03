@@ -4,6 +4,7 @@ const ScoreBoard = props => {
   let players = props.players;
   let playersArr = Object.keys(props.players);
   let gameOver = props.gameOver;
+  let socketId = props.socket.id;
   return (
     <div id="player-container">
       <h3>PLAYERS: </h3>
@@ -19,23 +20,23 @@ const ScoreBoard = props => {
         </ul>
       </div>
       <div>
-        {gameOver
-          ? playersArr.map(player => {
-              let playerId = players[player].playerNumber;
-              if (playerId === 1) {
-                return (
-                  <div key={playerId}>
-                    <button onClick={() => props.startGame()}>
-                      Play Again?
-                    </button>
-                    <button onClick={() => window.location.reload(false)}>
-                      Exit Game Room
-                    </button>
-                  </div>
-                );
-              }
-            })
-          : null}
+        {gameOver ? (
+          players[socketId] ? (
+            <div key={socketId}>
+              <button onClick={() => props.startGame()}>Play Again?</button>
+              <button onClick={() => window.location.reload(false)}>
+                Exit Game Room
+              </button>
+            </div>
+          ) : (
+            <button
+              key={socketId}
+              onClick={() => window.location.reload(false)}
+            >
+              Exit Game Room
+            </button>
+          )
+        ) : null}
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import SmallPac from "./SmallPac.js";
 import { socket } from "../../components/App";
 
 export default function addPlayer(scene, player) {
+  console.log("inside addplayer", scene);
   const playerNumber = player.playerNumber;
   const x = scene[playerNumber].startPositions.x;
   const y = scene[playerNumber].startPositions.y;
@@ -41,11 +42,7 @@ export default function addPlayer(scene, player) {
     }
   });
   scene.physics.add.overlap(scene.pac, scene.dots, (pac, dots) => {
-    scene.socket.emit(
-      "ateSmallDot",
-      { x: dots.x, y: dots.y },
-      socket.roomId
-    );
+    scene.socket.emit("ateSmallDot", { x: dots.x, y: dots.y }, socket.roomId);
     dots.destroy();
   });
   scene.physics.add.overlap(scene.pac, scene.food, (pac, food) => {
@@ -110,7 +107,7 @@ export default function addPlayer(scene, player) {
     dots.destroy();
     scene.og.vulnerable = true;
     pac.big = true;
-    pac.vulnerable = false
+    pac.vulnerable = false;
     scene.time.delayedCall(
       5000,
       () => {

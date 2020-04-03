@@ -58,7 +58,7 @@ export default class Level1 extends Phaser.Scene {
     this.otherPlayers = this.physics.add.group();
     this.ghosts = this.physics.add.group();
 
-    this.socket.on("currentPlayers", (players, room) => {
+    this.socket.on("currentPlayers", players => {
       Object.keys(players).forEach(playerId => {
         if (playerId === scene.socket.id) {
           addPlayer(scene, players[playerId]);
@@ -66,35 +66,7 @@ export default class Level1 extends Phaser.Scene {
           addOtherPlayers(scene, players[playerId]);
         }
       });
-      this.create();
     });
-
-    // this.socket.on("enablePlayers", roomId => {
-    //   // this.game.registry.destroy();
-    //   // console.log(this.scene);
-    //   // this.scene.start("Level1");
-    //   this.otherPlayers.getChildren().forEach(otherPlayer => {
-    //     otherPlayer.disableBody(false, false);
-    //     const playerNumber = otherPlayer.playerNumber;
-    //     const x = this[playerNumber].startPositions.x;
-    //     const y = this[playerNumber].startPositions.y;
-
-    //     otherPlayer.x = this.map.tileToWorldX(x);
-    //     otherPlayer.y = this.map.tileToWorldX(y);
-    //     otherPlayer.direction = "";
-    //   });
-    //   this.pac.disableBody(false, false);
-
-    //   const x = this[this.pac.playerNumber].startPositions.x;
-    //   const y = this[this.pac.playerNumber].startPositions.y;
-    //   this.pac.x = this.map.tileToWorldX(x);
-    //   this.pac.y = this.map.tileToWorldX(y);
-    //   this.pac.direction = "";
-    //   console.log("before", this.otherPlayersArray);
-    //   this.scene.restart();
-    //   console.log("after", this.otherPlayersArray);
-    //   console.log("enablePlayer", this);
-    // });
 
     this.socket.on("disconnect", playerId => {
       scene.otherPlayers.getChildren().forEach(otherPlayer => {

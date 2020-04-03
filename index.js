@@ -46,7 +46,7 @@ const joinRoom = (socket, room, name) => {
       );
     }
   } else {
-    console.log("Room", room.id, "has already started");
+    console.log("Room", room.id, "is invalide or has already started");
     socket.emit("gameAlreadyStarted", room.id);
   }
 };
@@ -78,6 +78,7 @@ io.on("connection", socket => {
       joinRoom(socket, room, name);
     } else {
       console.log("Sorry, game room:", roomId, "not found");
+      socket.emit("invalidRoom", roomId);
     }
   });
 

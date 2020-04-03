@@ -7,7 +7,13 @@ function loadImages(scene) {
   });
 
   scene.load.image("pinksquare", "/public/assets/pinksquare.jpeg");
-  scene.load.image("blacksquare", "public/assets/blacksquare.png");
+  scene.load.image("blacksquare", "/public/assets/blacksquare.png");
+
+  //winner images
+  scene.load.image("player1", "/public/assets/winner/GameMain290.png");
+  scene.load.image("player2", "/public/assets/winner/GameMain293.png");
+  scene.load.image("player3", "/public/assets/winner/GameMain292.png");
+  scene.load.image("player4", "/public/assets/winner/GameMain291.png");
 
   //pacman yellow small pre-load images
   scene.load.image("ysclosed", "/public/assets/yellowSmall/GameMain020.png");
