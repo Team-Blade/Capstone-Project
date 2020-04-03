@@ -243,8 +243,12 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     if (this.body.velocity.y !== this.turnPoint.y && this.body.velocity.x !== 0){
       this.y = this.turnPoint.y;
     }
-    else if (this.body.velocity.x === 0 && this.body.velocity.y === 0 && !this.fuzzyEqualXY(25)) {
-      this.snapToTurnPoint();
+    else if (this.body.velocity.x === 0 &&
+             this.body.velocity.y === 0 &&
+             !this.fuzzyEqualXY(25) &&
+             (!this.tilePositionY >= 15 || !this.tilePositionY <= -1)) {
+
+                this.snapToTurnPoint();
     }
   }
 
