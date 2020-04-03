@@ -4,13 +4,17 @@ body {
   background-color: #000000;
   border: black solid;
 }
-
+li {
+  margin-bottom: 5px;
+}
 #app {
   position: absolute;
   width: 20vw;
   display: flex;
 }
-
+.test {
+  border: 2px solid pink;
+}
 #container {
   display: flex;
 }

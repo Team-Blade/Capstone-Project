@@ -81,7 +81,7 @@ class App extends React.Component {
     socket.emit("joinRoom", code, name);
     socket.on("invalidRoom", roomId => {
       console.log("inside invalidRoom");
-      alert("Sorry, game room:", roomId, "not found");
+      alert(`Sorry, game room: ${roomId} not found`);
     });
     socket.on("gameAlreadyStarted", roomId => {
       alert(`Sorry, the game for code ${roomId} has already started...`);
@@ -251,6 +251,14 @@ class App extends React.Component {
                   >
                     Enter Game Room
                   </button>
+                  <button
+                    className="enter-game-button"
+                    type="submit"
+                    onClick={() => window.location.reload(false)}
+                    open={false}
+                  >
+                    GO BACK
+                  </button>
                 </div>
               )}
             </Popup>
@@ -273,6 +281,13 @@ class App extends React.Component {
                   }}
                 >
                   Enter Game
+                </button>
+                <button
+                  type="submit"
+                  onClick={() => window.location.reload(false)}
+                  open={false}
+                >
+                  GO BACK
                 </button>
               </div>
             </Popup>
