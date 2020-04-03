@@ -26,15 +26,21 @@ class App extends React.Component {
       name: "",
       buttonClickedName: "",
       code: "",
-      players: {}
+      players: {},
+      gameStarted: false,
+      gameOver: false
     };
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleCodeChange = this.handleCodeChange.bind(this);
     this.createGame = this.createGame.bind(this);
     this.joinGame = this.joinGame.bind(this);
     this.startGame = this.startGame.bind(this);
+    this.restartGame = this.restartGame.bind(this);
+    this.eventListener = this.eventListener.bind(this);
   }
-
+  componentDidMount() {
+    this.eventListener();
+  }
   handleNameChange(event) {
     this.setState({ name: event.target.value });
   }
@@ -73,14 +79,18 @@ class App extends React.Component {
     let code = this.state.code;
 
     socket.emit("joinRoom", code, name);
+    socket.on("invalidRoom", roomId => {
+      console.log("inside invalidRoom");
+      alert("Sorry, game room:", roomId, "not found");
+    });
     socket.on("gameAlreadyStarted", roomId => {
-      alert("Sorry, the game for this code has already started...");
+      alert(`Sorry, the game for code ${roomId} has already started...`);
       window.location.reload(false);
     });
-
     socket.on("newPlayers", allPlayers => {
       games.doc(code).set({ players: allPlayers }, { merge: true });
     });
+
     //listening for new players
     games.doc(code).onSnapshot(doc => {
       const players = doc.data().players;
@@ -91,16 +101,37 @@ class App extends React.Component {
   }
 
   startGame() {
-    this.setState({ buttonClickedName: "" });
+    console.log("in startgame");
+    this.setState({
+      buttonClickedName: "",
+      gameOver: false,
+      gameStarted: true
+    });
     socket.emit("startGame", this.state.code);
+  }
+  restartGame() {
+    this.setState({ buttonClickedName: "", gameOver: false });
+    socket.emit("restartGame", this.state.code);
+  }
+
+  eventListener() {
+    socket.on("playAgain", () => {
+      this.setState({ gameOver: true });
+    });
   }
 
   render() {
+    let state = this.state;
     return (
       <div id="main-wrapper">
         <main id="main">
           <nav>
-            <ScoreBoard players={this.state.players}></ScoreBoard>
+            <ScoreBoard
+              players={state.players}
+              gameOver={state.gameOver}
+              socket={socket}
+              startGame={this.startGame}
+            />
             {this.state.buttonClickedName === "create" ? (
               <div id="game-start">
                 <p>
@@ -117,16 +148,17 @@ class App extends React.Component {
                   START!
                 </button>
               </div>
-            ) : (
-              <p>
-                Waiting for the
-                <br />
-                game to start...
+            ) : null}
+            {state.buttonClickedName !== "" &&
+            state.buttonClickedName !== "create" &&
+            !state.gameStarted ? (
+              <p className="waiting-room">
+                Waiting for <br /> game to start...
               </p>
-            )}
+            ) : null}
           </nav>
           <div>
-            {!this.state.beginGameButtonClicked ? (
+            {!state.beginGameButtonClicked ? (
               <Popup defaultOpen closeOnDocumentClick={false}>
                 <div id="container-start">
                   <div></div>
@@ -150,7 +182,7 @@ class App extends React.Component {
               </Popup>
             ) : null}
 
-            {this.state.buttonClicked ? (
+            {state.buttonClicked ? (
               <Popup open closeOnDocumentClick={false}>
                 <div className="input-buttons">
                   <div>
@@ -172,7 +204,7 @@ class App extends React.Component {
                     <button
                       type="submit"
                       name="create"
-                      disabled={!this.state.name}
+                      disabled={!state.name}
                       onClick={this.createGame}
                     >
                       Create A Game
@@ -182,7 +214,7 @@ class App extends React.Component {
                     <button
                       type="button"
                       name="join"
-                      disabled={!this.state.name}
+                      disabled={!state.name}
                       onClick={() =>
                         this.setState({
                           buttonClicked: false,
@@ -208,7 +240,7 @@ class App extends React.Component {
                     <br />
                     with friends
                     <div>
-                      <h2>{this.state.code}</h2>
+                      <h2>{state.code}</h2>
                     </div>
                   </div>
                   <button
