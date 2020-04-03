@@ -101,6 +101,7 @@ class App extends React.Component {
   }
 
   startGame() {
+    console.log("in startgame");
     this.setState({
       buttonClickedName: "",
       gameOver: false,
