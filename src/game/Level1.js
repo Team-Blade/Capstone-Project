@@ -50,15 +50,13 @@ export default class Level1 extends Phaser.Scene {
       "map",
       "/public/assets/newMapWithFoodDots6.json"
     );
-    this.load.audio('game_start','/public/assets/audio/game_start.mp3')
-    this.load.audio('death','/public/assets/audio/death.mp3')
-    this.load.audio('eat_ghost','/public/assets/audio/eat_ghost.mp3')
-    this.load.audio('eat','/public/assets/audio/pause.mp3')
-    this.load.audio('intro','/public/assets/audio/pause_beat.mp3')
-    this.load.audio('fruit','/public/assets/audio/fruit.mp3')
-    this.load.audio('powerPellet','/public/assets/audio/waza.mp3')
-
-
+    this.load.audio("game_start", "/public/assets/audio/game_start.mp3");
+    this.load.audio("death", "/public/assets/audio/death.mp3");
+    this.load.audio("eat_ghost", "/public/assets/audio/eat_ghost.mp3");
+    this.load.audio("eat", "/public/assets/audio/pause.mp3");
+    this.load.audio("intro", "/public/assets/audio/pause_beat.mp3");
+    this.load.audio("fruit", "/public/assets/audio/fruit.mp3");
+    this.load.audio("powerPellet", "/public/assets/audio/waza.mp3");
   }
 
   create() {
@@ -122,12 +120,7 @@ export default class Level1 extends Phaser.Scene {
   update() {
     //CHECK WIN
     if (!this.winner) {
-<<<<<<< HEAD
-      // if (!checkWin(this)) {
-      if (true) {
-=======
       if (!checkWin(this)) {
->>>>>>> master
         if (!this.og.dead) {
           this.og.setOffset(7, 7);
         }
@@ -135,7 +128,7 @@ export default class Level1 extends Phaser.Scene {
         if (this.og.dead && this.og.body.enable) {
           this.socket.emit("ghostDeath", socket.roomId);
           this.og.disableBody(true, true);
-          let eatGhostSound = this.sound.add('eat_ghost')
+          let eatGhostSound = this.sound.add("eat_ghost");
           eatGhostSound.play();
         }
         //IF GHOST IS VULNERABLE, TURN BLUE
@@ -176,15 +169,8 @@ export default class Level1 extends Phaser.Scene {
             this.pac.disableBody(true, true);
             this.socket.emit("selfDeath", socket.roomId, this.pac.playerNumber);
             delete this.playersAlive[this.pac.playerNumber];
-<<<<<<< HEAD
-            //   },
-            //   [],
-            //   this
-            // );
-=======
-            let deathSound = this.sound.add('death')
+            let deathSound = this.sound.add("death");
             deathSound.play();
->>>>>>> master
           }
           //FOR EACH PLAYER
           this.otherPlayersArray.forEach(player => {
