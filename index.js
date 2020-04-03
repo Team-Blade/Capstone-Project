@@ -85,12 +85,8 @@ io.on("connection", socket => {
   socket.on("startGame", roomId => {
     rooms[roomId].started = true;
     io.in(roomId).emit("currentPlayers", rooms[roomId].players);
+    io.in(roomId).emit("gameStarted");
   });
-
-  // socket.on("restartGame", roomId => {
-  //   console.log("inside socket restartgame");
-  //   io.in(roomId).emit("enablePlayers", rooms[roomId].players);
-  // });
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
@@ -138,6 +134,12 @@ io.on("connection", socket => {
   socket.on("gameOver", roomId => {
     console.log("inside gameOver", roomId);
     io.in(roomId).emit("playAgain");
+  });
+  socket.on("exitGameRoom", roomId => {
+    console.log("deleting roomId from db", roomId);
+    console.log("before", rooms[roomId]);
+    delete rooms[roomId];
+    socket.in(roomId).emit("playerGone", roomId);
   });
 });
 const PORT = process.env.PORT || 8080;
