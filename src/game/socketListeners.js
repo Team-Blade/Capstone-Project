@@ -66,6 +66,23 @@ export function listenForDotActivity(scene) {
       }
     });
   });
+  scene.socket.on("makeNewSmallDot", dot => {
+    let x = dot.x;
+    let y = dot.y;
+    scene.dots.create(x, y, "smallDot");
+  });
+  scene.socket.on("makeNewBigDot", dot => {
+    let x = dot.x;
+    let y = dot.y;
+    scene.bigDots.create(x, y, "largeDot");
+  });
+  scene.socket.on("makeNewFood", food => {
+    let name = food.name;
+    let x = food.x;
+    let y = food.y;
+    scene.food.create(x, y, name);
+  });
+
   scene.socket.on("currentPlayers", players => {
     scene.countdown = scene.add.sprite(655, 280, "3");
     scene.anims.create({
@@ -75,9 +92,9 @@ export function listenForDotActivity(scene) {
       repeat: 0
     });
     scene.countdown.anims.play("countdown", true);
-    let startSound = scene.sound.add('game_start')
+    let startSound = scene.sound.add("game_start");
     startSound.play();
-    scene.sound.add('intro').stop();
+    scene.sound.add("intro").stop();
     scene.time.delayedCall(
       4000,
       () => {
@@ -95,8 +112,6 @@ export function listenForDotActivity(scene) {
           setTimeout(() => {
             calledRecently = false;
           }, 3000);
-
-
         }
       },
       [],
