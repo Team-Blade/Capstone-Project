@@ -81,6 +81,7 @@ class App extends React.Component {
     socket.on("invalidRoom", roomId => {
       console.log("inside invalidRoom");
       alert(`Sorry, game room: ${roomId} not found`);
+      this.setState({ buttonClickedName: "join" });
     });
     socket.on("gameAlreadyStarted", roomId => {
       alert(`Sorry, the game for code ${roomId} has already started...`);
@@ -265,7 +266,13 @@ class App extends React.Component {
                   <button
                     className="enter-game-button"
                     type="submit"
-                    onClick={() => this.setState({buttonClicked: true, buttonClickedName: "", players : {} })}
+                    onClick={() =>
+                      this.setState({
+                        buttonClicked: true,
+                        buttonClickedName: "",
+                        players: {}
+                      })
+                    }
                     open={false}
                   >
                     GO BACK
@@ -295,7 +302,12 @@ class App extends React.Component {
                 </button>
                 <button
                   type="submit"
-                  onClick={() => this.setState({buttonClicked: true, buttonClickedName: "" })}
+                  onClick={() =>
+                    this.setState({
+                      buttonClicked: true,
+                      buttonClickedName: ""
+                    })
+                  }
                   open={false}
                 >
                   GO BACK
