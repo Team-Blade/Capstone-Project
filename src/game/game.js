@@ -1,6 +1,7 @@
 import Level1 from "./Level1.js";
 const config = {
   type: Phaser.AUTO,
+  parent: "divId",
   scale: {
     scale: "SHOW_ALL",
     orientation: "LANDSCAPE",

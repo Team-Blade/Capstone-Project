@@ -7,7 +7,14 @@ body {
 
 #app {
   position: absolute;
+  width: 20vw;
+  display: flex;
 }
+
+#container {
+  display: flex;
+}
+
 nav {
   padding: 100px;
   padding-left: 0px;
@@ -26,8 +33,19 @@ nav {
 
 nav > div {
   align-self: flex-end;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
+.waiting-room {
+  color: gold;
+}
+#exit-room-button {
+  height: 60px;
+}
 main {
   font-family: "Press Start 2P", cursive;
 }
@@ -46,12 +64,17 @@ main {
   margin-top: 0px;
   align-self: center;
 }
-
+.popup-content {
+  min-width: 600px;
+  color: black;
+}
 #container-start {
   display: flex;
   justify-content: space-around;
   padding: 20px;
   background-color: black;
+  border: 2px solid purple;
+  min-width: 500;
 }
 
 .input-buttons {
@@ -148,12 +171,15 @@ h2 {
   color: gold;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: flex-start;
   background-color: black;
 }
 
 h3 {
   text-decoration: underline;
+}
+#players {
+  align-self: flex-start;
 }
 
 .popup-overlay {
