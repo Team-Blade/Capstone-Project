@@ -147,6 +147,10 @@ class App extends React.Component {
                 >
                   START!
                 </button>
+                <p>
+                  Game Code:
+                  {this.state.code}
+                </p>
               </div>
             ) : null}
             {state.buttonClickedName !== "" &&
