@@ -28,6 +28,10 @@ nav > div {
   align-self: flex-end;
 }
 
+.waiting-room {
+  color: gold;
+}
+
 main {
   font-family: "Press Start 2P", cursive;
 }
