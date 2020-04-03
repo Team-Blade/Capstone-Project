@@ -156,7 +156,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.checkSurroundingTiles();
     
     this.setTurnPoint();
-
+    this.centerPac();
     //animate pac-man consistently
     if (this.direction) {
       this.move(this.direction);
@@ -203,11 +203,8 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       this.direction !== turnTo
     ) {
 
-      if (Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, 11) &&
-          Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, 11)){
-            
-            this.x = this.turnPoint.x;
-            this.y = this.turnPoint.y;
+      if (this.fuzzyEqualXY(11)){
+            this.snapToTurnPoint();
             return true;
       }
       // else {
@@ -224,6 +221,31 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   setTurnPoint() {
     this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
     this.turnPoint.y = this.scene.map.tileToWorldY(this.tilePositionY + 0.57);
+  }
+
+  snapToTurnPoint() {
+    this.x = this.turnPoint.x;
+    this.y = this.turnPoint.y;
+  }
+
+  fuzzyEqualXY(threshold) {
+    return Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, threshold)
+           &&
+           Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, threshold)
+  }
+
+  centerPac() {
+
+    if (this.body.velocity.x !== this.turnPoint.x && this.body.velocity.y !== 0){
+      this.x = this.turnPoint.x;
+    }
+    if (this.body.velocity.y !== this.turnPoint.y && this.body.velocity.x !== 0){
+      this.y = this.turnPoint.y;
+    }
+    // if (this.body.velocity.x === 0 && this.body.velocity.y === 0 && !this.fuzzyEqualXY(11)) {
+    //   console.log('11', this.turnPoint, this.x, this.y);
+    //   this.snapToTurnPoint();
+    // }
   }
 
   checkSurroundingTiles() {
@@ -254,11 +276,9 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
 
     if (this.direction && this[`tile${this.direction}`] && this[`tile${this.direction}`].collides){
       setTimeout(() => {
-        this.x = this.turnPoint.x;
-        this.y = this.turnPoint.y;
-        this.setVelocity(0, 0);
+        this.snapToTurnPoint();
         this.direction = "";
-      }, 40)
+      }, 33)
 
     }
   }
