@@ -148,7 +148,7 @@ class App extends React.Component {
                   START!
                 </button>
                 <p>
-                  Game Code:
+                  Game Cod
                   {this.state.code}
                 </p>
               </div>

@@ -12,9 +12,7 @@ li {
   width: 20vw;
   display: flex;
 }
-.test {
-  border: 2px solid pink;
-}
+
 #container {
   display: flex;
 }
