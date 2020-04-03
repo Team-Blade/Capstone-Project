@@ -11,7 +11,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.playerNumber = config.playerNumber;
     this.color = this.key.slice(0, 2);
     this.bigColor = `${this.key.slice(0, 1)}b`;
-    this.moving = false;
+    this.moving = true;
     this.big = false;
     this.vulnerable = true;
     this.direction = "";
@@ -154,13 +154,9 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
 
   trajectory() {
     this.checkSurroundingTiles();
-    // console.log(
-    //   'pac:', 'x=', this.tilePositionX, 'y=', this.tilePositionY,
-    //   'up:', this.tileUp,
-    //   'down', this.tileDown,
-    //   'left', this.tileLeft,
-    //   'right', this.tileRight
-    // )
+    
+    this.setTurnPoint();
+
     //animate pac-man consistently
     if (this.direction) {
       this.move(this.direction);
@@ -200,44 +196,34 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  // updateOldPosition() {
-  //   this.oldPosition = {
-  //     x: this.x,
-  //     y: this.y,
-  //     tileX: this.map.worldToTileX(this.x),
-  //     tileY: this.map.worldToTileY(this.y),
-  //     scale: this.scale
-  //   };
-  // }
-
   checkDirection(turnTo) {
     if (
       this[`tile${turnTo}`] &&
       !this[`tile${turnTo}`].collides &&
       this.direction !== turnTo
     ) {
-      this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
-      this.turnPoint.y = this.scene.map.tileToWorldY(this.tilePositionY + 0.57);
 
-        this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
-        this.turnPoint.y = this.scene.map.tileToWorldY(this.tilePositionY + 0.57);
-  
-        if (Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, 11) &&
-            Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, 11)){
-              // console.log('passed2'); 
-              this.x = this.turnPoint.x;
-              this.y = this.turnPoint.y;
-              return true;
-        }
-        // else {
-        //   // console.log('not passed');
-        //   console.log(this.x, this.turnPoint.x);
-        //   console.log(this.y, this.turnPoint.y)
-        // }
+      if (Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, 11) &&
+          Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, 11)){
+            
+            this.x = this.turnPoint.x;
+            this.y = this.turnPoint.y;
+            return true;
+      }
+      // else {
+      //   // console.log('not passed');
+      //   console.log(this.x, this.turnPoint.x);
+      //   console.log(this.y, this.turnPoint.y)
+      // }
     }
     else {
       return false;
     }
+  }
+
+  setTurnPoint() {
+    this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
+    this.turnPoint.y = this.scene.map.tileToWorldY(this.tilePositionY + 0.57);
   }
 
   checkSurroundingTiles() {
@@ -267,8 +253,6 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     );
 
     if (this.direction && this[`tile${this.direction}`] && this[`tile${this.direction}`].collides){
-      this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
-      this.turnPoint.y = this.scene.map.tileToWorldY(this.tilePositionY + 0.57);
       setTimeout(() => {
         this.x = this.turnPoint.x;
         this.y = this.turnPoint.y;
