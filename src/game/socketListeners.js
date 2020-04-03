@@ -75,6 +75,9 @@ export function listenForDotActivity(scene) {
       repeat: 0
     });
     scene.countdown.anims.play("countdown", true);
+    let startSound = scene.sound.add('game_start')
+    startSound.play();
+    scene.sound.add('intro').stop();
     scene.time.delayedCall(
       4000,
       () => {
@@ -92,9 +95,7 @@ export function listenForDotActivity(scene) {
           setTimeout(() => {
             calledRecently = false;
           }, 3000);
-          let startSound = scene.sound.add('game_start')
-          startSound.play();
-          scene.sound.add('intro').stop();
+
 
         }
       },
