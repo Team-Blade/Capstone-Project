@@ -38,20 +38,20 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       frames: [
         { key: `${this.color}closed` },
         { key: `${this.color}left1` },
-        { key: `${this.color}left2` }
+        { key: `${this.color}left2` },
       ],
       frameRate: 10,
-      repeat: -1
+      repeat: -1,
     });
     this.scene.anims.create({
       key: `${this.color}right`,
       frames: [
         { key: `${this.color}closed` },
         { key: `${this.color}right1` },
-        { key: `${this.color}right2` }
+        { key: `${this.color}right2` },
       ],
       frameRate: 10,
-      repeat: -1
+      repeat: -1,
     });
     this.scene.anims.create({
       key: `${this.color}up`,
@@ -59,19 +59,19 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       frames: [
         { key: `${this.color}closed` },
         { key: `${this.color}up1` },
-        { key: `${this.color}up2` }
+        { key: `${this.color}up2` },
       ],
-      repeat: -1
+      repeat: -1,
     });
     this.scene.anims.create({
       key: `${this.color}down`,
       frames: [
         { key: `${this.color}closed` },
         { key: `${this.color}down1` },
-        { key: `${this.color}down2` }
+        { key: `${this.color}down2` },
       ],
       frameRate: 10,
-      repeat: -1
+      repeat: -1,
     });
     this.scene.anims.create({
       key: `death`,
@@ -83,10 +83,10 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
         { key: `${this.color}death5` },
         { key: `${this.color}death6` },
         { key: `${this.color}death7` },
-        { key: `${this.color}death8` }
+        { key: `${this.color}death8` },
       ],
-      frameRate: 8,
-      repeat: 0
+      frameRate: 16,
+      repeat: 0,
     });
   }
 
@@ -155,7 +155,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
 
   trajectory() {
     this.checkSurroundingTiles();
-    
+
     this.setTurnPoint();
     this.centerPac();
     //animate pac-man consistently
@@ -205,18 +205,16 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       !this[`tile${turnTo}`].collides &&
       this.direction !== turnTo
     ) {
-
-      if (this.fuzzyEqualXY(11)){
-            this.snapToTurnPoint();
-            return true;
+      if (this.fuzzyEqualXY(11)) {
+        this.snapToTurnPoint();
+        return true;
       }
       // else {
       //   // console.log('not passed');
       //   console.log(this.x, this.turnPoint.x);
       //   console.log(this.y, this.turnPoint.y)
       // }
-    }
-    else {
+    } else {
       return false;
     }
   }
@@ -232,26 +230,25 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   fuzzyEqualXY(threshold) {
-    const fuzzy = Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, threshold)
-           &&
-           Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, threshold)
-    return fuzzy
+    const fuzzy =
+      Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, threshold) &&
+      Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, threshold);
+    return fuzzy;
   }
 
   centerPac() {
-
-    if (this.x !== this.turnPoint.x && this.body.velocity.y !== 0){
+    if (this.x !== this.turnPoint.x && this.body.velocity.y !== 0) {
       this.x = this.turnPoint.x;
     }
-    if (this.y !== this.turnPoint.y && this.body.velocity.x !== 0){
+    if (this.y !== this.turnPoint.y && this.body.velocity.x !== 0) {
       this.y = this.turnPoint.y;
-    }
-    else if (this.body.velocity.x === 0 &&
-             this.body.velocity.y === 0 &&
-             !this.fuzzyEqualXY(25) &&
-             (!this.tilePositionY >= 15 || !this.tilePositionY <= -1)) {
-
-                this.snapToTurnPoint();
+    } else if (
+      this.body.velocity.x === 0 &&
+      this.body.velocity.y === 0 &&
+      !this.fuzzyEqualXY(25) &&
+      (!this.tilePositionY >= 15 || !this.tilePositionY <= -1)
+    ) {
+      this.snapToTurnPoint();
     }
   }
 
@@ -281,12 +278,15 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       "mapBaseLayer"
     );
 
-    if (this.direction && this[`tile${this.direction}`] && this[`tile${this.direction}`].collides){
+    if (
+      this.direction &&
+      this[`tile${this.direction}`] &&
+      this[`tile${this.direction}`].collides
+    ) {
       setTimeout(() => {
         this.snapToTurnPoint();
         this.direction = "";
-      }, 33)
-
+      }, 33);
     }
   }
 

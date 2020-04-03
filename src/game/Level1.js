@@ -164,17 +164,17 @@ export default class Level1 extends Phaser.Scene {
           //IF YOU ARE DEAD TELL EVERYONE AND DELETE YOURSELF
           if (this.pac.dead && this.playersAlive[this.pac.playerNumber]) {
             this.socket.emit("selfDeath", socket.roomId, this.pac.playerNumber);
-            pac.creatAnimations();
-            pac.anims.play("death", true);
+            this.pac.createAnimations();
+            console.log(this.pac.color);
+            this.pac.anims.play("death", true);
             let deathSound = this.sound.add("death");
             deathSound.play();
-            player.setVelocityX(0);
-            player.setVelocityY(0);
+            this.pac.setVelocityX(0);
+            this.pac.setVelocityY(0);
             this.time.delayedCall(
-              400,
+              500,
               () => {
                 this.pac.disableBody(true, true);
-                delete this.playersAlive[player.playerNumber];
                 delete this.playersAlive[this.pac.playerNumber];
               },
               [],
@@ -191,12 +191,12 @@ export default class Level1 extends Phaser.Scene {
               player.setVelocityY(0);
 
               this.time.delayedCall(
-                400,
-                () => {
+                500,
+                (player) => {
                   player.disableBody(true, true);
                   delete this.playersAlive[player.playerNumber];
                 },
-                [],
+                [player],
                 this
               );
             } else {
