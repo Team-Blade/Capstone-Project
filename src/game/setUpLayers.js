@@ -3,15 +3,17 @@ function setUpLayers(scene) {
 
   const pinkTileset = map.addTilesetImage("pinksquare", "pinksquare");
   const blackTileset = map.addTilesetImage("blacksquare", "blacksquare");
-  const smallDotTileset = map.addTilesetImage("GameMain219", "smallDot");
+  const smallDotTileset = map.addTilesetImage("GameMain219Edit2", "smallDot");
   const largeDotTileset = map.addTilesetImage("Common061", "largeDot");
   const candyTileset = map.addTilesetImage("GameMain004", "candy");
-  const burgerTileset = map.addTilesetImage("GameMain006", "burger");
-  const papayaTileset = map.addTilesetImage("GameMain008", "papaya");
-  const peachTileset = map.addTilesetImage("GameMain010", "peach");
-  const pizzaSliceTileset = map.addTilesetImage("GameMain011", "pizzaSlice");
+  //const burgerTileset = map.addTilesetImage("GameMain006", "burger");
+  //const papayaTileset = map.addTilesetImage("GameMain008", "papaya");
+  //const peachTileset = map.addTilesetImage("GameMain010", "peach");
+  //const pizzaSliceTileset = map.addTilesetImage("GameMain011", "pizzaSlice");
   const cakeSliceTileset = map.addTilesetImage("GameMain003", "cakeSlice");
-  const eggTileset = map.addTilesetImage("GameMain014", "egg");
+  //const eggTileset = map.addTilesetImage("GameMain014", "egg");
+  const bananaTileset = map.addTilesetImage("GameMain001", "banana");
+
 
   // creates the map layer, key must match layer name in tiled
   scene.collisionLayer = map.createStaticLayer(
@@ -29,7 +31,7 @@ function setUpLayers(scene) {
 
   //creates the food and dots layer
   scene.collisionLayerFoodDots = map.createDynamicLayer(
-    "foodDotsLayer",
+    "foodDotsLayer1",
     [],
     0,
     0
@@ -45,8 +47,10 @@ function setUpLayers(scene) {
   //food
   scene.food = scene.physics.add.staticGroup();
 
+  //small dots
+
   scene.collisionLayerFoodDots.forEachTile(tile => {
-    if (tile.index === 13) {
+    if (tile.index === 9) {
       const x = tile.getCenterX();
       const y = tile.getCenterY();
       const dot = scene.dots.create(x, y, "smallDot");
@@ -59,7 +63,7 @@ function setUpLayers(scene) {
 
   //large dots
   scene.collisionLayerFoodDots.forEachTile(tile => {
-    if (tile.index === 4) {
+    if (tile.index === 5) {
       const x = tile.getCenterX();
       const y = tile.getCenterY();
       const dot = scene.bigDots.create(x, y, "largeDot");
@@ -76,48 +80,6 @@ function setUpLayers(scene) {
     }
   });
 
-  // burger
-
-  scene.collisionLayerFoodDots.forEachTile(tile => {
-    if (tile.index === 5) {
-      const x = tile.getCenterX();
-      const y = tile.getCenterY();
-      const foodItem = scene.food.create(x, y, "burger");
-    }
-  });
-
-  // papaya
-
-  scene.collisionLayerFoodDots.forEachTile(tile => {
-    if (tile.index === 12) {
-      const x = tile.getCenterX();
-      const y = tile.getCenterY();
-      const foodItem = scene.food.create(x, y, "papaya");
-    }
-  });
-
-  scene.bigDots.getChildren().forEach(dot => {
-    dot.setSize(40, 40);
-  });
-
-  //peach
-  scene.collisionLayerFoodDots.forEachTile(tile => {
-    if (tile.index === 11) {
-      const x = tile.getCenterX();
-      const y = tile.getCenterY();
-      const foodItem = scene.food.create(x, y, "peach");
-    }
-  });
-
-  //pizza slice
-
-  scene.collisionLayerFoodDots.forEachTile(tile => {
-    if (tile.index === 10) {
-      const x = tile.getCenterX();
-      const y = tile.getCenterY();
-      const foodItem = scene.food.create(x, y, "pizzaSlice");
-    }
-  });
 
   //cake Slice
 
@@ -129,15 +91,18 @@ function setUpLayers(scene) {
     }
   });
 
-  //egg
+
+  //banana
 
   scene.collisionLayerFoodDots.forEachTile(tile => {
-    if (tile.index === 9) {
+    if (tile.index === 8) {
       const x = tile.getCenterX();
       const y = tile.getCenterY();
-      const foodItem = scene.food.create(x, y, "egg");
+      const foodItem = scene.food.create(x, y, "banana");
     }
   });
+
+
   scene.food.getChildren().forEach(foodItem => {
     foodItem.setSize(40, 40);
   });
