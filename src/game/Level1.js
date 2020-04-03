@@ -50,10 +50,21 @@ export default class Level1 extends Phaser.Scene {
       "map",
       "/public/assets/newMapWithFoodDots6.json"
     );
+    this.load.audio('game_start','/public/assets/audio/game_start.mp3')
+    this.load.audio('death','/public/assets/audio/death.mp3')
+    this.load.audio('eat_ghost','/public/assets/audio/eat_ghost.mp3')
+    this.load.audio('eat','/public/assets/audio/pause.mp3')
+    this.load.audio('intro','/public/assets/audio/pause_beat.mp3')
+    this.load.audio('fruit','/public/assets/audio/fruit.mp3')
+    this.load.audio('powerPellet','/public/assets/audio/extra_life.mp3')
+
+
   }
+
 
   create() {
     // this.directions = {};
+
     const scene = this;
 
     this.otherPlayers = this.physics.add.group();
@@ -67,6 +78,9 @@ export default class Level1 extends Phaser.Scene {
           addOtherPlayers(scene, players[playerId]);
         }
       });
+      let startSound = this.sound.add('game_start')
+      startSound.play();
+
     });
     // this.socket.on("newPlayer", playerInfo => {
     //   addOtherPlayers(scene, playerInfo);
@@ -74,9 +88,11 @@ export default class Level1 extends Phaser.Scene {
     this.socket.on("disconnect", playerId => {
       scene.otherPlayers.getChildren().forEach(otherPlayer => {
         if (playerId === otherPlayer.playerId) {
+
           // otherPlayer.destroy();
         }
       });
+
     });
 
     //makes the tilemap and defines the height and width of the tiles
@@ -121,6 +137,10 @@ export default class Level1 extends Phaser.Scene {
     //processes DOM input events if true
     this.input.enabled = true;
     this.cursors = this.input.keyboard.createCursorKeys();
+
+    let introSound = this.sound.add('intro')
+    introSound.play();
+
   }
   update() {
     //CHECK WIN
@@ -136,6 +156,9 @@ export default class Level1 extends Phaser.Scene {
     if (this.og.dead && this.og.body.enable) {
       this.socket.emit("ghostDeath", socket.roomId);
       this.og.disableBody(true, true);
+      let eatGhostSound = this.sound.add('eat_ghost')
+      eatGhostSound.play();
+
     }
     //IF GHOST IS VULNERABLE, TURN BLUE
     //IF YOU ARE SMALL AND OTHER PLAYERS ARE ALSO SMALL, MAKE GHOST NOT VULERABLE
@@ -170,6 +193,8 @@ export default class Level1 extends Phaser.Scene {
         this.pac.disableBody(true, true);
         this.socket.emit("selfDeath", socket.roomId, this.pac.playerNumber);
         delete this.playersAlive[this.pac.playerNumber];
+        let deathSound = this.sound.add('death')
+        deathSound.play();
       }
       //FOR EACH PLAYER
       this.otherPlayersArray.forEach(player => {
@@ -178,6 +203,8 @@ export default class Level1 extends Phaser.Scene {
           player.death();
           player.disableBody(true, true);
           delete this.playersAlive[player.playerNumber];
+          let deathSound = this.sound.add('death')
+          deathSound.play();
         } else {
           //IF SOMEONE IS BIG AND GHOST IS NOT VULNERABLE, MAKE GHOST VULNERABLE
           if (player.big && !this.og.vulnerable) {
