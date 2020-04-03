@@ -30,14 +30,13 @@ export default function addPlayer(scene, player) {
       pac.dead = true;
       // pac.disableBody(true, true)
       // delete scene.playersAlive[pac.playerNumber]
-    }
-    else {
+    } else {
       pac.colliding = true;
       pac.direction === "left" ? pac.setVelocityX(400) : null;
       pac.direction === "right" ? pac.setVelocityX(-400) : null;
       pac.direction === "up" ? pac.setVelocityY(400) : null;
       pac.direction === "down" ? pac.setVelocityY(-400) : null;
-      console.log('here here pac.body.velocity', pac.body.velocity);
+      console.log("here here pac.body.velocity", pac.body.velocity);
       // if (pac.direction === "left" || pac.direction === "right") {
       //   pac.setVelocityX(pac.body.velocity.x * -2)
       //   console.log('velocity x', pac.body.velocity.x);
@@ -54,9 +53,9 @@ export default function addPlayer(scene, player) {
       //     // pac.setVelocityY(other.body.velocity.y * 2)
       //   }
       // }
-      setTimeout(()=> {
+      setTimeout(() => {
         pac.colliding = false;
-        pac.setVelocity(0,0)
+        pac.setVelocity(0, 0);
       }, 1000);
     }
   });
@@ -78,13 +77,13 @@ export default function addPlayer(scene, player) {
   scene.physics.add.overlap(scene.pac, scene.dots, (pac, dots) => {
     scene.socket.emit("ateSmallDot", { x: dots.x, y: dots.y }, socket.roomId);
     dots.destroy();
-    let eatSound = scene.sound.add('eat')
+    let eatSound = scene.sound.add("eat");
     eatSound.play();
   });
   scene.physics.add.overlap(scene.pac, scene.food, (pac, food) => {
     scene.socket.emit("ateFood", { x: food.x, y: food.y }, socket.roomId);
     food.destroy();
-    let fruitSound = scene.sound.add('fruit')
+    let fruitSound = scene.sound.add("fruit");
     fruitSound.play();
 
     //if remaining food length is zero
@@ -109,6 +108,11 @@ export default function addPlayer(scene, player) {
           const x = tile.getCenterX();
           const y = tile.getCenterY();
           const dot = scene.dots.create(x, y, "smallDot");
+          scene.socket.emit(
+            "newSmallDot",
+            { x: dot.x, y: dot.y },
+            socket.roomId
+          );
         }
       });
 
@@ -120,8 +124,18 @@ export default function addPlayer(scene, player) {
 
           if (x === 862.4 && y === 145.6) {
             const dot = scene.bigDots.create(x, y, "largeDot");
+            scene.socket.emit(
+              "newBigDot",
+              { x: dot.x, y: dot.y },
+              socket.roomId
+            );
           } else if (x === 442.4 && y === 481.6) {
             const dot = scene.bigDots.create(x, y, "largeDot");
+            scene.socket.emit(
+              "newBigDot",
+              { x: dot.x, y: dot.y },
+              socket.roomId
+            );
           }
         }
       });
@@ -131,6 +145,11 @@ export default function addPlayer(scene, player) {
           const x = tile.getCenterX();
           const y = tile.getCenterY();
           const foodItem = scene.food.create(x, y, callFood());
+          scene.socket.emit(
+            "newFood",
+            { name: foodItem.texture.key, x: foodItem.x, y: foodItem.y },
+            socket.roomId
+          );
         }
       });
 
@@ -139,8 +158,6 @@ export default function addPlayer(scene, player) {
         scene.socket.emit("ateFood", { x: food.x, y: food.y }, socket.roomId);
         food.destroy();
         fruitSound.play();
-
-
       });
     }
   });
@@ -148,7 +165,7 @@ export default function addPlayer(scene, player) {
   scene.physics.add.overlap(scene.pac, scene.bigDots, (pac, dots) => {
     scene.socket.emit("ateBigDot", { x: dots.x, y: dots.y }, socket.roomId);
     dots.destroy();
-    let powerPelletSound = scene.sound.add('powerPellet',2)
+    let powerPelletSound = scene.sound.add("powerPellet", 2);
     powerPelletSound.play();
 
     scene.og.vulnerable = true;
