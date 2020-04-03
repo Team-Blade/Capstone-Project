@@ -9,7 +9,8 @@ const config = {
     height: 900 * 0.7
   },
   resolution: window.devicePixelRatio,
-  pixelArt: true,
+  // pixelArt setting to false makes everything looks better, less pixeleted
+  pixelArt: false,
   physics: {
     default: "arcade",
     arcade: {
