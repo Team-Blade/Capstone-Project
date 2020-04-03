@@ -172,8 +172,17 @@ export default class Level1 extends Phaser.Scene {
             //IF YOU HEAR SOMEONE IS DEAD, DISABLE THEM AND DELETE THEM
             if (player.dead && this.playersAlive[player.playerNumber]) {
               player.death();
-              player.disableBody(true, true);
-              delete this.playersAlive[player.playerNumber];
+              player.createAnimations();
+              console.log("in dead check", player);
+              this.time.delayedCall(
+                300,
+                () => {
+                  player.disableBody(true, true);
+                  delete this.playersAlive[player.playerNumber];
+                },
+                [],
+                this
+              );
             } else {
               //IF SOMEONE IS BIG AND GHOST IS NOT VULNERABLE, MAKE GHOST VULNERABLE
               if (player.big && !this.og.vulnerable) {

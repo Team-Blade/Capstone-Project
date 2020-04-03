@@ -18,6 +18,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.dead = false;
     this.turnPoint = {};
     this.turnTo = "";
+    this.death = this.death.bind(this);
   }
   createAnimations() {
     if (this.big) {
@@ -261,6 +262,6 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   death() {
     console.log("inside death");
     this.createAnimations();
-    this.anims.play("death");
+    this.anims.play("death", true);
   }
 }
