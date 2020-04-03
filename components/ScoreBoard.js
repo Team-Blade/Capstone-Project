@@ -21,7 +21,7 @@ const ScoreBoard = props => {
       </div>
       <div>
         {gameOver ? (
-          players[socketId] ? (
+          players[socketId].playerNumber === 1 ? (
             <div key={socketId}>
               <button onClick={() => props.startGame()}>Play Again?</button>
               <button
