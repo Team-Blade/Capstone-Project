@@ -265,7 +265,7 @@ class App extends React.Component {
                   <button
                     className="enter-game-button"
                     type="submit"
-                    onClick={() => window.location.reload(false)}
+                    onClick={() => this.setState({buttonClicked: true, buttonClickedName: "", players : {} })}
                     open={false}
                   >
                     GO BACK
@@ -295,7 +295,7 @@ class App extends React.Component {
                 </button>
                 <button
                   type="submit"
-                  onClick={() => window.location.reload(false)}
+                  onClick={() => this.setState({buttonClicked: true, buttonClickedName: "" })}
                   open={false}
                 >
                   GO BACK

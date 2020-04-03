@@ -4,7 +4,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     config.scene.add.existing(this);
     config.scene.physics.world.enable(this);
     this.scene = config.scene;
-    this.setSize(28, 28, true)
+    this.setSize(28, 28, true);
     // .setOrigin(0,0)
     // .setOffset(-0.05,-0.05)
     this.setCircle(7,7,7)
