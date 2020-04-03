@@ -58,9 +58,22 @@ export default class Level1 extends Phaser.Scene {
     this.otherPlayers = this.physics.add.group();
     this.ghosts = this.physics.add.group();
 
+    // this.socket.on("currentPlayers", players => {
+    //   console.log(players)
+    //   Object.keys(players).forEach(playerId => {
+    //     if (playerId === scene.socket.id) {
+    //       console.log("thi is passing", playerId, scene.socket.id);
+    //       addPlayer(scene, players[playerId]);
+    //     } else {
+    //       addOtherPlayers(scene, players[playerId]);
+    //     }
+    //   });
+    // });
+
     this.socket.on("disconnect", playerId => {
       scene.otherPlayers.getChildren().forEach(otherPlayer => {
         if (playerId === otherPlayer.playerId) {
+          // otherPlayer.destroy();
         }
       });
     });
@@ -154,16 +167,9 @@ export default class Level1 extends Phaser.Scene {
           }
           //IF YOU ARE DEAD TELL EVERYONE AND DELETE YOURSELF
           if (this.pac.dead && this.playersAlive[this.pac.playerNumber]) {
-            // this.time.delayedCall(
-            //   400,
-            //   () => {
             this.pac.disableBody(true, true);
             this.socket.emit("selfDeath", socket.roomId, this.pac.playerNumber);
-            delete this.playersAli.ve[this.pac.playerNumber];
-            //   },
-            //   [],
-            //   this
-            // );
+            delete this.playersAlive[this.pac.playerNumber];
           }
           //FOR EACH PLAYER
           this.otherPlayersArray.forEach(player => {
@@ -173,7 +179,7 @@ export default class Level1 extends Phaser.Scene {
               player.createAnimations();
               console.log("in dead check", player);
               this.time.delayedCall(
-                400,
+                300,
                 () => {
                   player.disableBody(true, true);
                   delete this.playersAlive[player.playerNumber];
