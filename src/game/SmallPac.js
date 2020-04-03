@@ -19,6 +19,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.turnPoint = {};
     this.turnTo = "";
     this.speed = 180;
+    this.death = this.death.bind(this);
   }
   createAnimations() {
     if (this.big) {
@@ -210,9 +211,13 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   // }
 
   checkDirection(turnTo) {
-    if(this[`tile${turnTo}`] &&
+    if (
+      this[`tile${turnTo}`] &&
       !this[`tile${turnTo}`].collides &&
-      this.direction !== turnTo){
+      this.direction !== turnTo
+    ) {
+      this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
+      this.turnPoint.y = this.scene.map.tileToWorldY(this.tilePositionY + 0.57);
 
         this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
         this.turnPoint.y = this.scene.map.tileToWorldY(this.tilePositionY + 0.57);
@@ -236,25 +241,25 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   checkSurroundingTiles() {
-    this['tileup'] = this.scene.map.getTileAt(
+    this["tileup"] = this.scene.map.getTileAt(
       this.tilePositionX,
       this.tilePositionY - 1,
       false,
       "mapBaseLayer"
     );
-    this['tiledown'] = this.scene.map.getTileAt(
+    this["tiledown"] = this.scene.map.getTileAt(
       this.tilePositionX,
       this.tilePositionY + 1,
       false,
       "mapBaseLayer"
     );
-    this['tileleft'] = this.scene.map.getTileAt(
+    this["tileleft"] = this.scene.map.getTileAt(
       this.tilePositionX - 1,
       this.tilePositionY,
       false,
       "mapBaseLayer"
     );
-    this['tileright'] = this.scene.map.getTileAt(
+    this["tileright"] = this.scene.map.getTileAt(
       this.tilePositionX + 1,
       this.tilePositionY,
       false,
@@ -267,14 +272,16 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       setTimeout(() => {
         this.x = this.turnPoint.x;
         this.y = this.turnPoint.y;
-      }, 45)
+        this.setVelocity(0, 0);
+        this.direction = "";
+      }, 40)
 
     }
   }
 
   death() {
-    console.log('inside death')
+    console.log("inside death");
     this.createAnimations();
-    this.anims.play("death");
+    this.anims.play("death", true);
   }
 }

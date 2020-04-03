@@ -46,7 +46,7 @@ const joinRoom = (socket, room, name) => {
       );
     }
   } else {
-    console.log("Room", room.id, "has already started");
+    console.log("Room", room.id, "is invalid or has already started");
     socket.emit("gameAlreadyStarted", room.id);
   }
 };
@@ -78,14 +78,19 @@ io.on("connection", socket => {
       joinRoom(socket, room, name);
     } else {
       console.log("Sorry, game room:", roomId, "not found");
+      socket.emit("invalidRoom", roomId);
     }
   });
 
   socket.on("startGame", roomId => {
     rooms[roomId].started = true;
     io.in(roomId).emit("currentPlayers", rooms[roomId].players);
-    // socket.in(roomId).emit("newPlayer", rooms[roomId].players[socket.id]);
   });
+
+  // socket.on("restartGame", roomId => {
+  //   console.log("inside socket restartgame");
+  //   io.in(roomId).emit("enablePlayers", rooms[roomId].players);
+  // });
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
@@ -107,9 +112,8 @@ io.on("connection", socket => {
       player.big = big;
       player.vulnerable = vulnerable;
       socket.in(roomId).emit("playerMoved", player);
-    }
-    else {
-      console.log('rooms[roomId] is false', 'rooms:', rooms, 'roomId:', roomId);
+    } else {
+      console.log("rooms[roomId] is false", "rooms:", rooms, "roomId:", roomId);
     }
   });
 
@@ -131,8 +135,11 @@ io.on("connection", socket => {
   socket.on("selfDeath", (roomId, playerNumber) => {
     socket.in(roomId).emit("someoneDied", playerNumber);
   });
+  socket.on("gameOver", roomId => {
+    console.log("inside gameOver", roomId);
+    io.in(roomId).emit("playAgain");
+  });
 });
-
 const PORT = process.env.PORT || 8080;
 
 server.listen(PORT, () => {
