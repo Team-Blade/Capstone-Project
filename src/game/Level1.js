@@ -8,7 +8,7 @@ import {
   listenForGhostMovement,
   listenForDotActivity,
   listenForGhostDeath,
-  listenForSomeonesDeath
+  listenForSomeonesDeath,
 } from "./socketListeners";
 import addPlayer from "./addPlayer";
 import addOtherPlayers from "./otherPlayers";
@@ -20,19 +20,19 @@ export default class Level1 extends Phaser.Scene {
     super({ key: "Level1" });
     this["1"] = {
       startPositions: { x: 12.57, y: 5.57 },
-      color: "y"
+      color: "y",
     };
     this["2"] = {
       startPositions: { x: 18.57, y: 5.57 },
-      color: "r"
+      color: "r",
     };
     this["3"] = {
       startPositions: { x: 12.57, y: 9.57 },
-      color: "b"
+      color: "b",
     };
     this["4"] = {
       startPositions: { x: 18.57, y: 9.57 },
-      color: "p"
+      color: "p",
     };
 
     this.socket = socket;
@@ -65,8 +65,8 @@ export default class Level1 extends Phaser.Scene {
     this.otherPlayers = this.physics.add.group();
     this.ghosts = this.physics.add.group();
 
-    this.socket.on("disconnect", playerId => {
-      scene.otherPlayers.getChildren().forEach(otherPlayer => {
+    this.socket.on("disconnect", (playerId) => {
+      scene.otherPlayers.getChildren().forEach((otherPlayer) => {
         if (playerId === otherPlayer.playerId) {
           // otherPlayer.destroy();
         }
@@ -77,7 +77,7 @@ export default class Level1 extends Phaser.Scene {
     this.map = this.make.tilemap({
       key: "map",
       tileWidth: 60,
-      tileHeight: 60
+      tileHeight: 60,
     });
     // let map = this.add.tilemap("map");
     //adds the tileset to the map
@@ -95,7 +95,7 @@ export default class Level1 extends Phaser.Scene {
       // y: scene.map.tileToWorldY(8),
       x: scene.map.tileToWorldX(15.571),
       y: scene.map.tileToWorldY(7.56),
-      game: this.game
+      game: this.game,
     });
 
     listenForGhostMovement(this);
@@ -136,7 +136,7 @@ export default class Level1 extends Phaser.Scene {
         if (this.og.vulnerable) {
           this.og.turnBlue();
           const playersAreSmall = this.otherPlayersArray.every(
-            player => !player.big
+            (player) => !player.big
           );
           if (playersAreSmall && !this.pac.big) {
             this.og.vulnerable = false;
@@ -163,24 +163,38 @@ export default class Level1 extends Phaser.Scene {
           }
           //IF YOU ARE DEAD TELL EVERYONE AND DELETE YOURSELF
           if (this.pac.dead && this.playersAlive[this.pac.playerNumber]) {
-            this.pac.disableBody(true, true);
             this.socket.emit("selfDeath", socket.roomId, this.pac.playerNumber);
-            delete this.playersAlive[this.pac.playerNumber];
+            pac.creatAnimations();
+            pac.anims.play("death", true);
             let deathSound = this.sound.add("death");
             deathSound.play();
+            player.setVelocityX(0);
+            player.setVelocityY(0);
+            this.time.delayedCall(
+              400,
+              () => {
+                this.pac.disableBody(true, true);
+                delete this.playersAlive[player.playerNumber];
+                delete this.playersAlive[this.pac.playerNumber];
+              },
+              [],
+              this
+            );
           }
           //FOR EACH PLAYER
-          this.otherPlayersArray.forEach(player => {
+          this.otherPlayersArray.forEach((player) => {
             //IF YOU HEAR SOMEONE IS DEAD, DISABLE THEM AND DELETE THEM
             if (player.dead && this.playersAlive[player.playerNumber]) {
-              player.death();
               player.createAnimations();
-              delete this.playersAlive[player.playerNumber];
+              player.anims.play("death", true);
+              player.setVelocityX(0);
+              player.setVelocityY(0);
+
               this.time.delayedCall(
                 400,
                 () => {
                   player.disableBody(true, true);
-                  // delete this.playersAlive[player.playerNumber];
+                  delete this.playersAlive[player.playerNumber];
                 },
                 [],
                 this
