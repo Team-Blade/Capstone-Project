@@ -50,6 +50,15 @@ export default class Level1 extends Phaser.Scene {
       "map",
       "/public/assets/newMapWithFoodDots6.json"
     );
+    this.load.audio('game_start','/public/assets/audio/game_start.mp3')
+    this.load.audio('death','/public/assets/audio/death.mp3')
+    this.load.audio('eat_ghost','/public/assets/audio/eat_ghost.mp3')
+    this.load.audio('eat','/public/assets/audio/pause.mp3')
+    this.load.audio('intro','/public/assets/audio/pause_beat.mp3')
+    this.load.audio('fruit','/public/assets/audio/fruit.mp3')
+    this.load.audio('powerPellet','/public/assets/audio/waza.mp3')
+
+
   }
 
   create() {
@@ -57,18 +66,6 @@ export default class Level1 extends Phaser.Scene {
 
     this.otherPlayers = this.physics.add.group();
     this.ghosts = this.physics.add.group();
-
-    // this.socket.on("currentPlayers", players => {
-    //   console.log(players)
-    //   Object.keys(players).forEach(playerId => {
-    //     if (playerId === scene.socket.id) {
-    //       console.log("thi is passing", playerId, scene.socket.id);
-    //       addPlayer(scene, players[playerId]);
-    //     } else {
-    //       addOtherPlayers(scene, players[playerId]);
-    //     }
-    //   });
-    // });
 
     this.socket.on("disconnect", playerId => {
       scene.otherPlayers.getChildren().forEach(otherPlayer => {
@@ -113,7 +110,6 @@ export default class Level1 extends Phaser.Scene {
 
     listenForSomeonesDeath(this);
 
-    // this.ghosts.add(this.pg);
     this.ghosts.add(this.og);
     this.og.setBounce(0, 1);
 
@@ -134,6 +130,8 @@ export default class Level1 extends Phaser.Scene {
         if (this.og.dead && this.og.body.enable) {
           this.socket.emit("ghostDeath", socket.roomId);
           this.og.disableBody(true, true);
+          let eatGhostSound = this.sound.add('eat_ghost')
+          eatGhostSound.play();
         }
         //IF GHOST IS VULNERABLE, TURN BLUE
         //IF YOU ARE SMALL AND OTHER PLAYERS ARE ALSO SMALL, MAKE GHOST NOT VULERABLE
@@ -170,6 +168,8 @@ export default class Level1 extends Phaser.Scene {
             this.pac.disableBody(true, true);
             this.socket.emit("selfDeath", socket.roomId, this.pac.playerNumber);
             delete this.playersAlive[this.pac.playerNumber];
+            let deathSound = this.sound.add('death')
+            deathSound.play();
           }
           //FOR EACH PLAYER
           this.otherPlayersArray.forEach(player => {
@@ -179,7 +179,7 @@ export default class Level1 extends Phaser.Scene {
               player.createAnimations();
               console.log("in dead check", player);
               this.time.delayedCall(
-                300,
+                400,
                 () => {
                   player.disableBody(true, true);
                   delete this.playersAlive[player.playerNumber];

@@ -66,7 +66,6 @@ export function listenForDotActivity(scene) {
       }
     });
   });
-
   scene.socket.on("currentPlayers", players => {
     scene.countdown = scene.add.sprite(655, 280, "3");
     scene.anims.create({
@@ -93,6 +92,10 @@ export function listenForDotActivity(scene) {
           setTimeout(() => {
             calledRecently = false;
           }, 3000);
+          let startSound = scene.sound.add('game_start')
+          startSound.play();
+          scene.sound.add('intro').stop();
+
         }
       },
       [],

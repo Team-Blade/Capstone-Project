@@ -72,10 +72,14 @@ export default function addPlayer(scene, player) {
   scene.physics.add.overlap(scene.pac, scene.dots, (pac, dots) => {
     scene.socket.emit("ateSmallDot", { x: dots.x, y: dots.y }, socket.roomId);
     dots.destroy();
+    let eatSound = scene.sound.add('eat')
+    eatSound.play();
   });
   scene.physics.add.overlap(scene.pac, scene.food, (pac, food) => {
     scene.socket.emit("ateFood", { x: food.x, y: food.y }, socket.roomId);
     food.destroy();
+    let fruitSound = scene.sound.add('fruit')
+    fruitSound.play();
 
     //if remaining food length is zero
     if (scene.food.getChildren().length === 0) {
@@ -128,6 +132,9 @@ export default function addPlayer(scene, player) {
       scene.physics.add.overlap(scene.pac, scene.food, (pac, food) => {
         scene.socket.emit("ateFood", { x: food.x, y: food.y }, socket.roomId);
         food.destroy();
+        fruitSound.play();
+
+
       });
     }
   });
@@ -135,6 +142,9 @@ export default function addPlayer(scene, player) {
   scene.physics.add.overlap(scene.pac, scene.bigDots, (pac, dots) => {
     scene.socket.emit("ateBigDot", { x: dots.x, y: dots.y }, socket.roomId);
     dots.destroy();
+    let powerPelletSound = scene.sound.add('powerPellet',2)
+    powerPelletSound.play();
+
     scene.og.vulnerable = true;
     pac.big = true;
     pac.vulnerable = false;
