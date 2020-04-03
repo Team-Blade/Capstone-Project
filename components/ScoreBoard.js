@@ -24,7 +24,10 @@ const ScoreBoard = props => {
           players[socketId] ? (
             <div key={socketId}>
               <button onClick={() => props.startGame()}>Play Again?</button>
-              <button onClick={() => window.location.reload(false)}>
+              <button
+                id="exit-room-button"
+                onClick={() => window.location.reload(false)}
+              >
                 Exit Game Room
               </button>
             </div>
