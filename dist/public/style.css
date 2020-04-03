@@ -45,7 +45,7 @@ nav > div {
 .waiting-room {
   color: gold;
 }
-#exit-room-button {
+.exit-room-button {
   height: 60px;
 }
 main {
@@ -197,7 +197,7 @@ h3 {
 #player3 {
   color: blue;
 }
-#player5 {
+#player4 {
   color: fuchsia;
 }
 
