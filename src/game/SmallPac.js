@@ -229,9 +229,10 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   fuzzyEqualXY(threshold) {
-    return Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, threshold)
+    const fuzzy = Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, threshold)
            &&
            Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, threshold)
+    return fuzzy
   }
 
   centerPac() {
@@ -242,10 +243,9 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     if (this.body.velocity.y !== this.turnPoint.y && this.body.velocity.x !== 0){
       this.y = this.turnPoint.y;
     }
-    // if (this.body.velocity.x === 0 && this.body.velocity.y === 0 && !this.fuzzyEqualXY(11)) {
-    //   console.log('11', this.turnPoint, this.x, this.y);
-    //   this.snapToTurnPoint();
-    // }
+    else if (this.body.velocity.x === 0 && this.body.velocity.y === 0 && !this.fuzzyEqualXY(25)) {
+      this.snapToTurnPoint();
+    }
   }
 
   checkSurroundingTiles() {
