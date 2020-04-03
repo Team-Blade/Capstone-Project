@@ -87,11 +87,6 @@ io.on("connection", socket => {
     io.in(roomId).emit("currentPlayers", rooms[roomId].players);
   });
 
-  // socket.on("restartGame", roomId => {
-  //   console.log("inside socket restartgame");
-  //   io.in(roomId).emit("enablePlayers", rooms[roomId].players);
-  // });
-
   socket.on("disconnect", () => {
     console.log("user disconnected");
     // if (socket.roomId) {
@@ -138,6 +133,12 @@ io.on("connection", socket => {
   socket.on("gameOver", roomId => {
     console.log("inside gameOver", roomId);
     io.in(roomId).emit("playAgain");
+  });
+  socket.on("exitGameRoom", roomId => {
+    console.log("deleting roomId from db", roomId);
+    console.log("before", rooms[roomId]);
+    delete rooms[roomId];
+    socket.in(roomId).emit("playerGone", roomId);
   });
 });
 const PORT = process.env.PORT || 8080;

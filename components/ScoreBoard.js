@@ -1,10 +1,15 @@
 import React from "react";
+import db from "../src/firebase";
+import { socket } from "./App";
 
 const ScoreBoard = props => {
   let players = props.players;
   let playersArr = Object.keys(props.players);
   let gameOver = props.gameOver;
-  let socketId = props.socket.id;
+  // let socket = props.socket;
+  let gameCode = props.code;
+  const games = db.collection("games");
+
   return (
     <div id="player-container">
       <h3>PLAYERS: </h3>
@@ -21,20 +26,28 @@ const ScoreBoard = props => {
       </div>
       <div>
         {gameOver ? (
-          players[socketId].playerNumber === 1 ? (
-            <div key={socketId}>
+          players[socket.id].playerNumber === 1 ? (
+            <div key={socket.id}>
               <button onClick={() => props.startGame()}>Play Again?</button>
               <button
                 id="exit-room-button"
-                onClick={() => window.location.reload(false)}
+                onClick={() => {
+                  socket.emit("exitGameRoom", gameCode);
+                  games.doc(gameCode).delete(); //removing game from db
+                  window.location.reload(false);
+                }}
               >
                 Exit Game Room
               </button>
             </div>
           ) : (
             <button
-              key={socketId}
-              onClick={() => window.location.reload(false)}
+              key={socket.id}
+              onClick={() => {
+                socket.emit("exitGameRoom", gameCode);
+                games.doc(gameCode).delete(); //removing game from db
+                window.location.reload(false);
+              }}
             >
               Exit Game Room
             </button>

@@ -37,9 +37,11 @@ class App extends React.Component {
     this.startGame = this.startGame.bind(this);
     this.restartGame = this.restartGame.bind(this);
     this.eventListener = this.eventListener.bind(this);
+    this.playerGone = this.playerGone.bind(this);
   }
   componentDidMount() {
     this.eventListener();
+    this.playerGone();
   }
   handleNameChange(event) {
     this.setState({ name: event.target.value });
@@ -120,6 +122,15 @@ class App extends React.Component {
     });
   }
 
+  playerGone() {
+    socket.on("playerGone", () => {
+      alert(
+        "Player has left the room, please play again using a different game room code"
+      );
+      window.location.reload(false);
+    });
+  }
+
   render() {
     let state = this.state;
     return (
@@ -131,6 +142,7 @@ class App extends React.Component {
               gameOver={state.gameOver}
               socket={socket}
               startGame={this.startGame}
+              code={this.state.code}
             />
             {this.state.buttonClickedName === "create" ? (
               <div id="game-start">
