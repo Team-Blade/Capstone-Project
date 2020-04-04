@@ -86,6 +86,7 @@ io.on("connection", socket => {
     rooms[roomId].started = true;
     io.in(roomId).emit("startCountdown");
     io.in(roomId).emit("currentPlayers", rooms[roomId].players);
+    socket.emit("sound");
     io.in(roomId).emit("gameStarted");
   });
 
@@ -148,6 +149,7 @@ io.on("connection", socket => {
   });
   socket.on("toggleSoundFromFront", toggle => {
     socket.emit("toggleSoundToPhaser", toggle);
+    socket.emit("sound");
   });
 });
 const PORT = process.env.PORT || 8080;

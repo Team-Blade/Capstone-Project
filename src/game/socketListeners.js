@@ -88,6 +88,18 @@ export function listenForDotActivity(scene) {
     else toggleSound = false;
   });
 
+  let startSound = scene.sound.add("game_start");
+  scene.socket.on("sound", () => {
+    if (toggleSound) {
+      console.log("sound: ON");
+      startSound.mute = false;
+      scene.sound.add("intro").stop();
+    } else {
+      console.log("sound: OFF", startSound);
+      startSound.mute = true;
+    }
+  });
+
   scene.socket.on("currentPlayers", players => {
     if (calledRecently === false) {
       calledRecently = true;
@@ -99,18 +111,11 @@ export function listenForDotActivity(scene) {
         repeat: 0
       });
       scene.countdown.anims.play("countdown", true);
-      let startSound = scene.sound.add("game_start");
-      if (toggleSound) {
-        startSound.play();
-        scene.sound.add("intro").stop();
-      }
+      startSound.play();
       scene.time.delayedCall(
         4000,
         () => {
-          console.log("in destroy delay");
-          console.log(scene.countdown);
           scene.countdown.destroy();
-
           Object.keys(players).forEach(playerId => {
             if (playerId === scene.socket.id) {
               addPlayer(scene, players[playerId]);
