@@ -91,11 +91,9 @@ export function listenForDotActivity(scene) {
   let startSound = scene.sound.add("game_start");
   scene.socket.on("sound", () => {
     if (toggleSound) {
-      console.log("sound: ON");
       startSound.mute = false;
       scene.sound.add("intro").stop();
     } else {
-      console.log("sound: OFF", startSound);
       startSound.mute = true;
     }
   });

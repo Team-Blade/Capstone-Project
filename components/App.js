@@ -112,7 +112,6 @@ class App extends React.Component {
     socket.emit("startGame", this.state.code);
   }
   toggleSound(toggle) {
-    console.log("inside toggleSound method", toggle);
     socket.emit("toggleSoundFromFront", toggle);
   }
 
