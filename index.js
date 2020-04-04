@@ -29,7 +29,8 @@ const joinRoom = (socket, room, name) => {
           y: 0,
           name: name,
           playerId: socket.id,
-          playerNumber: room.numberOfPlayers
+          playerNumber: room.numberOfPlayers.numberOfPlayers,
+          score: 0
         };
         console.log(
           socket.id,
