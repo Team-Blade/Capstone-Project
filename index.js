@@ -91,11 +91,6 @@ io.on("connection", socket => {
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
-    // if (socket.roomId) {
-    //   console.log("before, rooms", rooms);
-    //   // delete rooms[socket.roomId].players[socket.id];
-    //   console.log("after, rooms", rooms);
-    // }
     io.emit("disconnect", socket.id);
   });
 
@@ -148,9 +143,11 @@ io.on("connection", socket => {
   });
   socket.on("exitGameRoom", roomId => {
     console.log("deleting roomId from db", roomId);
-    console.log("before", rooms[roomId]);
     delete rooms[roomId];
     socket.in(roomId).emit("playerGone", roomId);
+  });
+  socket.on("toggleSoundFromFront", toggle => {
+    socket.emit("toggleSoundToPhaser", toggle);
   });
 });
 const PORT = process.env.PORT || 8080;

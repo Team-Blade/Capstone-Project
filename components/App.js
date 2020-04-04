@@ -29,7 +29,8 @@ class App extends React.Component {
       players: {},
       gameStarted: false,
       gameOver: false,
-      waitingRoom: false
+      waitingRoom: false,
+      sound: true
     };
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleCodeChange = this.handleCodeChange.bind(this);
@@ -37,6 +38,7 @@ class App extends React.Component {
     this.joinGame = this.joinGame.bind(this);
     this.startGame = this.startGame.bind(this);
     this.eventListener = this.eventListener.bind(this);
+    this.toggleSound = this.toggleSound.bind(this);
   }
   componentDidMount() {
     this.eventListener();
@@ -109,6 +111,10 @@ class App extends React.Component {
     });
     socket.emit("startGame", this.state.code);
   }
+  toggleSound(toggle) {
+    console.log("inside toggleSound method", toggle);
+    socket.emit("toggleSoundFromFront", toggle);
+  }
 
   eventListener() {
     socket.on("playAgain", () => {
@@ -120,7 +126,7 @@ class App extends React.Component {
     });
     socket.on("playerGone", () => {
       alert(
-        "Player has left the room, please play again using a different game room code"
+        "A player has left the room, please play again using a different game room code"
       );
       window.location.reload(false);
     });
@@ -132,6 +138,23 @@ class App extends React.Component {
       <div id="main-wrapper">
         <main id="main">
           <nav>
+            {state.sound ? (
+              <button
+                className="icono icono-volumeHigh"
+                onClick={() => {
+                  this.setState({ sound: false });
+                  this.toggleSound("off");
+                }}
+              ></button>
+            ) : (
+              <button
+                className="icono icono-volumeMute"
+                onClick={() => {
+                  this.setState({ sound: true });
+                  this.toggleSound("on");
+                }}
+              ></button>
+            )}
             <ScoreBoard
               players={state.players}
               gameOver={state.gameOver}
