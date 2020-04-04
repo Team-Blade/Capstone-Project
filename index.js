@@ -83,11 +83,15 @@ io.on("connection", socket => {
   });
 
   socket.on("startGame", roomId => {
-    rooms[roomId].started = true;
-    io.in(roomId).emit("startCountdown");
-    io.in(roomId).emit("currentPlayers", rooms[roomId].players);
-    socket.emit("sound");
-    io.in(roomId).emit("gameStarted");
+    if (rooms.numberOfPlayers > 1) {
+      rooms[roomId].started = true;
+      io.in(roomId).emit("startCountdown");
+      io.in(roomId).emit("currentPlayers", rooms[roomId].players);
+      socket.emit("sound");
+      io.in(roomId).emit("gameStarted");
+    } else {
+      socket.emit("notEnoughPlayers");
+    }
   });
 
   socket.on("disconnect", () => {
