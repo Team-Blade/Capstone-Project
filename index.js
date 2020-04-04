@@ -83,7 +83,7 @@ io.on("connection", socket => {
   });
 
   socket.on("startGame", roomId => {
-    if (rooms.numberOfPlayers > 1) {
+    if (rooms[roomId].numberOfPlayers > 1) {
       rooms[roomId].started = true;
       io.in(roomId).emit("startCountdown");
       io.in(roomId).emit("currentPlayers", rooms[roomId].players);
