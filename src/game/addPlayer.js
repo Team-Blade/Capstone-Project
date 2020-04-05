@@ -20,19 +20,14 @@ export default function addPlayer(scene, player) {
 
   scene.playersAlive[playerNumber] = scene.pac;
 
-  scene.physics.add.overlap(scene.pac, scene.collisionLayer, (pac, layer) => {
+  scene.physics.add.collider(scene.pac, scene.collisionLayer, (pac, layer) => {
     pac.setVelocity(0, 0);
-    
+    pac.snapToTurnPoint();
+    pac.direction = "";
     // pac.moving = false;
     //had to take it cause because it was throwing an error on player2, could not read frames
     // pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
   });
-
-  // function checkEnemyAtTile(targetTile) {
-  //   return (scene.og.tilePositionY === targetTile.y && scene.og.tilePositionX === targetTile.x) ||
-  //     (Object.values(scene.playersAlive).some(
-  //   (otherPlayer)=> otherPlayer.tilePositionX === targetTile.x && otherPlayer.tilePositionY === targetTile.y))
-  // }
   
   scene.physics.add.overlap(scene.pac, scene.otherPlayers, (pac, other) => {
     if (!pac.big && other.big) {
