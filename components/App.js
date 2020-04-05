@@ -2,6 +2,7 @@ import React from "react";
 import Popup from "reactjs-popup";
 import ScoreBoard from "./ScoreBoard";
 import db from "../src/firebase";
+import { CopyToClipboard } from "react-copy-to-clipboard"
 
 export const socket = io();
 const games = db.collection("games");
@@ -29,7 +30,9 @@ class App extends React.Component {
       players: {},
       gameStarted: false,
       gameOver: false,
-      waitingRoom: false
+      waitingRoom: false,
+      alertCopied: false,
+      sound: true
     };
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleCodeChange = this.handleCodeChange.bind(this);
@@ -37,6 +40,8 @@ class App extends React.Component {
     this.joinGame = this.joinGame.bind(this);
     this.startGame = this.startGame.bind(this);
     this.eventListener = this.eventListener.bind(this);
+    this.copied = this.copied.bind(this);
+    this.toggleSound = this.toggleSound.bind(this);
   }
   componentDidMount() {
     this.eventListener();
@@ -75,7 +80,7 @@ class App extends React.Component {
 
   joinGame() {
     let name = this.state.name;
-    let code = this.state.code;
+    let code = this.state.code.toUpperCase();
 
     socket.emit("joinRoom", code, name);
     socket.on("invalidRoom", roomId => {
@@ -101,13 +106,15 @@ class App extends React.Component {
   }
 
   startGame() {
-    console.log("in startgame");
     this.setState({
       buttonClickedName: "",
       gameOver: false,
       gameStarted: true
     });
     socket.emit("startGame", this.state.code);
+  }
+  toggleSound(toggle) {
+    socket.emit("toggleSoundFromFront", toggle);
   }
 
   eventListener() {
@@ -118,12 +125,26 @@ class App extends React.Component {
       console.log("inside gameStarted");
       this.setState({ waitingRoom: false });
     });
+    socket.on("notEnoughPlayers", () => {
+      alert(
+        "Cannot start game with only one player. Please do not press 'START!' until you see another player's name."
+      );
+      this.setState({
+        buttonClickedName: "create",
+        gameStarted: false
+      });
+    });
     socket.on("playerGone", () => {
       alert(
-        "Player has left the room, please play again using a different game room code"
+        "A player has left the room, please play again using a different game room code"
       );
       window.location.reload(false);
     });
+  }
+
+  copied() {
+    this.setState({alertCopied: true});
+    setTimeout(()=> this.setState({alertCopied: false}), 1500)
   }
 
   render() {
@@ -132,6 +153,23 @@ class App extends React.Component {
       <div id="main-wrapper">
         <main id="main">
           <nav>
+            {state.sound ? (
+              <button
+                className="icono icono-volumeHigh"
+                onClick={() => {
+                  this.setState({ sound: false });
+                  this.toggleSound("off");
+                }}
+              ></button>
+            ) : (
+              <button
+                className="icono icono-volumeMute"
+                onClick={() => {
+                  this.setState({ sound: true });
+                  this.toggleSound("on");
+                }}
+              ></button>
+            )}
             <ScoreBoard
               players={state.players}
               gameOver={state.gameOver}
@@ -139,7 +177,7 @@ class App extends React.Component {
               startGame={this.startGame}
               code={this.state.code}
             />
-            {this.state.buttonClickedName === "create" ? (
+            {state.buttonClickedName === "create" ? (
               <div id="game-start">
                 <p>
                   Wait for all
@@ -150,19 +188,23 @@ class App extends React.Component {
                   className="start-game-button"
                   type="submit"
                   onClick={this.startGame}
-                  open={false}
                 >
                   START!
                 </button>
                 <p>
                   Game Code:
-                  {this.state.code}
+                </p>
+                <p className="gameCode" style={{fontSize: '17'}}>
+                  <CopyToClipboard text={this.state.code} onCopy={this.copied}>
+                    <span>{this.state.code}</span>
+                  </CopyToClipboard>
+                </p>
+                <p>
+                  {this.state.alertCopied ? <span>*COPIED*</span> : null}
                 </p>
               </div>
             ) : null}
-            {state.waitingRoom &&
-            // !state.gameStarted &&
-            state.buttonClickedName !== "create" ? (
+            {state.waitingRoom && state.buttonClickedName !== "create" ? (
               <p className="waiting-room">
                 Waiting for <br /> game to start...
               </p>
@@ -178,7 +220,7 @@ class App extends React.Component {
                     src="/public/assets/extract/Menu_rogo.png"
                   />
                   <button
-                    className="start-button"
+                    className="begin-button"
                     onClick={() =>
                       this.setState({
                         beginGameButtonClicked: true,
@@ -247,12 +289,16 @@ class App extends React.Component {
             <Popup open closeOnDocumentClick={false}>
               {close => (
                 <div className="init-game-create">
-                  <div>
-                    <div>Share this code</div>
-                    <br />
-                    with friends
+                  <div style={{textAlign: 'center'}}>
+                    <div>Share this code with friends: </div>
+        
                     <div>
-                      <h2>{state.code}</h2>
+                      <h2>
+                      <CopyToClipboard text={this.state.code} onCopy={this.copied}>
+                        <span className='gameCode'>{state.code}</span>
+                      </CopyToClipboard>
+                      </h2>
+                      {this.state.alertCopied ? <span>*COPIED*</span> : null}
                     </div>
                   </div>
                   <button
@@ -293,6 +339,7 @@ class App extends React.Component {
                   onChange={() => this.handleCodeChange(event)}
                 />
                 <button
+                  disabled = {!this.state.code}
                   onClick={() => {
                     this.joinGame();
                     this.setState({ buttonClickedName: "", waitingRoom: true });

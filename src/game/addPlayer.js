@@ -1,5 +1,6 @@
 import SmallPac from "./SmallPac.js";
 import { socket } from "../../components/App";
+import { toggleSound } from "./socketListeners";
 
 export default function addPlayer(scene, player) {
   const playerNumber = player.playerNumber;
@@ -25,45 +26,51 @@ export default function addPlayer(scene, player) {
     //had to take it cause because it was throwing an error on player2, could not read frames
     // pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
   });
+  
   scene.physics.add.overlap(scene.pac, scene.otherPlayers, (pac, other) => {
     if (!pac.big && other.big) {
       pac.dead = true;
-      // pac.disableBody(true, true)
-      // delete scene.playersAlive[pac.playerNumber]
-    } else {
-      pac.colliding = true;
-      pac.direction === "left" ? pac.setVelocityX(400) : null;
-      pac.direction === "right" ? pac.setVelocityX(-400) : null;
-      pac.direction === "up" ? pac.setVelocityY(400) : null;
-      pac.direction === "down" ? pac.setVelocityY(-400) : null;
-      console.log("here here pac.body.velocity", pac.body.velocity);
-      // if (pac.direction === "left" || pac.direction === "right") {
-      //   pac.setVelocityX(pac.body.velocity.x * -2)
-      //   console.log('velocity x', pac.body.velocity.x);
-      // }
-      // if (pac.direction === "up" || pac.direction === "down") {
-      //   pac.setVelocityY(pac.body.velocity.y * -2)
-      //   console.log('velocity y', pac.body.velocity.y);
-      // }
-      // else if (!pac.direction || (pac.body.velocity.x === 0 && pac.body.velocity.y === 0)){
-      //   if (other.direction === "left" || other.direction === "right") {
-      //     // pac.setVelocityX(other.body.velocity.x * 2)
-      //   }
-      //   else if (other.direction === "up" || other.direction === "down") {
-      //     // pac.setVelocityY(other.body.velocity.y * 2)
-      //   }
-      // }
-      setTimeout(() => {
-        pac.colliding = false;
-        pac.setVelocity(0, 0);
-      }, 1000);
+    } 
+    else{
+      console.log('trying with 4 tiles')
+      if ((pac.direction === "right" || (!pac.direction && other.direction === "left")) && !pac['tileleft'].collides) {
+        // for (let i = 4; i > 0; i--) {
+        //   console.log(i, scene.map.getTileAt(pac.tilePositionX - i, pac.tilePositionY, false, "mapBaseLayer").collides);
+        //   if (!scene.map.getTileAt(pac.tilePositionX - i, pac.tilePositionY, false, "mapBaseLayer").collides) {
+        //     // pac.x = scene.map.tileToWorldX(pac.tilePositionX - i + 0.57);
+        //     pac.colliding = true;
+        //     pac.body.velocity.x = -1000;
+        //     console.log
+        //     setTimeout(()=> {
+        //       pac.colliding = false;
+        //       pac.direction = "";
+        //       pac.setVelocity(0, 0);
+        //     }, 1000);
+        //     break;
+        //   }
+        // }
+        pac.x = scene.map.tileToWorldX(pac.tilePositionX - 1 + 0.57);
+      }
+      if ((pac.direction === "left" || (!pac.direction && other.direction === "right")) && !pac['tileright'].collides) {
+        pac.x = scene.map.tileToWorldX(pac.tilePositionX + 1 + 0.57);
+      }
+      if ((pac.direction === "down" || (!pac.direction && other.direction === "up")) && !pac['tileup'].collides) {
+        pac.y = scene.map.tileToWorldY(pac.tilePositionY - 1 + 0.57);
+      }
+      if ((pac.direction === "up" || (!pac.direction && other.direction === "down")) && !pac['tiledown'].collides) {
+        pac.y = scene.map.tileToWorldY(pac.tilePositionY + 1 + 0.57);
+      }
+      // pac.direction === "right" && !pac['tileleft'].collides ? pac.x = scene.map.tileToWorldX(pac.tilePositionX - 1 + 0.57) : null;
+      // pac.direction === "left" && !pac['tileright'].collides ? pac.x = scene.map.tileToWorldX(pac.tilePositionX + 1 + 0.57) : null;
+      // pac.direction === "down" && !pac['tileup'].collides ? pac.y = scene.map.tileToWorldY(pac.tilePositionY - 1 + 0.57) : null;
+      // pac.direction === "up" && !pac['tiledown'].collides ? pac.y = scene.map.tileToWorldY(pac.tilePositionY + 1 + 0.57) : null;
+      pac.setVelocity(0, 0);
+      pac.direction = "";
     }
   });
   scene.physics.add.overlap(scene.pac, scene.og, () => {
     if (!scene.pac.big && scene.og.vulnerable === false) {
       scene.pac.dead = true;
-      // scene.pac.disableBody(true, true);
-      // delete scene.playersAlive[scene.pac.playerNumber];
     } else {
       scene.og.dead = true;
       setTimeout(()=> {
@@ -77,14 +84,18 @@ export default function addPlayer(scene, player) {
   scene.physics.add.overlap(scene.pac, scene.dots, (pac, dots) => {
     scene.socket.emit("ateSmallDot", { x: dots.x, y: dots.y }, socket.roomId);
     dots.destroy();
-    let eatSound = scene.sound.add("eat");
-    eatSound.play();
+    if (toggleSound) {
+      let eatSound = scene.sound.add("eat");
+      eatSound.play();
+    }
   });
   scene.physics.add.overlap(scene.pac, scene.food, (pac, food) => {
     scene.socket.emit("ateFood", { x: food.x, y: food.y }, socket.roomId);
     food.destroy();
-    let fruitSound = scene.sound.add("fruit");
-    fruitSound.play();
+    if (toggleSound) {
+      let fruitSound = scene.sound.add("fruit");
+      fruitSound.play();
+    }
 
     //if remaining food length is zero
     if (scene.food.getChildren().length === 0) {
@@ -157,7 +168,7 @@ export default function addPlayer(scene, player) {
       scene.physics.add.overlap(scene.pac, scene.food, (pac, food) => {
         scene.socket.emit("ateFood", { x: food.x, y: food.y }, socket.roomId);
         food.destroy();
-        fruitSound.play();
+        if (toggleSound) fruitSound.play();
       });
     }
   });
@@ -165,8 +176,10 @@ export default function addPlayer(scene, player) {
   scene.physics.add.overlap(scene.pac, scene.bigDots, (pac, dots) => {
     scene.socket.emit("ateBigDot", { x: dots.x, y: dots.y }, socket.roomId);
     dots.destroy();
-    let powerPelletSound = scene.sound.add("powerPellet", 2);
-    powerPelletSound.play();
+    if (toggleSound) {
+      let powerPelletSound = scene.sound.add("powerPellet", 2);
+      powerPelletSound.play();
+    }
 
     scene.og.vulnerable = true;
     pac.big = true;
