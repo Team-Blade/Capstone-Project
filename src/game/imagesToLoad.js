@@ -9,6 +9,15 @@ function loadImages(scene) {
   scene.load.image("pinksquare", "/public/assets/pinksquare.jpeg");
   scene.load.image("blacksquare", "/public/assets/blacksquare.png");
 
+  //instructions
+  scene.load.image("eatPower", "/public/assets/instructions/Common062.png");
+  scene.load.image("eatPacmen1", "/public/assets/instructions/Common063.png");
+  scene.load.image("eatPacmen2", "/public/assets/instructions/Common064.png");
+  scene.load.image("eatPacmen3", "/public/assets/instructions/Common065.png");
+  scene.load.image("eatPacmen4", "/public/assets/instructions/Common066.png");
+  scene.load.image("lastOneStanding", "/public/assets/instructions/Common068.png")
+  scene.load.image("winner", "public/assets/instructions/GameMain070.png");
+
   //countdown numbers
   scene.load.image("1", "/public/assets/countdown/GameMain281.png");
   scene.load.image("2", "/public/assets/countdown/GameMain282.png");

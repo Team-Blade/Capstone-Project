@@ -2,7 +2,7 @@ import Ghost from "./Ghost.js";
 import SmallPac from "./SmallPac.js";
 import { socket } from "../../components/App";
 import loadImages from "./imagesToLoad";
-import setUpLayers from "./setUpLayers";
+import { setUpMapLayer } from "./setUpLayers";
 import {
   listenForPlayerMovement,
   listenForGhostMovement,
@@ -13,6 +13,7 @@ import {
 import { sendMovementInfo, sendGhostMovement } from "./socketEmiters";
 import checkWin from "./checkWin";
 import { toggleSound } from "./socketListeners";
+import { displayInstructions } from "./instructions";
 
 export default class Level1 extends Phaser.Scene {
   constructor() {
@@ -42,7 +43,6 @@ export default class Level1 extends Phaser.Scene {
     this.winner = "";
   }
   preload() {
-    console.log('set n snap');
     //loads image for tileset
     loadImages(this);
     //loads image of map
@@ -57,6 +57,7 @@ export default class Level1 extends Phaser.Scene {
     this.load.audio("intro", "/public/assets/audio/pause_beat.mp3");
     this.load.audio("fruit", "/public/assets/audio/fruit.mp3");
     this.load.audio("powerPellet", "/public/assets/audio/waza.mp3");
+
   }
 
   create() {
@@ -82,7 +83,7 @@ export default class Level1 extends Phaser.Scene {
     // let map = this.add.tilemap("map");
     //adds the tileset to the map
 
-    setUpLayers(this);
+    setUpMapLayer(this);
 
     window.addEventListener("resize", resizeCanvas);
 
@@ -116,6 +117,9 @@ export default class Level1 extends Phaser.Scene {
     //processes DOM input events if true
     this.input.enabled = true;
     this.cursors = this.input.keyboard.createCursorKeys();
+
+    //ADD INSTRUCTIONS
+    displayInstructions(this);
   }
   update() {
     //CHECK WIN

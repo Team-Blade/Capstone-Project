@@ -34,7 +34,7 @@ export default function addPlayer(scene, player) {
     if (!pac.big && other.big) {
       pac.dead = true;
     } 
-    else {
+    if (pac.big === other.big) {
       pac.direction === "left" ? pac.collisionDirection = "right" : null;
       pac.direction === "right" ? pac.collisionDirection = "left" : null;
       pac.direction === "up" ? pac.collisionDirection = "down" : null;
