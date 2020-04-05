@@ -2,7 +2,7 @@ import React from "react";
 import Popup from "reactjs-popup";
 import ScoreBoard from "./ScoreBoard";
 import db from "../src/firebase";
-import { CopyToClipboard } from "react-copy-to-clipboard"
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 export const socket = io();
 const games = db.collection("games");
@@ -143,8 +143,8 @@ class App extends React.Component {
   }
 
   copied() {
-    this.setState({alertCopied: true});
-    setTimeout(()=> this.setState({alertCopied: false}), 1500)
+    this.setState({ alertCopied: true });
+    setTimeout(() => this.setState({ alertCopied: false }), 1500);
   }
 
   render() {
@@ -191,17 +191,13 @@ class App extends React.Component {
                 >
                   START!
                 </button>
-                <p>
-                  Game Code:
-                </p>
-                <p className="gameCode" style={{fontSize: '17'}}>
+                <p>Game Code:</p>
+                <p className="gameCode" style={{ fontSize: "17" }}>
                   <CopyToClipboard text={this.state.code} onCopy={this.copied}>
                     <span>{this.state.code}</span>
                   </CopyToClipboard>
                 </p>
-                <p>
-                  {this.state.alertCopied ? <span>*COPIED*</span> : null}
-                </p>
+                <p>{this.state.alertCopied ? <span>*COPIED*</span> : null}</p>
               </div>
             ) : null}
             {state.waitingRoom && state.buttonClickedName !== "create" ? (
@@ -289,14 +285,17 @@ class App extends React.Component {
             <Popup open closeOnDocumentClick={false}>
               {close => (
                 <div className="init-game-create">
-                  <div style={{textAlign: 'center'}}>
+                  <div style={{ textAlign: "center" }}>
                     <div>Share this code with friends: </div>
-        
+
                     <div>
                       <h2>
-                      <CopyToClipboard text={this.state.code} onCopy={this.copied}>
-                        <span className='gameCode'>{state.code}</span>
-                      </CopyToClipboard>
+                        <CopyToClipboard
+                          text={this.state.code}
+                          onCopy={this.copied}
+                        >
+                          <span className="gameCode">{state.code}</span>
+                        </CopyToClipboard>
                       </h2>
                       {this.state.alertCopied ? <span>*COPIED*</span> : null}
                     </div>
@@ -312,13 +311,14 @@ class App extends React.Component {
                   <button
                     className="enter-game-button"
                     type="submit"
-                    onClick={() =>
+                    onClick={() => {
+                      games.doc(state.code).delete();
                       this.setState({
                         buttonClicked: true,
                         buttonClickedName: "",
                         players: {}
-                      })
-                    }
+                      });
+                    }}
                     open={false}
                   >
                     GO BACK
@@ -339,7 +339,7 @@ class App extends React.Component {
                   onChange={() => this.handleCodeChange(event)}
                 />
                 <button
-                  disabled = {!this.state.code}
+                  disabled={!this.state.code}
                   onClick={() => {
                     this.joinGame();
                     this.setState({ buttonClickedName: "", waitingRoom: true });
