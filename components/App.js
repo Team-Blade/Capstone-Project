@@ -2,6 +2,7 @@ import React from "react";
 import Popup from "reactjs-popup";
 import ScoreBoard from "./ScoreBoard";
 import db from "../src/firebase";
+import { CopyToClipboard } from "react-copy-to-clipboard"
 
 export const socket = io();
 const games = db.collection("games");
@@ -29,7 +30,8 @@ class App extends React.Component {
       players: {},
       gameStarted: false,
       gameOver: false,
-      waitingRoom: false
+      waitingRoom: false,
+      alertCopied: false
     };
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleCodeChange = this.handleCodeChange.bind(this);
@@ -37,6 +39,7 @@ class App extends React.Component {
     this.joinGame = this.joinGame.bind(this);
     this.startGame = this.startGame.bind(this);
     this.eventListener = this.eventListener.bind(this);
+    this.copied = this.copied.bind(this);
   }
   componentDidMount() {
     this.eventListener();
@@ -126,6 +129,12 @@ class App extends React.Component {
     });
   }
 
+  copied() {
+    console.log('copied');
+    this.setState({alertCopied: true});
+    setTimeout(()=> this.setState({alertCopied: false}), 1500)
+  }
+
   render() {
     let state = this.state;
     return (
@@ -157,8 +166,13 @@ class App extends React.Component {
                 <p>
                   Game Code:
                 </p>
-                <p style={{fontSize: '17'}}>
-                {this.state.code}
+                <p className="gameCode" style={{fontSize: '17'}}>
+                  <CopyToClipboard text={this.state.code} onCopy={this.copied}>
+                    <span>{this.state.code}</span>
+                  </CopyToClipboard>
+                </p>
+                <p>
+                  {this.state.alertCopied ? <span>*COPIED*</span> : null}
                 </p>
               </div>
             ) : null}
@@ -249,12 +263,16 @@ class App extends React.Component {
             <Popup open closeOnDocumentClick={false}>
               {close => (
                 <div className="init-game-create">
-                  <div>
-                    <div>Share this code</div>
-                    <br />
-                    with friends
+                  <div style={{textAlign: 'center'}}>
+                    <div>Share this code with friends: </div>
+        
                     <div>
-                      <h2>{state.code}</h2>
+                      <h2>
+                      <CopyToClipboard text={this.state.code} onCopy={this.copied}>
+                        <span className='gameCode'>{state.code}</span>
+                      </CopyToClipboard>
+                      </h2>
+                      {this.state.alertCopied ? <span>*COPIED*</span> : null}
                     </div>
                   </div>
                   <button
