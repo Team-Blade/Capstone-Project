@@ -19,7 +19,7 @@ export default function addOtherPlayers(scene, player) {
   otherPlayer.tilePositionY = scene.map.worldToTileY(otherPlayer.y);
   scene.physics.add.collider(otherPlayer, scene.collisionLayer);
 
-  scene.physics.add.collider(
+  scene.physics.add.overlap(
     otherPlayer,
     scene.pac /*, () => {
     if (!otherPlayer.big && scene.pac.big) {

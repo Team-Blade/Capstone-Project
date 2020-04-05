@@ -26,40 +26,22 @@ export default function addPlayer(scene, player) {
     // pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
   });
   
-  scene.physics.add.collider(scene.pac, scene.otherPlayers, (pac, other) => {
+  scene.physics.add.overlap(scene.pac, scene.otherPlayers, (pac, other) => {
     if (!pac.big && other.big) {
       pac.dead = true;
       // pac.disableBody(true, true)
       // delete scene.playersAlive[pac.playerNumber]
     } 
-    // else {
-      // pac.colliding = true;
-      // pac.direction === "left" ? pac.setVelocityX(900) : null;
-      // pac.direction === "right" ? pac.setVelocityX(-900) : null;
-      // pac.direction === "up" ? pac.setVelocityY(900) : null;
-      // pac.direction === "down" ? pac.setVelocityY(-900) : null;
-      // console.log("here here pac.body.velocity", pac.body.velocity);
-      // if (pac.direction === "left" || pac.direction === "right") {
-      //   pac.setVelocityX(pac.body.velocity.x * -2)
-      //   console.log('velocity x', pac.body.velocity.x);
-      // }
-      // if (pac.direction === "up" || pac.direction === "down") {
-      //   pac.setVelocityY(pac.body.velocity.y * -2)
-      //   console.log('velocity y', pac.body.velocity.y);
-      // }
-      // else if (!pac.direction || (pac.body.velocity.x === 0 && pac.body.velocity.y === 0)){
-      //   if (other.direction === "left" || other.direction === "right") {
-      //     // pac.setVelocityX(other.body.velocity.x * 2)
-      //   }
-      //   else if (other.direction === "up" || other.direction === "down") {
-      //     // pac.setVelocityY(other.body.velocity.y * 2)
-      //   }
-      // }
-      // setTimeout(() => {
-      //   pac.colliding = false;
-      //   pac.setVelocity(0, 0);
-      // }, 1000);
-    // }
+    else{
+      console.log('resetting position')
+      pac.direction === "right" && !pac['tileleft'].collides ? pac.x = scene.map.tileToWorldX(pac.tilePositionX - 1 + 0.57) : null;
+      pac.direction === "left" && !pac['tileright'].collides ? pac.x = pac.x = scene.map.tileToWorldX(pac.tilePositionX + 1 + 0.57) : null;
+      pac.direction === "down" && !pac['tileup'].collides ? pac.y = scene.map.tileToWorldY(pac.tilePositionY - 1 + 0.57) : null;
+      pac.direction === "up" && !pac['tiledown'].collides ? pac.y = scene.map.tileToWorldY(pac.tilePositionY + 1 + 0.57) : null;
+      // !pac.direction ? 
+      pac.setVelocity(0, 0);
+      pac.direction = "";
+    }
   });
   scene.physics.add.overlap(scene.pac, scene.og, () => {
     if (!scene.pac.big && scene.og.vulnerable === false) {

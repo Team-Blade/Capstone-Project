@@ -130,7 +130,6 @@ class App extends React.Component {
   }
 
   copied() {
-    console.log('copied');
     this.setState({alertCopied: true});
     setTimeout(()=> this.setState({alertCopied: false}), 1500)
   }
@@ -313,6 +312,7 @@ class App extends React.Component {
                   onChange={() => this.handleCodeChange(event)}
                 />
                 <button
+                  disabled = {!this.state.code}
                   onClick={() => {
                     this.joinGame();
                     this.setState({ buttonClickedName: "", waitingRoom: true });
