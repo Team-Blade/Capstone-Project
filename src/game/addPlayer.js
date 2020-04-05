@@ -20,8 +20,11 @@ export default function addPlayer(scene, player) {
 
   scene.playersAlive[playerNumber] = scene.pac;
 
-  scene.physics.add.overlap(scene.pac, scene.collisionLayer, (pac, layer) => {
+  scene.physics.add.collider(scene.pac, scene.collisionLayer, (pac, layer) => {
     pac.setVelocity(0, 0);
+    pac.direction = "";
+    pac.setTurnPoint();
+    pac.snapToTurnPoint();
     // pac.moving = false;
     //had to take it cause because it was throwing an error on player2, could not read frames
     // pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
@@ -31,41 +34,26 @@ export default function addPlayer(scene, player) {
     if (!pac.big && other.big) {
       pac.dead = true;
     } 
-    else{
-      console.log('trying with 4 tiles')
-      if ((pac.direction === "right" || (!pac.direction && other.direction === "left")) && !pac['tileleft'].collides) {
-        // for (let i = 4; i > 0; i--) {
-        //   console.log(i, scene.map.getTileAt(pac.tilePositionX - i, pac.tilePositionY, false, "mapBaseLayer").collides);
-        //   if (!scene.map.getTileAt(pac.tilePositionX - i, pac.tilePositionY, false, "mapBaseLayer").collides) {
-        //     // pac.x = scene.map.tileToWorldX(pac.tilePositionX - i + 0.57);
-        //     pac.colliding = true;
-        //     pac.body.velocity.x = -1000;
-        //     console.log
-        //     setTimeout(()=> {
-        //       pac.colliding = false;
-        //       pac.direction = "";
-        //       pac.setVelocity(0, 0);
-        //     }, 1000);
-        //     break;
-        //   }
-        // }
-        pac.x = scene.map.tileToWorldX(pac.tilePositionX - 1 + 0.57);
+    else {
+      pac.direction === "left" ? pac.collisionDirection = "right" : null;
+      pac.direction === "right" ? pac.collisionDirection = "left" : null;
+      pac.direction === "up" ? pac.collisionDirection = "down" : null;
+      pac.direction === "down" ? pac.collisionDirection = "up" : null;
+
+      if (!pac.direction) {
+        pac.body.touching.left === true ? pac.collisionDirection = "right" : null;
+        pac.body.touching.right === true ? pac.collisionDirection = "left" : null;
+        pac.body.touching.up === true ? pac.collisionDirection = "down" : null;
+        pac.body.touching.down === true? pac.collisionDirection = "up" : null;
       }
-      if ((pac.direction === "left" || (!pac.direction && other.direction === "right")) && !pac['tileright'].collides) {
-        pac.x = scene.map.tileToWorldX(pac.tilePositionX + 1 + 0.57);
-      }
-      if ((pac.direction === "down" || (!pac.direction && other.direction === "up")) && !pac['tileup'].collides) {
-        pac.y = scene.map.tileToWorldY(pac.tilePositionY - 1 + 0.57);
-      }
-      if ((pac.direction === "up" || (!pac.direction && other.direction === "down")) && !pac['tiledown'].collides) {
-        pac.y = scene.map.tileToWorldY(pac.tilePositionY + 1 + 0.57);
-      }
-      // pac.direction === "right" && !pac['tileleft'].collides ? pac.x = scene.map.tileToWorldX(pac.tilePositionX - 1 + 0.57) : null;
-      // pac.direction === "left" && !pac['tileright'].collides ? pac.x = scene.map.tileToWorldX(pac.tilePositionX + 1 + 0.57) : null;
-      // pac.direction === "down" && !pac['tileup'].collides ? pac.y = scene.map.tileToWorldY(pac.tilePositionY - 1 + 0.57) : null;
-      // pac.direction === "up" && !pac['tiledown'].collides ? pac.y = scene.map.tileToWorldY(pac.tilePositionY + 1 + 0.57) : null;
-      pac.setVelocity(0, 0);
+
+      pac.colliding = true;
       pac.direction = "";
+      setTimeout(() => {
+        pac.setVelocity(0, 0);
+        pac.colliding = false
+        pac.collisionDirection = "";
+      }, 320);
     }
   });
   scene.physics.add.overlap(scene.pac, scene.og, () => {
@@ -78,7 +66,7 @@ export default function addPlayer(scene, player) {
         scene.og.y = scene.map.tileToWorldY(7.56),
         scene.og.enableBody(true, scene.map.tileToWorldX(15.571), scene.map.tileToWorldY(7.56), true, true);
         scene.og.dead = false;
-      }, 10000);
+      }, 30000);
     }
   });
   scene.physics.add.overlap(scene.pac, scene.dots, (pac, dots) => {

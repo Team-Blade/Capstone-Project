@@ -20,6 +20,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.turnTo = "";
     this.speed = 200;
     this.colliding = false;
+    this.collisionDirection = "";
   }
   createAnimations() {
     if (this.big) {
@@ -75,20 +76,23 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   trajectory() {
-    this.checkSurroundingTiles();
-
-    this.setTurnPoint();
-    this.centerPac();
-    //animate pac-man consistently
-    if (this.direction && !this.colliding) {
-      this.move(this.direction);
+    if (this.colliding) {
+      this.collisionWithPlayers();
     }
-    //change the direction pac man is facing in animation
-    this.changePacFace();
-    //change direction pac man is headed
     if (!this.colliding) {
+      this.checkSurroundingTiles();
+      
+      this.setTurnPoint();
+      this.centerPac();
+      //animate pac-man consistently
+      if (this.direction) {
+        this.move(this.direction);
+      }
+      //change the direction pac man is facing in animation
+      this.changePacFace();
+      //change direction pac man is headed
       this.changePacDirection();
-    }
+  }
     //update tile position property of pacman
     this.updateTilePosition();
     //makes sure pacman wraps and stays on map
@@ -270,6 +274,14 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       }, 33);
     }
   }
+
+  collisionWithPlayers() {
+    this.collisionDirection === "left" ? this.setVelocityX(-600) : null;
+    this.collisionDirection === "right" ? this.setVelocityX(600) : null;
+    this.collisionDirection === "up" ? this.setVelocityY(-600) : null;
+    this.collisionDirection === "down" ? this.setVelocityY(600) : null;
+  }
+
   death() {
     console.log("top of func", this.color);
     this.scene.anims.create({

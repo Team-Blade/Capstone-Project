@@ -10,8 +10,6 @@ import {
   listenForGhostDeath,
   listenForSomeonesDeath
 } from "./socketListeners";
-import addPlayer from "./addPlayer";
-import addOtherPlayers from "./otherPlayers";
 import { sendMovementInfo, sendGhostMovement } from "./socketEmiters";
 import checkWin from "./checkWin";
 import { toggleSound } from "./socketListeners";
@@ -44,6 +42,7 @@ export default class Level1 extends Phaser.Scene {
     this.winner = "";
   }
   preload() {
+    console.log('set n snap');
     //loads image for tileset
     loadImages(this);
     //loads image of map
@@ -123,9 +122,9 @@ export default class Level1 extends Phaser.Scene {
     if (!this.winner) {
       if (!checkWin(this)) {
         // if(true){
-        // if (!this.og.dead) {
-        //   this.og.setOffset(7, 7);
-        // }
+        if (!this.og.dead) {
+          this.og.setOffset(7, 7);
+        }
         //IF GHOST IS DEAD TELL EVERYONE AND DISABLE GHOST;
         if (this.og.dead && this.og.body.enable) {
           this.socket.emit("ghostDeath", socket.roomId);
