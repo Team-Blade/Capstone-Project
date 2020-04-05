@@ -18,8 +18,8 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.vulnerable = false;
     this.chaseTarget = "";
     this.decideTarget = this.findPac();
-    this.dead = true;
-    // this.dead = false;
+    // this.dead = true;
+    this.dead = false;
     this.turnTo = "";
     this.turnPoint = {};
   }

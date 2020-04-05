@@ -123,9 +123,9 @@ export default class Level1 extends Phaser.Scene {
     if (!this.winner) {
       if (!checkWin(this)) {
         // if(true){
-        // if (!this.og.dead) {
-        //   this.og.setOffset(7, 7);
-        // }
+        if (!this.og.dead) {
+          this.og.setOffset(7, 7);
+        }
         //IF GHOST IS DEAD TELL EVERYONE AND DISABLE GHOST;
         if (this.og.dead && this.og.body.enable) {
           this.socket.emit("ghostDeath", socket.roomId);
