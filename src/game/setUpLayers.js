@@ -1,19 +1,8 @@
-function setUpLayers(scene) {
+export function setUpMapLayer(scene) {
   const map = scene.map;
 
   const pinkTileset = map.addTilesetImage("pinksquare", "pinksquare");
   const blackTileset = map.addTilesetImage("blacksquare", "blacksquare");
-  const smallDotTileset = map.addTilesetImage("GameMain219Edit2", "smallDot");
-  const largeDotTileset = map.addTilesetImage("Common061", "largeDot");
-  const candyTileset = map.addTilesetImage("GameMain004", "candy");
-  //const burgerTileset = map.addTilesetImage("GameMain006", "burger");
-  //const papayaTileset = map.addTilesetImage("GameMain008", "papaya");
-  //const peachTileset = map.addTilesetImage("GameMain010", "peach");
-  //const pizzaSliceTileset = map.addTilesetImage("GameMain011", "pizzaSlice");
-  const cakeSliceTileset = map.addTilesetImage("GameMain003", "cakeSlice");
-  //const eggTileset = map.addTilesetImage("GameMain014", "egg");
-  const bananaTileset = map.addTilesetImage("GameMain001", "banana");
-
 
   // creates the map layer, key must match layer name in tiled
   scene.collisionLayer = map.createStaticLayer(
@@ -28,6 +17,22 @@ function setUpLayers(scene) {
   });
 
   scene.collisionLayer.setScale(0.7);
+
+}
+
+export function setUpFoodLayers(scene) {
+  const map = scene.map;
+
+  const smallDotTileset = map.addTilesetImage("GameMain219Edit2", "smallDot");
+  const largeDotTileset = map.addTilesetImage("Common061", "largeDot");
+  const candyTileset = map.addTilesetImage("GameMain004", "candy");
+  //const burgerTileset = map.addTilesetImage("GameMain006", "burger");
+  //const papayaTileset = map.addTilesetImage("GameMain008", "papaya");
+  //const peachTileset = map.addTilesetImage("GameMain010", "peach");
+  //const pizzaSliceTileset = map.addTilesetImage("GameMain011", "pizzaSlice");
+  const cakeSliceTileset = map.addTilesetImage("GameMain003", "cakeSlice");
+  //const eggTileset = map.addTilesetImage("GameMain014", "egg");
+  const bananaTileset = map.addTilesetImage("GameMain001", "banana");
 
   //creates the food and dots layer
   scene.collisionLayerFoodDots = map.createDynamicLayer(
@@ -107,5 +112,3 @@ function setUpLayers(scene) {
     foodItem.setSize(40, 40);
   });
 }
-
-export default setUpLayers;

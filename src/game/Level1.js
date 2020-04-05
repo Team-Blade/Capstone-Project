@@ -2,7 +2,7 @@ import Ghost from "./Ghost.js";
 import SmallPac from "./SmallPac.js";
 import { socket } from "../../components/App";
 import loadImages from "./imagesToLoad";
-import setUpLayers from "./setUpLayers";
+import { setUpMapLayer } from "./setUpLayers";
 import {
   listenForPlayerMovement,
   listenForGhostMovement,
@@ -83,7 +83,7 @@ export default class Level1 extends Phaser.Scene {
     // let map = this.add.tilemap("map");
     //adds the tileset to the map
 
-    setUpLayers(this);
+    setUpMapLayer(this);
 
     window.addEventListener("resize", resizeCanvas);
 
