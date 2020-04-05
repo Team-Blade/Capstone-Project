@@ -29,7 +29,8 @@ const joinRoom = (socket, room, name) => {
           y: 0,
           name: name,
           playerId: socket.id,
-          playerNumber: room.numberOfPlayers
+          playerNumber: room.numberOfPlayers.numberOfPlayers,
+          score: 0
         };
         console.log(
           socket.id,
@@ -83,19 +84,19 @@ io.on("connection", socket => {
   });
 
   socket.on("startGame", roomId => {
-    rooms[roomId].started = true;
-    io.in(roomId).emit("startCountdown");
-    io.in(roomId).emit("currentPlayers", rooms[roomId].players);
-    io.in(roomId).emit("gameStarted");
+    if (rooms[roomId].numberOfPlayers > 1) {
+      rooms[roomId].started = true;
+      io.in(roomId).emit("startCountdown");
+      io.in(roomId).emit("currentPlayers", rooms[roomId].players);
+      socket.emit("sound");
+      io.in(roomId).emit("gameStarted");
+    } else {
+      socket.emit("notEnoughPlayers");
+    }
   });
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
-    // if (socket.roomId) {
-    //   console.log("before, rooms", rooms);
-    //   // delete rooms[socket.roomId].players[socket.id];
-    //   console.log("after, rooms", rooms);
-    // }
     io.emit("disconnect", socket.id);
   });
 
@@ -148,9 +149,12 @@ io.on("connection", socket => {
   });
   socket.on("exitGameRoom", roomId => {
     console.log("deleting roomId from db", roomId);
-    console.log("before", rooms[roomId]);
     delete rooms[roomId];
     socket.in(roomId).emit("playerGone", roomId);
+  });
+  socket.on("toggleSoundFromFront", toggle => {
+    socket.emit("toggleSoundToPhaser", toggle);
+    socket.emit("sound");
   });
 });
 const PORT = process.env.PORT || 8080;
