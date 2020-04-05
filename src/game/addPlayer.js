@@ -32,20 +32,70 @@ export default function addPlayer(scene, player) {
       pac.dead = true;
     } 
     else {
+      pac.colliding = true;
       if ((pac.direction === "right" || (!pac.direction && other.direction === "left")) && !pac['tileleft'].collides) {
         pac.x = scene.map.tileToWorldX(pac.tilePositionX - 1 + 0.57);
+        for (let i = 2; i <= 4; i++) {
+          const targetTile = scene.map.getTileAt(pac.tilePositionX - i, pac.tilePositionY, false, "mapBaseLayer");
+          if (targetTile && targetTile.collides) {
+            break;
+          }
+          else {
+            pac.x = scene.map.tileToWorldX(pac.tilePositionX - i + 0.57);
+          }
+        }
       }
       if ((pac.direction === "left" || (!pac.direction && other.direction === "right")) && !pac['tileright'].collides) {
         pac.x = scene.map.tileToWorldX(pac.tilePositionX + 1 + 0.57);
+        for (let i = 2; i <= 4; i++) {
+          const targetTile = scene.map.getTileAt(pac.tilePositionX + i, pac.tilePositionY, false, "mapBaseLayer")
+          if (targetTile && targetTile.collides) {
+            break;
+          }
+          else {
+            pac.x = scene.map.tileToWorldX(pac.tilePositionX + i + 0.57);
+          }
+        }
       }
-      if ((pac.direction === "down" || (!pac.direction && other.direction === "up")) && !pac['tileup'].collides) {
+      if ((pac.direction === "down" || (!pac.direction && other.direction === "up")) &&
+          (pac.tilePositionY <= 3 || !pac['tileup'].collides)) {
         pac.y = scene.map.tileToWorldY(pac.tilePositionY - 1 + 0.57);
+        for (let i = 2; i <= 4; i++) {
+          const targetTile = scene.map.getTileAt(pac.tilePositionX, pac.tilePositionY - i, false, "mapBaseLayer")
+          if ((!targetTile && pac.tilePositionY !== 0) || targetTile.collides) {
+            break;
+          }
+          else {
+            if (pac.tilePositionY <= 3) {
+              pac.y = scene.map.tileToWorldY(pac.tilePositionY + 11 + 0.57);
+            }
+            else {
+              pac.y = scene.map.tileToWorldY(pac.tilePositionY - i + 0.57);
+            }
+          }
+        }
       }
-      if ((pac.direction === "up" || (!pac.direction && other.direction === "down")) && !pac['tiledown'].collides) {
+      if ((pac.direction === "up" || (!pac.direction && other.direction === "down")) &&
+          (pac.tilePositionY >= 11 || !pac['tiledown'].collides)) {
         pac.y = scene.map.tileToWorldY(pac.tilePositionY + 1 + 0.57);
+        for (let i = 2; i <= 4; i++) {
+          const targetTile = scene.map.getTileAt(pac.tilePositionX, pac.tilePositionY + i, false, "mapBaseLayer")
+          if ((!targetTile && pac.tilePositionY !== 14)|| targetTile.collides) {
+            break;
+          }
+          else {
+            if (pac.tilePositionY >= 11) {
+              pac.y = scene.map.tileToWorldY(pac.tilePositionY - 11 + 0.57);
+            }
+            else{
+              pac.y = scene.map.tileToWorldY(pac.tilePositionY + i + 0.57);
+            }
+          }
+        }
       }
       pac.setVelocity(0, 0);
       pac.direction = "";
+      setTimeout(() => pac.colliding = false, 500);
     }
   });
   scene.physics.add.overlap(scene.pac, scene.og, () => {
