@@ -31,7 +31,7 @@ export default function addPlayer(scene, player) {
     if (!pac.big && other.big) {
       pac.dead = true;
     } 
-    else{
+    else if (pac.big === other.big) {
       if ((pac.direction === "right" || (!pac.direction && other.direction === "left")) && !pac['tileleft'].collides) {
         pac.x = scene.map.tileToWorldX(pac.tilePositionX - 1 + 0.57);
       }
