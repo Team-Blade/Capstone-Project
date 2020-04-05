@@ -26,6 +26,12 @@ export default function addPlayer(scene, player) {
     //had to take it cause because it was throwing an error on player2, could not read frames
     // pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
   });
+
+  function checkEnemyAtTile(targetTile) {
+    return (scene.og.tilePositionY === targetTile.y && scene.og.tilePositionX === targetTile.x) ||
+      (Object.values(scene.playersAlive).some(
+    (otherPlayer)=> otherPlayer.tilePositionX === targetTile.x && otherPlayer.tilePositionY === targetTile.y))
+  }
   
   scene.physics.add.overlap(scene.pac, scene.otherPlayers, (pac, other) => {
     if (!pac.big && other.big) {
@@ -42,6 +48,9 @@ export default function addPlayer(scene, player) {
           }
           else {
             pac.x = scene.map.tileToWorldX(pac.tilePositionX - i + 0.57);
+            if (checkEnemyAtTile(targetTile)) {
+              break;
+            }
           }
         }
       }
@@ -54,6 +63,9 @@ export default function addPlayer(scene, player) {
           }
           else {
             pac.x = scene.map.tileToWorldX(pac.tilePositionX + i + 0.57);
+            if (checkEnemyAtTile(targetTile)) {
+              break;
+            }
           }
         }
       }
@@ -62,16 +74,18 @@ export default function addPlayer(scene, player) {
         pac.y = scene.map.tileToWorldY(pac.tilePositionY - 1 + 0.57);
         for (let i = 2; i <= 4; i++) {
           const targetTile = scene.map.getTileAt(pac.tilePositionX, pac.tilePositionY - i, false, "mapBaseLayer")
-          if ((!targetTile && pac.tilePositionY !== 0) || targetTile.collides) {
+          if ((!targetTile && pac.tilePositionY <= 3) || targetTile.collides) {
             break;
           }
           else {
+            pac.y = scene.map.tileToWorldY(pac.tilePositionY - i + 0.57);
+            if (checkEnemyAtTile(targetTile)) {
+              break;
+            }
             if (pac.tilePositionY <= 3) {
               pac.y = scene.map.tileToWorldY(pac.tilePositionY + 11 + 0.57);
             }
-            else {
-              pac.y = scene.map.tileToWorldY(pac.tilePositionY - i + 0.57);
-            }
+            
           }
         }
       }
@@ -80,15 +94,16 @@ export default function addPlayer(scene, player) {
         pac.y = scene.map.tileToWorldY(pac.tilePositionY + 1 + 0.57);
         for (let i = 2; i <= 4; i++) {
           const targetTile = scene.map.getTileAt(pac.tilePositionX, pac.tilePositionY + i, false, "mapBaseLayer")
-          if ((!targetTile && pac.tilePositionY !== 14)|| targetTile.collides) {
+          if ((!targetTile && pac.tilePositionY >= 11)|| targetTile.collides) {
             break;
           }
           else {
+            pac.y = scene.map.tileToWorldY(pac.tilePositionY + i + 0.57);
+            if (checkEnemyAtTile(targetTile)) {
+              break;
+            }
             if (pac.tilePositionY >= 11) {
               pac.y = scene.map.tileToWorldY(pac.tilePositionY - 11 + 0.57);
-            }
-            else{
-              pac.y = scene.map.tileToWorldY(pac.tilePositionY + i + 0.57);
             }
           }
         }
