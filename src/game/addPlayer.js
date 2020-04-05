@@ -29,16 +29,40 @@ export default function addPlayer(scene, player) {
   scene.physics.add.overlap(scene.pac, scene.otherPlayers, (pac, other) => {
     if (!pac.big && other.big) {
       pac.dead = true;
-      // pac.disableBody(true, true)
-      // delete scene.playersAlive[pac.playerNumber]
     } 
     else{
-      console.log('resetting position')
-      pac.direction === "right" && !pac['tileleft'].collides ? pac.x = scene.map.tileToWorldX(pac.tilePositionX - 1 + 0.57) : null;
-      pac.direction === "left" && !pac['tileright'].collides ? pac.x = pac.x = scene.map.tileToWorldX(pac.tilePositionX + 1 + 0.57) : null;
-      pac.direction === "down" && !pac['tileup'].collides ? pac.y = scene.map.tileToWorldY(pac.tilePositionY - 1 + 0.57) : null;
-      pac.direction === "up" && !pac['tiledown'].collides ? pac.y = scene.map.tileToWorldY(pac.tilePositionY + 1 + 0.57) : null;
-      // !pac.direction ? 
+      console.log('trying with 4 tiles')
+      if ((pac.direction === "right" || (!pac.direction && other.direction === "left")) && !pac['tileleft'].collides) {
+        // for (let i = 4; i > 0; i--) {
+        //   console.log(i, scene.map.getTileAt(pac.tilePositionX - i, pac.tilePositionY, false, "mapBaseLayer").collides);
+        //   if (!scene.map.getTileAt(pac.tilePositionX - i, pac.tilePositionY, false, "mapBaseLayer").collides) {
+        //     // pac.x = scene.map.tileToWorldX(pac.tilePositionX - i + 0.57);
+        //     pac.colliding = true;
+        //     pac.body.velocity.x = -1000;
+        //     console.log
+        //     setTimeout(()=> {
+        //       pac.colliding = false;
+        //       pac.direction = "";
+        //       pac.setVelocity(0, 0);
+        //     }, 1000);
+        //     break;
+        //   }
+        // }
+        pac.x = scene.map.tileToWorldX(pac.tilePositionX - 1 + 0.57);
+      }
+      if ((pac.direction === "left" || (!pac.direction && other.direction === "right")) && !pac['tileright'].collides) {
+        pac.x = scene.map.tileToWorldX(pac.tilePositionX + 1 + 0.57);
+      }
+      if ((pac.direction === "down" || (!pac.direction && other.direction === "up")) && !pac['tileup'].collides) {
+        pac.y = scene.map.tileToWorldY(pac.tilePositionY - 1 + 0.57);
+      }
+      if ((pac.direction === "up" || (!pac.direction && other.direction === "down")) && !pac['tiledown'].collides) {
+        pac.y = scene.map.tileToWorldY(pac.tilePositionY + 1 + 0.57);
+      }
+      // pac.direction === "right" && !pac['tileleft'].collides ? pac.x = scene.map.tileToWorldX(pac.tilePositionX - 1 + 0.57) : null;
+      // pac.direction === "left" && !pac['tileright'].collides ? pac.x = scene.map.tileToWorldX(pac.tilePositionX + 1 + 0.57) : null;
+      // pac.direction === "down" && !pac['tileup'].collides ? pac.y = scene.map.tileToWorldY(pac.tilePositionY - 1 + 0.57) : null;
+      // pac.direction === "up" && !pac['tiledown'].collides ? pac.y = scene.map.tileToWorldY(pac.tilePositionY + 1 + 0.57) : null;
       pac.setVelocity(0, 0);
       pac.direction = "";
     }
@@ -46,8 +70,6 @@ export default function addPlayer(scene, player) {
   scene.physics.add.overlap(scene.pac, scene.og, () => {
     if (!scene.pac.big && scene.og.vulnerable === false) {
       scene.pac.dead = true;
-      // scene.pac.disableBody(true, true);
-      // delete scene.playersAlive[scene.pac.playerNumber];
     } else {
       scene.og.dead = true;
       setTimeout(()=> {

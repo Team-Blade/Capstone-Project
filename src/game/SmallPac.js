@@ -138,14 +138,12 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       this.move("down");
       this.direction = "down";
     }
-    // console.log('this.scene.cursors.right.isDown', this.scene.cursors.right.isDown);
     if (
       this.scene.cursors.left.isDown &&
       this.checkDirection("left") &&
       this.tilePositionY > 0 &&
       this.tilePositionY < 14
     ) {
-      console.log('is this being called?')
       this.move("left");
       this.direction = "left";
     }
@@ -215,11 +213,6 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       if (!this.direction) {
         return true;
       }
-      // else {
-      //   // console.log('not passed');
-      //   console.log(this.x, this.turnPoint.x);
-      //   console.log(this.y, this.turnPoint.y)
-      // }
     }
     else {
       return false;
