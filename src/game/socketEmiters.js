@@ -1,11 +1,6 @@
 import { socket } from "../../components/App";
 
 export function sendMovementInfo(scene) {
-  // let x = scene.pac.x;
-  // let y = scene.pac.y;
-  // const moving =
-  //   scene.pac.oldPosition &&
-  //   (x !== scene.pac.oldPosition.x || y !== scene.pac.oldPosition.y);
   scene.socket.emit("playerMovement", {
     roomId: socket.roomId,
     socketId: socket.id,

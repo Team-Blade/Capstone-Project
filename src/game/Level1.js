@@ -122,10 +122,11 @@ export default class Level1 extends Phaser.Scene {
     //CHECK WIN
     if (!this.winner) {
       if (!checkWin(this)) {
-        if (!this.og.dead) {
-          this.og.setOffset(7, 7);
-        }
-
+        // if(true){
+        // if (!this.og.dead) {
+        //   this.og.setOffset(7, 7);
+        // }
+        //IF GHOST IS DEAD TELL EVERYONE AND DISABLE GHOST;
         if (this.og.dead && this.og.body.enable) {
           this.socket.emit("ghostDeath", socket.roomId);
           this.og.disableBody(true, true);
@@ -207,7 +208,6 @@ export default class Level1 extends Phaser.Scene {
       }
     }
   }
-  //IF GHOST IS DEAD TELL EVERYONE AND DISABLE GHOST;
 }
 
 function resizeCanvas() {

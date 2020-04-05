@@ -90,6 +90,27 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     });
   }
 
+  trajectory() {
+    this.checkSurroundingTiles();
+    
+    this.setTurnPoint();
+    this.centerPac();
+    //animate pac-man consistently
+    if (this.direction && !this.colliding) {
+      this.move(this.direction);
+    }
+    //change the direction pac man is facing in animation
+    this.changePacFace();
+    //change direction pac man is headed
+    if (!this.colliding) {
+      this.changePacDirection();
+    }
+    //update tile position property of pacman
+    this.updateTilePosition();
+    //makes sure pacman wraps and stays on map
+    this.wrap();
+  }
+
   changePacFace() {
     if (this.body.velocity.x > 0) {
       this.direction = "right";
@@ -117,7 +138,6 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       this.move("down");
       this.direction = "down";
     }
-
     if (
       this.scene.cursors.left.isDown &&
       this.checkDirection("left") &&
@@ -153,27 +173,6 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  trajectory() {
-    this.checkSurroundingTiles();
-    
-    this.setTurnPoint();
-    this.centerPac();
-    //animate pac-man consistently
-    if (this.direction && !this.colliding) {
-      this.move(this.direction);
-    }
-    //change the direction pac man is facing in animation
-    this.changePacFace();
-    //change direction pac man is headed
-    if (!this.colliding) {
-      this.changePacDirection();
-    }
-    //update tile position property of pacman
-    this.updateTilePosition();
-    //makes sure pacman wraps and stays on map
-    this.wrap();
-  }
-
   move(direction) {
     this.moving = true;
     if (this.big) {
@@ -200,21 +199,20 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   checkDirection(turnTo) {
+
     if (
       this[`tile${turnTo}`] &&
       !this[`tile${turnTo}`].collides &&
       this.direction !== turnTo
     ) {
 
-      if (this.fuzzyEqualXY(11)){
-            this.snapToTurnPoint();
-            return true;
+      if (this.fuzzyEqualXY(11)) {
+        this.snapToTurnPoint();
+        return true;
       }
-      // else {
-      //   // console.log('not passed');
-      //   console.log(this.x, this.turnPoint.x);
-      //   console.log(this.y, this.turnPoint.y)
-      // }
+      if (!this.direction) {
+        return true;
+      }
     }
     else {
       return false;
