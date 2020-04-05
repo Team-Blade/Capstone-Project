@@ -167,11 +167,8 @@ export default class Level1 extends Phaser.Scene {
           }
           //IF YOU ARE DEAD TELL EVERYONE AND DELETE YOURSELF
           if (this.pac.dead && this.playersAlive[this.pac.playerNumber]) {
-            console.log("in pac");
-            this.pac.createAnimations();
             this.socket.emit("selfDeath", socket.roomId, this.pac.playerNumber);
             this.pac.death();
-
             let deathSound = this.sound.add("death");
             deathSound.play();
             this.pac.setVelocityX(0);
@@ -195,11 +192,10 @@ export default class Level1 extends Phaser.Scene {
           this.otherPlayersArray.forEach(player => {
             //IF YOU HEAR SOMEONE IS DEAD, DISABLE THEM AND DELETE THEM
             if (player.dead && this.playersAlive[player.playerNumber]) {
-              player.anims.play("death");
+              player.death();
               player.createAnimations();
               player.setVelocityX(0);
               player.setVelocityY(0);
-
               this.time.delayedCall(
                 500,
                 player => {
