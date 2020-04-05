@@ -65,16 +65,12 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.createAnimation();
 
     if (direction === "up") {
-      // this.setVelocityY(-110);
       this.anims.play("moveUp", true);
     } else if (direction === "down") {
-      // this.setVelocityY(110);
       this.anims.play("moveDown", true);
     } else if (direction === "left") {
-      // this.setVelocityX(-110);
       this.anims.play("moveLeft", true);
     } else if (direction === "right") {
-      // this.setVelocityX(110);
       this.anims.play("moveRight", true);
     }
   }
@@ -183,11 +179,9 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     
     if ((direction === "left" || direction === "right")) {
       this.setVelocityX(velocity);
-      // this.setVelocityY(0);
     }
     if (direction === "up" || direction === "down") {
       this.setVelocityY(velocity);
-      // this.setVelocityX(0);
     }
 
     this.move(direction);
