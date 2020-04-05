@@ -43,7 +43,6 @@ export default class Level1 extends Phaser.Scene {
     this.winner = "";
   }
   preload() {
-    console.log('preloading');
     //loads image for tileset
     loadImages(this);
     //loads image of map
@@ -62,7 +61,6 @@ export default class Level1 extends Phaser.Scene {
   }
 
   create() {
-    console.log('eat power');
     const scene = this;
 
     this.otherPlayers = this.physics.add.group();
