@@ -1,6 +1,7 @@
 import addPlayer from "./addPlayer";
 import addOtherPlayers from "./otherPlayers";
 import loadImages from "./imagesToLoad";
+import { destroyInstructions } from "./instructions"
 let calledRecently = false;
 export let toggleSound = true;
 
@@ -101,6 +102,7 @@ export function listenForDotActivity(scene) {
   scene.socket.on("currentPlayers", players => {
     if (calledRecently === false) {
       calledRecently = true;
+      destroyInstructions(scene);
       scene.countdown = scene.add.sprite(655, 280, "3");
       scene.anims.create({
         key: "countdown",
