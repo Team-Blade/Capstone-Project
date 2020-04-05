@@ -45,6 +45,7 @@ export default class Level1 extends Phaser.Scene {
   preload() {
     //loads image for tileset
     loadImagesAndAudio(this);
+
     //loads image of map
     this.load.tilemapTiledJSON(
       "map",
@@ -54,6 +55,8 @@ export default class Level1 extends Phaser.Scene {
   }
 
   create() {
+    this.sound.play('fruit');
+
     const scene = this;
 
     this.otherPlayers = this.physics.add.group();
