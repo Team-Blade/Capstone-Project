@@ -22,95 +22,42 @@ export default function addPlayer(scene, player) {
 
   scene.physics.add.overlap(scene.pac, scene.collisionLayer, (pac, layer) => {
     pac.setVelocity(0, 0);
+    
     // pac.moving = false;
     //had to take it cause because it was throwing an error on player2, could not read frames
     // pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
   });
 
-  function checkEnemyAtTile(targetTile) {
-    return (scene.og.tilePositionY === targetTile.y && scene.og.tilePositionX === targetTile.x) ||
-      (Object.values(scene.playersAlive).some(
-    (otherPlayer)=> otherPlayer.tilePositionX === targetTile.x && otherPlayer.tilePositionY === targetTile.y))
-  }
+  // function checkEnemyAtTile(targetTile) {
+  //   return (scene.og.tilePositionY === targetTile.y && scene.og.tilePositionX === targetTile.x) ||
+  //     (Object.values(scene.playersAlive).some(
+  //   (otherPlayer)=> otherPlayer.tilePositionX === targetTile.x && otherPlayer.tilePositionY === targetTile.y))
+  // }
   
   scene.physics.add.overlap(scene.pac, scene.otherPlayers, (pac, other) => {
     if (!pac.big && other.big) {
       pac.dead = true;
     } 
     else {
+      pac.direction === "left" ? pac.collisionDirection = "right" : null;
+      pac.direction === "right" ? pac.collisionDirection = "left" : null;
+      pac.direction === "up" ? pac.collisionDirection = "down" : null;
+      pac.direction === "down" ? pac.collisionDirection = "up" : null;
+
+      if (!pac.direction) {
+        pac.body.touching.left === true ? pac.collisionDirection = "right" : null;
+        pac.body.touching.right === true ? pac.collisionDirection = "left" : null;
+        pac.body.touching.up === true ? pac.collisionDirection = "down" : null;
+        pac.body.touching.down === true? pac.collisionDirection = "up" : null;
+      }
+
       pac.colliding = true;
-      if ((pac.direction === "right" || (!pac.direction && other.direction === "left")) && !pac['tileleft'].collides) {
-        pac.x = scene.map.tileToWorldX(pac.tilePositionX - 1 + 0.57);
-        for (let i = 2; i <= 4; i++) {
-          const targetTile = scene.map.getTileAt(pac.tilePositionX - i, pac.tilePositionY, false, "mapBaseLayer");
-          if (targetTile && targetTile.collides) {
-            break;
-          }
-          else {
-            pac.x = scene.map.tileToWorldX(pac.tilePositionX - i + 0.57);
-            if (checkEnemyAtTile(targetTile)) {
-              break;
-            }
-          }
-        }
-      }
-      if ((pac.direction === "left" || (!pac.direction && other.direction === "right")) && !pac['tileright'].collides) {
-        pac.x = scene.map.tileToWorldX(pac.tilePositionX + 1 + 0.57);
-        for (let i = 2; i <= 4; i++) {
-          const targetTile = scene.map.getTileAt(pac.tilePositionX + i, pac.tilePositionY, false, "mapBaseLayer")
-          if (targetTile && targetTile.collides) {
-            break;
-          }
-          else {
-            pac.x = scene.map.tileToWorldX(pac.tilePositionX + i + 0.57);
-            if (checkEnemyAtTile(targetTile)) {
-              break;
-            }
-          }
-        }
-      }
-      if ((pac.direction === "down" || (!pac.direction && other.direction === "up")) &&
-          (pac.tilePositionY <= 3 || !pac['tileup'].collides)) {
-        pac.y = scene.map.tileToWorldY(pac.tilePositionY - 1 + 0.57);
-        for (let i = 2; i <= 4; i++) {
-          const targetTile = scene.map.getTileAt(pac.tilePositionX, pac.tilePositionY - i, false, "mapBaseLayer")
-          if ((!targetTile && pac.tilePositionY <= 3) || targetTile.collides) {
-            break;
-          }
-          else {
-            pac.y = scene.map.tileToWorldY(pac.tilePositionY - i + 0.57);
-            if (checkEnemyAtTile(targetTile)) {
-              break;
-            }
-            if (pac.tilePositionY <= 3) {
-              pac.y = scene.map.tileToWorldY(pac.tilePositionY + 11 + 0.57);
-            }
-            
-          }
-        }
-      }
-      if ((pac.direction === "up" || (!pac.direction && other.direction === "down")) &&
-          (pac.tilePositionY >= 11 || !pac['tiledown'].collides)) {
-        pac.y = scene.map.tileToWorldY(pac.tilePositionY + 1 + 0.57);
-        for (let i = 2; i <= 4; i++) {
-          const targetTile = scene.map.getTileAt(pac.tilePositionX, pac.tilePositionY + i, false, "mapBaseLayer")
-          if ((!targetTile && pac.tilePositionY >= 11)|| targetTile.collides) {
-            break;
-          }
-          else {
-            pac.y = scene.map.tileToWorldY(pac.tilePositionY + i + 0.57);
-            if (checkEnemyAtTile(targetTile)) {
-              break;
-            }
-            if (pac.tilePositionY >= 11) {
-              pac.y = scene.map.tileToWorldY(pac.tilePositionY - 11 + 0.57);
-            }
-          }
-        }
-      }
-      pac.setVelocity(0, 0);
       pac.direction = "";
-      setTimeout(() => pac.colliding = false, 500);
+      setTimeout(() => {
+        pac.setVelocity(0, 0);
+        pac.colliding = false
+        pac.collisionDirection = "";
+      }, 320);
     }
   });
   scene.physics.add.overlap(scene.pac, scene.og, () => {

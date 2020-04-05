@@ -1,7 +1,6 @@
 import SmallPac from "./SmallPac.js";
 
 export default function addOtherPlayers(scene, player) {
-  console.log("add other playerss");
   const x = scene[player.playerNumber].startPositions.x;
   const y = scene[player.playerNumber].startPositions.y;
   const playerNumber = player.playerNumber;
@@ -21,25 +20,9 @@ export default function addOtherPlayers(scene, player) {
 
   scene.physics.add.overlap(
     otherPlayer,
-    scene.pac /*, () => {
-    if (!otherPlayer.big && scene.pac.big) {
-      otherPlayer.disableBody(true, true);
-      delete scene.playersAlive[otherPlayer.playerNumber];
-    }
-  }*/
+    scene.pac
   );
 
-  // scene.physics.add.overlap(
-  //   otherPlayer,
-  //   scene.og /*, () => {
-  //   if (!otherPlayer.big && scene.og.vulnerable === false) {
-  //     otherPlayer.disableBody(true, true);
-  //     delete scene.playersAlive[otherPlayer.playerNumber];
-  //   } else {
-  //     scene.og.dead = true;
-  //   }
-  // }*/
-  // );
   scene.otherPlayersArray.push(otherPlayer);
   scene.playersAlive[playerNumber] = otherPlayer;
   otherPlayer.playerId = player.playerId;

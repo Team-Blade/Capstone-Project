@@ -10,8 +10,6 @@ import {
   listenForGhostDeath,
   listenForSomeonesDeath
 } from "./socketListeners";
-import addPlayer from "./addPlayer";
-import addOtherPlayers from "./otherPlayers";
 import { sendMovementInfo, sendGhostMovement } from "./socketEmiters";
 import checkWin from "./checkWin";
 import { toggleSound } from "./socketListeners";
