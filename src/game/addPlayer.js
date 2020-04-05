@@ -22,8 +22,9 @@ export default function addPlayer(scene, player) {
 
   scene.physics.add.collider(scene.pac, scene.collisionLayer, (pac, layer) => {
     pac.setVelocity(0, 0);
-    pac.snapToTurnPoint();
     pac.direction = "";
+    pac.setTurnPoint();
+    pac.snapToTurnPoint();
     // pac.moving = false;
     //had to take it cause because it was throwing an error on player2, could not read frames
     // pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);

@@ -42,6 +42,7 @@ export default class Level1 extends Phaser.Scene {
     this.winner = "";
   }
   preload() {
+    console.log('set n snap');
     //loads image for tileset
     loadImages(this);
     //loads image of map
@@ -165,8 +166,21 @@ export default class Level1 extends Phaser.Scene {
           }
           //IF YOU ARE DEAD TELL EVERYONE AND DELETE YOURSELF
           if (this.pac.dead && this.playersAlive[this.pac.playerNumber]) {
-            this.pac.disableBody(true, true);
             this.socket.emit("selfDeath", socket.roomId, this.pac.playerNumber);
+            this.pac.death();
+            let deathSound = this.sound.add("death");
+            deathSound.play();
+            this.pac.setVelocityX(0);
+            this.pac.setVelocityY(0);
+            this.time.delayedCall(
+              500,
+              () => {
+                this.pac.disableBody(true, true);
+                delete this.playersAlive[this.pac.playerNumber];
+              },
+              [],
+              this
+            );
             delete this.playersAlive[this.pac.playerNumber];
             if (toggleSound) {
               let deathSound = this.sound.add("death");
@@ -179,14 +193,15 @@ export default class Level1 extends Phaser.Scene {
             if (player.dead && this.playersAlive[player.playerNumber]) {
               player.death();
               player.createAnimations();
-              delete this.playersAlive[player.playerNumber];
+              player.setVelocityX(0);
+              player.setVelocityY(0);
               this.time.delayedCall(
-                400,
-                () => {
+                500,
+                player => {
                   player.disableBody(true, true);
-                  // delete this.playersAlive[player.playerNumber];
+                  delete this.playersAlive[player.playerNumber];
                 },
-                [],
+                [player],
                 this
               );
             } else {

@@ -7,8 +7,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.setSize(28, 28, true);
     // .setOrigin(0,0)
     // .setOffset(-0.05,-0.05)
-    this.setCircle(7,7,7)
-    .setScale(this.scene.collisionLayer.scale * 2.1);
+    this.setCircle(7, 7, 7).setScale(this.scene.collisionLayer.scale * 2.1);
     this.key = config.key.slice(0, -1);
     this.game = config.game;
     this.name = this.key;
@@ -76,7 +75,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   }
   trajectory() {
     this.setOffset(7, 7);
-    if(this.direction) {
+    if (this.direction) {
       this.move(this.direction);
     }
     if (this.scene.pac) {
@@ -110,14 +109,13 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   }
 
   fuzzyEqualXY(threshold) {
-    const fuzzy = Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, threshold)
-           &&
-           Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, threshold)
-    return fuzzy
+    const fuzzy =
+      Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, threshold) &&
+      Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, threshold);
+    return fuzzy;
   }
 
   centerGhost() {
-    
     // if (this.x !== this.turnPoint.x && this.body.velocity.y !== 0){
     //   this.x = this.turnPoint.x;
     // }
@@ -128,7 +126,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     //          this.body.velocity.y === 0 &&
     //          !this.fuzzyEqualXY(25) &&
     //          (!this.tilePositionY >= 15 || !this.tilePositionY <= -1)) {
-
     //             this.snapToTurnPoint();
     // }
   }
@@ -171,13 +168,11 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   }
 
   go(direction) {
-
     let velocity = 130;
 
-    direction === "left" || direction === "up" ? velocity *= (-1) : null;
-    
-    
-    if ((direction === "left" || direction === "right")) {
+    direction === "left" || direction === "up" ? (velocity *= -1) : null;
+
+    if (direction === "left" || direction === "right") {
       this.setVelocityX(velocity);
     }
     if (direction === "up" || direction === "down") {
@@ -186,7 +181,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
 
     this.move(direction);
     this.direction = direction;
-
   }
 
   followPac() {
@@ -249,12 +243,13 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   }
 
   checkDirection(turnTo) {
-    if(this[`tile${turnTo}`] &&
+    if (
+      this[`tile${turnTo}`] &&
       !this[`tile${turnTo}`].collides &&
-      this.direction !== turnTo){
-        return true;
-    }
-    else {
+      this.direction !== turnTo
+    ) {
+      return true;
+    } else {
       return false;
     }
   }
@@ -263,15 +258,16 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
     this.turnPoint.y = this.scene.map.tileToWorldY(this.tilePositionY + 0.57);
 
-    if (Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, 13.7) &&
-      Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, 13.7)){
-        // console.log('passed2');
-        // console.log('x:', 'gh', this.x, this.turnPoint.x);
-        // console.log('y:', 'gh', this.y, this.turnPoint.y); 
-        this.x = this.turnPoint.x;
-        this.y = this.turnPoint.y;
-    }
-    else {
+    if (
+      Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, 13.7) &&
+      Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, 13.7)
+    ) {
+      // console.log('passed2');
+      // console.log('x:', 'gh', this.x, this.turnPoint.x);
+      // console.log('y:', 'gh', this.y, this.turnPoint.y);
+      this.x = this.turnPoint.x;
+      this.y = this.turnPoint.y;
+    } else {
       // console.log('not passed');
       // console.log('x:', 'gh', this.x, this.turnPoint.x);
       // console.log('y:', 'gh', this.y, this.turnPoint.y);
@@ -279,25 +275,25 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   }
 
   checkSurroundingTiles() {
-    this['tileup'] = this.scene.map.getTileAt(
+    this["tileup"] = this.scene.map.getTileAt(
       this.tilePositionX,
       this.tilePositionY - 1,
       false,
       "mapBaseLayer"
     );
-    this['tiledown'] = this.scene.map.getTileAt(
+    this["tiledown"] = this.scene.map.getTileAt(
       this.tilePositionX,
       this.tilePositionY + 1,
       false,
       "mapBaseLayer"
     );
-    this['tileleft'] = this.scene.map.getTileAt(
+    this["tileleft"] = this.scene.map.getTileAt(
       this.tilePositionX - 1,
       this.tilePositionY,
       false,
       "mapBaseLayer"
     );
-    this['tileright'] = this.scene.map.getTileAt(
+    this["tileright"] = this.scene.map.getTileAt(
       this.tilePositionX + 1,
       this.tilePositionY,
       false,
