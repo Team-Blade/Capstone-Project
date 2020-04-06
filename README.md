@@ -1,6 +1,6 @@
 ![DotEaterLogo](https://user-images.githubusercontent.com/24820174/78578107-e0bd3800-77e3-11ea-9dc6-845b1d398a36.png)
 
-# DOT EATER
+# Dot Eater
 
 Pac-Man Battle Royale is a maze chase online video game inspired by the 17th arcade game in Pac-Man's series developed by Namco Bandai Games.
 
@@ -8,7 +8,7 @@ Pac-Man Battle Royale is a maze chase online video game inspired by the 17th arc
 All graphics are the property of Namco Bandai Games.
 
 ```
-Game Link : dot-eater.herokuapp.com
+Game Link : [dot-eater.herokuapp.com]
 ```
 
 ## Game Rules
