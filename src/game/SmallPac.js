@@ -38,20 +38,20 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       frames: [
         { key: `${this.color}closed` },
         { key: `${this.color}left1` },
-        { key: `${this.color}left2` }
+        { key: `${this.color}left2` },
       ],
       frameRate: 10,
-      repeat: -1
+      repeat: -1,
     });
     this.scene.anims.create({
       key: `${this.color}right`,
       frames: [
         { key: `${this.color}closed` },
         { key: `${this.color}right1` },
-        { key: `${this.color}right2` }
+        { key: `${this.color}right2` },
       ],
       frameRate: 10,
-      repeat: -1
+      repeat: -1,
     });
     this.scene.anims.create({
       key: `${this.color}up`,
@@ -59,19 +59,19 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       frames: [
         { key: `${this.color}closed` },
         { key: `${this.color}up1` },
-        { key: `${this.color}up2` }
+        { key: `${this.color}up2` },
       ],
-      repeat: -1
+      repeat: -1,
     });
     this.scene.anims.create({
       key: `${this.color}down`,
       frames: [
         { key: `${this.color}closed` },
         { key: `${this.color}down1` },
-        { key: `${this.color}down2` }
+        { key: `${this.color}down2` },
       ],
       frameRate: 10,
-      repeat: -1
+      repeat: -1,
     });
   }
 
@@ -81,7 +81,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
     if (!this.colliding) {
       this.checkSurroundingTiles();
-      
+
       this.setTurnPoint();
       this.centerPac();
       //animate pac-man consistently
@@ -92,7 +92,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       this.changePacFace();
       //change direction pac man is headed
       this.changePacDirection();
-  }
+    }
     //update tile position property of pacman
     this.updateTilePosition();
     //makes sure pacman wraps and stays on map
@@ -284,23 +284,22 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
 
   death() {
     console.log("top of func", this.color);
+
     this.scene.anims.create({
       key: "death",
       frames: [
-        { key: `${this.color}death1` },
-        { key: `${this.color}death2` },
-        { key: `${this.color}death3` },
-        { key: `${this.color}death4` },
-        { key: `${this.color}death5` },
-        { key: `${this.color}death6` },
-        { key: `${this.color}death7` },
-        { key: `${this.color}death8` }
+        { key: `${this.key.slice(0, 2)}death1` },
+        { key: `${this.key.slice(0, 2)}death2` },
+        { key: `${this.key.slice(0, 2)}death3` },
+        { key: `${this.key.slice(0, 2)}death4` },
+        { key: `${this.key.slice(0, 2)}death5` },
+        { key: `${this.key.slice(0, 2)}death6` },
+        { key: `${this.key.slice(0, 2)}death7` },
+        { key: `${this.key.slice(0, 2)}death8` },
       ],
       frameRate: 16,
-      repeat: 0
+      repeat: 0,
     });
     this.anims.play("death", true);
-    console.log(this.anims);
-    console.log(this.color);
   }
 }
