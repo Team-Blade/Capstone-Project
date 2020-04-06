@@ -69,19 +69,19 @@ export default function addPlayer(scene, player) {
       scene.pac.dead = true;
     } else {
       scene.og.dead = true;
-      // setTimeout(() => {
-      //   scene.og.x = scene.map.tileToWorldX(15.571);
-      //   scene.og.y = scene.map.tileToWorldY(7.56);
-      //   scene.og.enableBody(
-      //     true,
-      //     scene.map.tileToWorldX(15.571),
-      //     scene.map.tileToWorldY(7.56),
-      //     true,
-      //     true
-      //   );
-      //   scene.og.dead = false;
-      //   scene.chaseTarget = "";
-      // }, 30000);
+      setTimeout(() => {
+        scene.og.x = scene.map.tileToWorldX(15.571);
+        scene.og.y = scene.map.tileToWorldY(7.56);
+        scene.og.enableBody(
+          true,
+          scene.map.tileToWorldX(15.571),
+          scene.map.tileToWorldY(7.56),
+          true,
+          true
+        );
+        scene.og.dead = false;
+        scene.chaseTarget = "";
+      }, 30000);
     }
   });
   scene.physics.add.overlap(scene.pac, scene.dots, (pac, dots) => {
