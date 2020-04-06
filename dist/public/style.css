@@ -99,7 +99,10 @@ main {
   padding: 50px;
   color: gold;
 }
-
+.logo {
+  width: 500px;
+  height: 175px;
+}
 .init-game {
   display: flex;
   justify-content: space-around;

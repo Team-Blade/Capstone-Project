@@ -57,11 +57,16 @@ export default function addPlayer(scene, player) {
 
       pac.colliding = true;
       pac.direction = "";
-      setTimeout(() => {
-        pac.setVelocity(0, 0);
-        pac.colliding = false;
-        pac.collisionDirection = "";
-      }, 320);
+      scene.time.delayedCall(
+        320,
+        () => {
+          pac.setVelocity(0, 0);
+          pac.colliding = false;
+          pac.collisionDirection = "";
+        },
+        [],
+        scene
+      );
     }
   });
   scene.physics.add.overlap(scene.pac, scene.og, () => {
@@ -69,19 +74,24 @@ export default function addPlayer(scene, player) {
       scene.pac.dead = true;
     } else {
       scene.og.dead = true;
-      setTimeout(() => {
-        scene.og.x = scene.map.tileToWorldX(15.571);
-        scene.og.y = scene.map.tileToWorldY(7.56);
-        scene.og.enableBody(
-          true,
-          scene.map.tileToWorldX(15.571),
-          scene.map.tileToWorldY(7.56),
-          true,
-          true
-        );
-        scene.og.dead = false;
-        scene.chaseTarget = "";
-      }, 30000);
+      scene.time.delayedCall(
+        30000,
+        () => {
+          scene.og.x = scene.map.tileToWorldX(15.571);
+          scene.og.y = scene.map.tileToWorldY(7.56);
+          scene.og.enableBody(
+            true,
+            scene.map.tileToWorldX(15.571),
+            scene.map.tileToWorldY(7.56),
+            true,
+            true
+          );
+          scene.og.dead = false;
+          scene.chaseTarget = "";
+        },
+        [],
+        scene
+      );
     }
   });
   scene.physics.add.overlap(scene.pac, scene.dots, (pac, dots) => {

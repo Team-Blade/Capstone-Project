@@ -301,5 +301,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       repeat: 0,
     });
     this.anims.play("death", true);
+    console.log(this.anims);
+    console.log(this.color);
   }
 }
