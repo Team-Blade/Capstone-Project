@@ -56,18 +56,14 @@ class App extends React.Component {
   createGame() {
     //generate a game code
     const code = this.state.code;
-    console.log("inside createGame func", code);
-    // const code = randomString();
     let name = this.state.name;
+
     socket.emit("createRoom", code, name);
     //sending player to database & updating state
     socket.on("newPlayers", allPlayers => {
       games.doc(code).set({ players: allPlayers }, { merge: true });
       this.setState({
-        // buttonClicked: false,
         name: "",
-        // buttonClickedName: "create",
-        // code,
         players: allPlayers
       });
     });
@@ -83,10 +79,9 @@ class App extends React.Component {
   joinGame() {
     let name = this.state.name;
     let code = this.state.code.toUpperCase();
-    console.log("inside joinGame func", this.state.code);
+
     socket.emit("joinRoom", code, name);
     socket.on("invalidRoom", roomId => {
-      console.log("inside invalidRoom");
       alert(`Sorry, game room: ${roomId} not found`);
       this.setState({ buttonClickedName: "join" });
     });
