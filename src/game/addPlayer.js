@@ -80,6 +80,7 @@ export default function addPlayer(scene, player) {
             true
           );
         scene.og.dead = false;
+        scene.chaseTarget = "";
       }, 30000);
     }
   });
