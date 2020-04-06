@@ -43,6 +43,18 @@ nav {
   margin-left: 40px;
 }
 
+.back-button {
+  font-size: small;
+  margin-left: 40px;
+}
+
+.creator-text {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  flex-grow: 5;
+}
+
 nav > div {
   align-self: flex-end;
 
@@ -60,6 +72,14 @@ nav > div {
 }
 main {
   font-family: "Press Start 2P", cursive;
+}
+#creator-p-text {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: medium;
+}
+#creator-p-text > p {
+  font-size: small;
 }
 
 .begin-button {
