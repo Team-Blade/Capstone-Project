@@ -1,4 +1,4 @@
-function loadImages(scene) {
+function loadImagesAndAudio(scene) {
   //loads yellow pacman
 
   scene.load.spritesheet("pacYellow", "/public/assets/royale.png", {
@@ -196,6 +196,14 @@ function loadImages(scene) {
   scene.load.image("ghostEyesLeft", "/public/assets/ghosts/GameMain267.png");
   scene.load.image("ghostEyesRight", "/public/assets/ghosts/GameMain268.png");
   scene.load.image("ghostEyesDown", "/public/assets/ghosts/GameMain269.png");
+
+  scene.load.audio("game_start", "/public/assets/audio/game_start.mp3");
+  scene.load.audio("death", "/public/assets/audio/death.mp3");
+  scene.load.audio("eat_ghost", "/public/assets/audio/eat_ghost.mp3");
+  scene.load.audio("eat", "/public/assets/audio/pause.mp3");
+  scene.load.audio("intro", "/public/assets/audio/pause_beat.mp3");
+  scene.load.audio("fruit", "/public/assets/audio/fruit.mp3");
+  scene.load.audio("powerPellet", "/public/assets/audio/waza.mp3");
 }
 
-export default loadImages;
+export default loadImagesAndAudio;

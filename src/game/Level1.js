@@ -1,7 +1,7 @@
 import Ghost from "./Ghost.js";
 import SmallPac from "./SmallPac.js";
 import { socket } from "../../components/App";
-import loadImages from "./imagesToLoad";
+import loadImagesAndAudio from "./imagesToLoad";
 import { setUpMapLayer } from "./setUpLayers";
 import {
   listenForPlayerMovement,
@@ -44,23 +44,19 @@ export default class Level1 extends Phaser.Scene {
   }
   preload() {
     //loads image for tileset
-    loadImages(this);
+    loadImagesAndAudio(this);
+
     //loads image of map
     this.load.tilemapTiledJSON(
       "map",
       "/public/assets/newMapWithFoodDots6.json"
     );
-    this.load.audio("game_start", "/public/assets/audio/game_start.mp3");
-    this.load.audio("death", "/public/assets/audio/death.mp3");
-    this.load.audio("eat_ghost", "/public/assets/audio/eat_ghost.mp3");
-    this.load.audio("eat", "/public/assets/audio/pause.mp3");
-    this.load.audio("intro", "/public/assets/audio/pause_beat.mp3");
-    this.load.audio("fruit", "/public/assets/audio/fruit.mp3");
-    this.load.audio("powerPellet", "/public/assets/audio/waza.mp3");
 
   }
 
   create() {
+    this.sound.play('fruit');
+
     const scene = this;
 
     this.otherPlayers = this.physics.add.group();
