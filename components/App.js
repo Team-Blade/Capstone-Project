@@ -55,17 +55,15 @@ class App extends React.Component {
   }
   createGame() {
     //generate a game code
-    const code = randomString();
+    const code = this.state.code;
     let name = this.state.name;
+
     socket.emit("createRoom", code, name);
     //sending player to database & updating state
     socket.on("newPlayers", (allPlayers) => {
       games.doc(code).set({ players: allPlayers }, { merge: true });
       this.setState({
-        buttonClicked: false,
         name: "",
-        buttonClickedName: "create",
-        code,
         players: allPlayers,
       });
     });
@@ -84,7 +82,6 @@ class App extends React.Component {
 
     socket.emit("joinRoom", code, name);
     socket.on("invalidRoom", (roomId) => {
-      console.log("inside invalidRoom");
       alert(`Sorry, game room: ${roomId} not found`);
       this.setState({ buttonClickedName: "join" });
     });
@@ -252,7 +249,14 @@ class App extends React.Component {
                       type="submit"
                       name="create"
                       disabled={!state.name}
-                      onClick={this.createGame}
+                      onClick={() => {
+                        let code = randomString();
+                        this.setState({
+                          code,
+                          buttonClicked: false,
+                          buttonClickedName: "create",
+                        });
+                      }}
                     >
                       Create A Game
                     </button>
@@ -262,12 +266,12 @@ class App extends React.Component {
                       type="button"
                       name="join"
                       disabled={!state.name}
-                      onClick={() =>
+                      onClick={() => {
                         this.setState({
                           buttonClicked: false,
                           buttonClickedName: "join",
-                        })
-                      }
+                        });
+                      }}
                     >
                       Join A Game
                     </button>
@@ -282,7 +286,7 @@ class App extends React.Component {
             <Popup open closeOnDocumentClick={false}>
               {(close) => (
                 <div className="init-game-create">
-                  <div style={{ textAlign: "center" }}>
+                  <div className="creator-text" style={{ textAlign: "center" }}>
                     <div>Share this code with friends: </div>
 
                     <div>
@@ -294,32 +298,45 @@ class App extends React.Component {
                           <span className="gameCode">{state.code}</span>
                         </CopyToClipboard>
                       </h2>
+
                       {this.state.alertCopied ? <span>*COPIED*</span> : null}
                     </div>
                   </div>
-                  <button
-                    className="enter-game-button"
-                    onClick={() => {
-                      close();
-                    }}
-                  >
-                    Enter Game Room
-                  </button>
-                  <button
-                    className="enter-game-button"
-                    type="submit"
-                    onClick={() => {
-                      games.doc(state.code).delete();
-                      this.setState({
-                        buttonClicked: true,
-                        buttonClickedName: "",
-                        players: {},
-                      });
-                    }}
-                    open={false}
-                  >
-                    GO BACK
-                  </button>
+                  <div>
+                    <button
+                      type="submit"
+                      className="enter-game-button"
+                      onClick={() => {
+                        this.state.code;
+                        this.createGame();
+                        close();
+                      }}
+                    >
+                      Enter Game Room
+                    </button>
+                    <button
+                      className="back-button"
+                      type="submit"
+                      onClick={() => {
+                        games.doc(state.code).delete();
+                        this.setState({
+                          buttonClicked: true,
+                          buttonClickedName: "",
+                          players: {},
+                        });
+                      }}
+                      open={false}
+                    >
+                      GO BACK
+                    </button>
+                  </div>
+                  <div id="creator-p-text">
+                    <p>
+                      **You MUST ENTER <br />
+                      the game room for <br />
+                      your friends to join**
+                    </p>
+                  </div>
                 </div>
               )}
             </Popup>
