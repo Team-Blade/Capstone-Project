@@ -294,7 +294,7 @@ class App extends React.Component {
             <Popup open closeOnDocumentClick={false}>
               {close => (
                 <div className="init-game-create">
-                  <div style={{ textAlign: "center" }}>
+                  <div className="creator-text" style={{ textAlign: "center" }}>
                     <div>Share this code with friends: </div>
 
                     <div>
@@ -310,33 +310,41 @@ class App extends React.Component {
                       {this.state.alertCopied ? <span>*COPIED*</span> : null}
                     </div>
                   </div>
-                  <button
-                    type="submit"
-                    className="enter-game-button"
-                    onClick={() => {
-                      this.state.code;
-                      this.createGame();
-                      close();
-                    }}
-                  >
-                    Enter Game Room
-                  </button>
-                  <button
-                    className="enter-game-button"
-                    type="submit"
-                    onClick={() => {
-                      games.doc(state.code).delete();
-                      this.setState({
-                        buttonClicked: true,
-                        buttonClickedName: "",
-                        players: {}
-                      });
-                    }}
-                    open={false}
-                  >
-                    GO BACK
-                  </button>
-                  <p>You must enter the game room for your friends to join</p>
+                  <div>
+                    <button
+                      type="submit"
+                      className="enter-game-button"
+                      onClick={() => {
+                        this.state.code;
+                        this.createGame();
+                        close();
+                      }}
+                    >
+                      Enter Game Room
+                    </button>
+                    <button
+                      className="back-button"
+                      type="submit"
+                      onClick={() => {
+                        games.doc(state.code).delete();
+                        this.setState({
+                          buttonClicked: true,
+                          buttonClickedName: "",
+                          players: {}
+                        });
+                      }}
+                      open={false}
+                    >
+                      GO BACK
+                    </button>
+                  </div>
+                  <div id="creator-p-text">
+                    <p>
+                      **You MUST ENTER <br />
+                      the game room for <br />
+                      your friends to join**
+                    </p>
+                  </div>
                 </div>
               )}
             </Popup>
