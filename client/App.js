@@ -26,7 +26,7 @@ class App extends React.Component {
       name: "",
       buttonClickedName: "",
       code: "",
-      players: []
+      players: [],
     };
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleCodeChange = this.handleCodeChange.bind(this);
@@ -51,7 +51,7 @@ class App extends React.Component {
       buttonClicked: false,
       name: "",
       buttonClickedName: "create",
-      code
+      code,
     });
 
     //sending player to database
@@ -73,7 +73,7 @@ class App extends React.Component {
     let players = {};
     players[name] = { score: 0 };
     games.doc(code).set({ players }, { merge: true });
-    games.doc(code).onSnapshot(doc => {
+    games.doc(code).onSnapshot((doc) => {
       const players = Object.keys(doc.data().players);
       this.setState({ players });
     });
@@ -84,7 +84,7 @@ class App extends React.Component {
   }
 
   startGame() {
-    games.doc(this.state.code).onSnapshot(doc => {
+    games.doc(this.state.code).onSnapshot((doc) => {
       const players = Object.keys(doc.data().players);
       this.setState({ buttonClickedName: "", players });
       socket.emit("startGame", this.state.code);
@@ -106,16 +106,13 @@ class App extends React.Component {
               <Popup defaultOpen>
                 <div id="container-start">
                   <div></div>
-                  <img
-                    className="logo"
-                    src="/public/assets/extract/Menu_rogo.png"
-                  />
+                  <img className="logo" src="/public/assets/DotEaterLogo.png" />
                   <button
                     className="start-button"
                     onClick={() =>
                       this.setState({
                         beginGameButtonClicked: true,
-                        buttonClicked: true
+                        buttonClicked: true,
                       })
                     }
                   >
@@ -161,7 +158,7 @@ class App extends React.Component {
                       onClick={() =>
                         this.setState({
                           buttonClicked: false,
-                          buttonClickedName: "join"
+                          buttonClickedName: "join",
                         })
                       }
                     >
