@@ -1,5 +1,4 @@
-![pm3](https://user-images.githubusercontent.com/34702996/77866706-1e2d2e80-7202-11ea-9044-f3af32ea78cc.jpg)
-
+![DotEaterLogo](https://user-images.githubusercontent.com/24820174/78578107-e0bd3800-77e3-11ea-9dc6-845b1d398a36.png)
 
 # PAC-MAN BATTLE ROYALE
 
