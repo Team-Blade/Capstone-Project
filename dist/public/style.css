@@ -108,7 +108,10 @@ main {
   border: 2px solid purple;
   min-width: 500;
 }
-
+.logo {
+  width: 500px;
+  height: 175px;
+}
 .input-buttons {
   display: flex;
   flex-direction: column;

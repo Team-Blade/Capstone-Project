@@ -208,10 +208,7 @@ class App extends React.Component {
               <Popup defaultOpen closeOnDocumentClick={false}>
                 <div id="container-start">
                   <div></div>
-                  <img
-                    className="logo"
-                    src="/public/assets/extract/Menu_rogo.png"
-                  />
+                  <img className="logo" src="/public/assets/DotEaterLogo.png" />
                   <button
                     className="begin-button"
                     onClick={() =>
