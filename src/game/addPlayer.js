@@ -70,15 +70,15 @@ export default function addPlayer(scene, player) {
     } else {
       scene.og.dead = true;
       setTimeout(() => {
-        (scene.og.x = scene.map.tileToWorldX(15.571)),
-          (scene.og.y = scene.map.tileToWorldY(7.56)),
-          scene.og.enableBody(
-            true,
-            scene.map.tileToWorldX(15.571),
-            scene.map.tileToWorldY(7.56),
-            true,
-            true
-          );
+        scene.og.x = scene.map.tileToWorldX(15.571);
+        scene.og.y = scene.map.tileToWorldY(7.56);
+        scene.og.enableBody(
+          true,
+          scene.map.tileToWorldX(15.571),
+          scene.map.tileToWorldY(7.56),
+          true,
+          true
+        );
         scene.og.dead = false;
         scene.chaseTarget = "";
       }, 30000);
