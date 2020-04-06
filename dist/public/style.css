@@ -231,3 +231,7 @@ h3 {
   flex-direction: column;
   flex-grow: 5;
 }
+.back-button {
+  font-size: small;
+  margin-left: 40px;
+}
