@@ -55,17 +55,19 @@ class App extends React.Component {
   }
   createGame() {
     //generate a game code
-    const code = randomString();
+    const code = this.state.code;
+    console.log("inside createGame func", code);
+    // const code = randomString();
     let name = this.state.name;
     socket.emit("createRoom", code, name);
     //sending player to database & updating state
     socket.on("newPlayers", allPlayers => {
       games.doc(code).set({ players: allPlayers }, { merge: true });
       this.setState({
-        buttonClicked: false,
+        // buttonClicked: false,
         name: "",
-        buttonClickedName: "create",
-        code,
+        // buttonClickedName: "create",
+        // code,
         players: allPlayers
       });
     });
@@ -81,7 +83,7 @@ class App extends React.Component {
   joinGame() {
     let name = this.state.name;
     let code = this.state.code.toUpperCase();
-
+    console.log("inside joinGame func", this.state.code);
     socket.emit("joinRoom", code, name);
     socket.on("invalidRoom", roomId => {
       console.log("inside invalidRoom");
@@ -255,7 +257,14 @@ class App extends React.Component {
                       type="submit"
                       name="create"
                       disabled={!state.name}
-                      onClick={this.createGame}
+                      onClick={() => {
+                        let code = randomString();
+                        this.setState({
+                          code,
+                          buttonClicked: false,
+                          buttonClickedName: "create"
+                        });
+                      }}
                     >
                       Create A Game
                     </button>
@@ -265,12 +274,12 @@ class App extends React.Component {
                       type="button"
                       name="join"
                       disabled={!state.name}
-                      onClick={() =>
+                      onClick={() => {
                         this.setState({
                           buttonClicked: false,
                           buttonClickedName: "join"
-                        })
-                      }
+                        });
+                      }}
                     >
                       Join A Game
                     </button>
@@ -297,12 +306,16 @@ class App extends React.Component {
                           <span className="gameCode">{state.code}</span>
                         </CopyToClipboard>
                       </h2>
+
                       {this.state.alertCopied ? <span>*COPIED*</span> : null}
                     </div>
                   </div>
                   <button
+                    type="submit"
                     className="enter-game-button"
                     onClick={() => {
+                      this.state.code;
+                      this.createGame();
                       close();
                     }}
                   >
@@ -323,6 +336,7 @@ class App extends React.Component {
                   >
                     GO BACK
                   </button>
+                  <p>You must enter the game room for your friends to join</p>
                 </div>
               )}
             </Popup>
