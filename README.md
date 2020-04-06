@@ -1,4 +1,4 @@
-![DotEaterLogo](https://user-images.githubusercontent.com/24820174/78578107-e0bd3800-77e3-11ea-9dc6-845b1d398a36.png)
+![DotEaterLogo](https://user-images.githubusercontent.com/24820174/78609628-ea609300-7817-11ea-82bd-45e4202a9481.png)
 
 # Dot Eater
 
