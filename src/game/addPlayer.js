@@ -6,6 +6,8 @@ export default function addPlayer(scene, player) {
   const playerNumber = player.playerNumber;
   const x = scene[playerNumber].startPositions.x;
   const y = scene[playerNumber].startPositions.y;
+  let fruitSound = scene.sound.add("fruit");
+
 
   scene.pac = new SmallPac({
     scene: scene,
@@ -81,7 +83,6 @@ export default function addPlayer(scene, player) {
     scene.socket.emit("ateFood", { x: food.x, y: food.y }, socket.roomId);
     food.destroy();
     if (toggleSound) {
-      let fruitSound = scene.sound.add("fruit");
       fruitSound.play();
     }
 
