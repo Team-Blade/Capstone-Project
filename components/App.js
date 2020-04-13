@@ -32,7 +32,7 @@ class App extends React.Component {
       gameOver: false,
       waitingRoom: false,
       alertCopied: false,
-      sound: true
+      sound: true,
     };
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleCodeChange = this.handleCodeChange.bind(this);
@@ -60,15 +60,15 @@ class App extends React.Component {
 
     socket.emit("createRoom", code, name);
     //sending player to database & updating state
-    socket.on("newPlayers", allPlayers => {
+    socket.on("newPlayers", (allPlayers) => {
       games.doc(code).set({ players: allPlayers }, { merge: true });
       this.setState({
         name: "",
-        players: allPlayers
+        players: allPlayers,
       });
     });
     //listening for new players
-    games.doc(code).onSnapshot(doc => {
+    games.doc(code).onSnapshot((doc) => {
       const players = doc.data().players;
       this.setState({ players });
     });
@@ -81,20 +81,20 @@ class App extends React.Component {
     let code = this.state.code.toUpperCase();
 
     socket.emit("joinRoom", code, name);
-    socket.on("invalidRoom", roomId => {
+    socket.on("invalidRoom", (roomId) => {
       alert(`Sorry, game room: ${roomId} not found`);
       this.setState({ buttonClickedName: "join" });
     });
-    socket.on("gameAlreadyStarted", roomId => {
+    socket.on("gameAlreadyStarted", (roomId) => {
       alert(`Sorry, the game for code ${roomId} has already started...`);
       window.location.reload(false);
     });
-    socket.on("newPlayers", allPlayers => {
+    socket.on("newPlayers", (allPlayers) => {
       games.doc(code).set({ players: allPlayers }, { merge: true });
     });
 
     //listening for new players
-    games.doc(code).onSnapshot(doc => {
+    games.doc(code).onSnapshot((doc) => {
       const players = doc.data().players;
       this.setState({ players });
     });
@@ -106,7 +106,7 @@ class App extends React.Component {
     this.setState({
       buttonClickedName: "",
       gameOver: false,
-      gameStarted: true
+      gameStarted: true,
     });
     socket.emit("startGame", this.state.code);
   }
@@ -128,7 +128,7 @@ class App extends React.Component {
       );
       this.setState({
         buttonClickedName: "create",
-        gameStarted: false
+        gameStarted: false,
       });
     });
     socket.on("playerGone", () => {
@@ -215,7 +215,7 @@ class App extends React.Component {
                       this.setState({
                         beginGameButtonClicked: true,
                         buttonClicked: true,
-                        waitingRoom: false
+                        waitingRoom: false,
                       })
                     }
                   >
@@ -254,7 +254,7 @@ class App extends React.Component {
                         this.setState({
                           code,
                           buttonClicked: false,
-                          buttonClickedName: "create"
+                          buttonClickedName: "create",
                         });
                       }}
                     >
@@ -269,7 +269,7 @@ class App extends React.Component {
                       onClick={() => {
                         this.setState({
                           buttonClicked: false,
-                          buttonClickedName: "join"
+                          buttonClickedName: "join",
                         });
                       }}
                     >
@@ -284,7 +284,7 @@ class App extends React.Component {
           {/* Popup for game creator */}
           {this.state.buttonClickedName === "create" ? (
             <Popup open closeOnDocumentClick={false}>
-              {close => (
+              {(close) => (
                 <div className="init-game-create">
                   <div className="creator-text" style={{ textAlign: "center" }}>
                     <div>Share this code with friends: </div>
@@ -322,7 +322,7 @@ class App extends React.Component {
                         this.setState({
                           buttonClicked: true,
                           buttonClickedName: "",
-                          players: {}
+                          players: {},
                         });
                       }}
                       open={false}
@@ -366,7 +366,7 @@ class App extends React.Component {
                   onClick={() =>
                     this.setState({
                       buttonClicked: true,
-                      buttonClickedName: ""
+                      buttonClickedName: "",
                     })
                   }
                   open={false}

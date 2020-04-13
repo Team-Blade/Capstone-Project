@@ -1,5 +1,4 @@
 import Ghost from "./Ghost.js";
-import SmallPac from "./SmallPac.js";
 import { socket } from "../../components/App";
 import loadImagesAndAudio from "./imagesToLoad";
 import { setUpMapLayer } from "./setUpLayers";
@@ -8,11 +7,12 @@ import {
   listenForGhostMovement,
   listenForDotActivity,
   listenForGhostDeath,
-  listenForSomeonesDeath
+  listenForSomeonesDeath,
+  listenForGameStart,
+  toggleSound 
 } from "./socketListeners";
 import { sendMovementInfo, sendGhostMovement } from "./socketEmiters";
 import checkWin from "./checkWin";
-import { toggleSound } from "./socketListeners";
 import { displayInstructions } from "./instructions";
 
 export default class Level1 extends Phaser.Scene {
@@ -51,7 +51,6 @@ export default class Level1 extends Phaser.Scene {
       "map",
       "/public/assets/newMapWithFoodDots6.json"
     );
-
   }
 
   create() {
@@ -104,6 +103,8 @@ export default class Level1 extends Phaser.Scene {
     listenForGhostDeath(this);
 
     listenForSomeonesDeath(this);
+
+    listenForGameStart(this);
 
     this.ghosts.add(this.og);
     this.og.setBounce(0, 1);

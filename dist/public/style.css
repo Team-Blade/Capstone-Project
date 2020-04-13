@@ -122,7 +122,10 @@ main {
   padding: 50px;
   color: gold;
 }
-
+.logo {
+  width: 500px;
+  height: 175px;
+}
 .init-game {
   display: flex;
   justify-content: space-around;
@@ -236,4 +239,22 @@ h3 {
 
 #game-start {
   margin-top: 100px;
+}
+#creator-p-text {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: medium;
+}
+#creator-p-text > p {
+  font-size: small;
+}
+.creator-text {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  flex-grow: 5;
+}
+.back-button {
+  font-size: small;
+  margin-left: 40px;
 }

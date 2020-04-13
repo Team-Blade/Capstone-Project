@@ -6,15 +6,13 @@ export default function addPlayer(scene, player) {
   const playerNumber = player.playerNumber;
   const x = scene[playerNumber].startPositions.x;
   const y = scene[playerNumber].startPositions.y;
-  let fruitSound = scene.sound.add("fruit");
-
 
   scene.pac = new SmallPac({
     scene: scene,
     x: scene.map.tileToWorldX(x),
     y: scene.map.tileToWorldY(y),
     key: `${scene[playerNumber].color}sclosed`,
-    playerNumber: playerNumber
+    playerNumber: playerNumber,
   });
   scene.pac.setScale(scene.collisionLayer.scale * 2.1); //.99
   scene.pac.tilePositionX = scene.map.worldToTileX(scene.pac.x);
@@ -31,31 +29,44 @@ export default function addPlayer(scene, player) {
     //had to take it cause because it was throwing an error on player2, could not read frames
     // pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
   });
-  
+
   scene.physics.add.overlap(scene.pac, scene.otherPlayers, (pac, other) => {
     if (!pac.big && other.big) {
       pac.dead = true;
-    } 
+    }
     if (pac.big === other.big) {
-      pac.direction === "left" ? pac.collisionDirection = "right" : null;
-      pac.direction === "right" ? pac.collisionDirection = "left" : null;
-      pac.direction === "up" ? pac.collisionDirection = "down" : null;
-      pac.direction === "down" ? pac.collisionDirection = "up" : null;
+      pac.direction === "left" ? (pac.collisionDirection = "right") : null;
+      pac.direction === "right" ? (pac.collisionDirection = "left") : null;
+      pac.direction === "up" ? (pac.collisionDirection = "down") : null;
+      pac.direction === "down" ? (pac.collisionDirection = "up") : null;
 
       if (!pac.direction) {
-        pac.body.touching.left === true ? pac.collisionDirection = "right" : null;
-        pac.body.touching.right === true ? pac.collisionDirection = "left" : null;
-        pac.body.touching.up === true ? pac.collisionDirection = "down" : null;
-        pac.body.touching.down === true? pac.collisionDirection = "up" : null;
+        pac.body.touching.left === true
+          ? (pac.collisionDirection = "right")
+          : null;
+        pac.body.touching.right === true
+          ? (pac.collisionDirection = "left")
+          : null;
+        pac.body.touching.up === true
+          ? (pac.collisionDirection = "down")
+          : null;
+        pac.body.touching.down === true
+          ? (pac.collisionDirection = "up")
+          : null;
       }
 
       pac.colliding = true;
       pac.direction = "";
-      setTimeout(() => {
-        pac.setVelocity(0, 0);
-        pac.colliding = false
-        pac.collisionDirection = "";
-      }, 320);
+      scene.time.delayedCall(
+        320,
+        () => {
+          pac.setVelocity(0, 0);
+          pac.colliding = false;
+          pac.collisionDirection = "";
+        },
+        [],
+        scene
+      );
     }
   });
   scene.physics.add.overlap(scene.pac, scene.og, () => {
@@ -63,13 +74,24 @@ export default function addPlayer(scene, player) {
       scene.pac.dead = true;
     } else {
       scene.og.dead = true;
-      setTimeout(()=> {
-        scene.og.x = scene.map.tileToWorldX(15.571),
-        scene.og.y = scene.map.tileToWorldY(7.56),
-        scene.og.enableBody(true, scene.map.tileToWorldX(15.571), scene.map.tileToWorldY(7.56), true, true);
-        scene.og.dead = false;
-        scene.chaseTarget = "";  
-      }, 30000);
+      scene.time.delayedCall(
+        30000,
+        () => {
+          scene.og.x = scene.map.tileToWorldX(15.571);
+          scene.og.y = scene.map.tileToWorldY(7.56);
+          scene.og.enableBody(
+            true,
+            scene.map.tileToWorldX(15.571),
+            scene.map.tileToWorldY(7.56),
+            true,
+            true
+          );
+          scene.og.dead = false;
+          scene.chaseTarget = "";
+        },
+        [],
+        scene
+      );
     }
   });
   scene.physics.add.overlap(scene.pac, scene.dots, (pac, dots) => {
@@ -84,7 +106,7 @@ export default function addPlayer(scene, player) {
     scene.socket.emit("ateFood", { x: food.x, y: food.y }, socket.roomId);
     food.destroy();
     if (toggleSound) {
-      fruitSound.play();
+      scene.sound.play("fruit");
     }
 
     //if remaining food length is zero
@@ -98,13 +120,13 @@ export default function addPlayer(scene, player) {
           "peach",
           "egg",
           "pizzaSlice",
-          "candy"
+          "candy",
         ];
         const randomFood = allFood[Math.floor(Math.random() * allFood.length)];
         return randomFood;
       }
 
-      scene.collisionLayerFoodDots.forEachTile(tile => {
+      scene.collisionLayerFoodDots.forEachTile((tile) => {
         if (tile.index === 9) {
           const x = tile.getCenterX();
           const y = tile.getCenterY();
@@ -118,7 +140,7 @@ export default function addPlayer(scene, player) {
       });
 
       //large dots
-      scene.collisionLayerFoodDots.forEachTile(tile => {
+      scene.collisionLayerFoodDots.forEachTile((tile) => {
         if (tile.index === 5) {
           const x = tile.getCenterX();
           const y = tile.getCenterY();
@@ -141,7 +163,7 @@ export default function addPlayer(scene, player) {
         }
       });
 
-      scene.collisionLayerFoodDots.forEachTile(tile => {
+      scene.collisionLayerFoodDots.forEachTile((tile) => {
         if (tile.index === 6 || tile.index === 7 || tile.index === 8) {
           const x = tile.getCenterX();
           const y = tile.getCenterY();
@@ -158,7 +180,7 @@ export default function addPlayer(scene, player) {
       scene.physics.add.overlap(scene.pac, scene.food, (pac, food) => {
         scene.socket.emit("ateFood", { x: food.x, y: food.y }, socket.roomId);
         food.destroy();
-        if (toggleSound) fruitSound.play();
+        if (toggleSound) scene.sound.play("fruit");
       });
     }
   });
