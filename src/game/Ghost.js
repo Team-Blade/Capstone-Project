@@ -311,4 +311,21 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.anims.play("turnBlue", true);
     this.anims.play("turnWhite", true);
   }
+
+  pace() {
+    this.updateTilePosition();
+    if (!this.direction) {
+      this.go("left");
+    }
+    if (this.tilePositionX === 14) {
+      this.go("right")
+    }
+    if (this.tilePositionX === 16) {
+      this.go("left")
+    }
+    else{
+      this.go(this.direction)
+    }
+  }
+
 }
