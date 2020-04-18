@@ -117,18 +117,18 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   }
 
   centerGhost() {
-    // if (this.x !== this.turnPoint.x && this.body.velocity.y !== 0){
-    //   this.x = this.turnPoint.x;
-    // }
-    // if (this.y !== this.turnPoint.y && this.body.velocity.x !== 0){
-    //   this.y = this.turnPoint.y;
-    // }
-    // else if (this.body.velocity.x === 0 &&
-    //          this.body.velocity.y === 0 &&
-    //          !this.fuzzyEqualXY(25) &&
-    //          (!this.tilePositionY >= 15 || !this.tilePositionY <= -1)) {
-    //             this.snapToTurnPoint();
-    // }
+    if (this.x !== this.turnPoint.x && this.body.velocity.y !== 0){
+      this.x = this.turnPoint.x;
+    }
+    if (this.y !== this.turnPoint.y && this.body.velocity.x !== 0){
+      this.y = this.turnPoint.y;
+    }
+    else if (this.body.velocity.x === 0 &&
+             this.body.velocity.y === 0 &&
+             !this.fuzzyEqualXY(25) &&
+             (!this.tilePositionY >= 15 || !this.tilePositionY <= -1)) {
+                this.snapToTurnPoint();
+    }
   }
 
   findPac() {
