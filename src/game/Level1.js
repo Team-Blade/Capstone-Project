@@ -121,8 +121,8 @@ export default class Level1 extends Phaser.Scene {
   update() {
     //CHECK WIN
     if (!this.winner) {
-      if (!checkWin(this)) {
-        // if(true){
+      // if (!checkWin(this)) {
+        if(true){
         if (!this.og.dead) {
           this.og.setOffset(7, 7);
         }
