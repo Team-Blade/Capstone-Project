@@ -125,6 +125,7 @@ export default class Level1 extends Phaser.Scene {
         if(true){
         if (!this.og.dead) {
           this.og.setOffset(7, 7);
+          this.og.pace();
         }
         //IF GHOST IS DEAD TELL EVERYONE AND DISABLE GHOST;
         if (this.og.dead && this.og.body.enable) {
@@ -164,6 +165,9 @@ export default class Level1 extends Phaser.Scene {
             //ELSE LET EVERYONE KNOW WHERE GHOST SHOULD BE
             this.og.trajectory();
             sendGhostMovement(this);
+            if (this.og.speed <= 100) {
+              this.og.speed = 130;
+            }
           }
           //IF YOU ARE DEAD TELL EVERYONE AND DELETE YOURSELF
           if (this.pac.dead && this.playersAlive[this.pac.playerNumber]) {
