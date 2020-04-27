@@ -80,7 +80,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       this.collisionWithPlayers();
     }
     if (!this.colliding) {
-
+      
       this.checkSurroundingTiles();
       this.setTurnPoint();
       this.centerPac();
@@ -97,7 +97,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     //update tile position property of pacman
     this.updateTilePosition();
     //makes sure pacman wraps and stays on map
-    // this.wrap();
+    this.wrap();
   }
 
   changePacFace() {
@@ -152,15 +152,15 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.tilePositionY = this.scene.map.worldToTileY(this.y);
   }
 
-  // wrap() {
-  //   if (this.tilePositionY >= 15 && this.body.velocity.y > 0) {
-  //     this.y = this.scene.map.tileToWorldY(-1);
-  //   }
+  wrap() {
+    if (this.tilePositionY >= 15 && this.body.velocity.y > 0) {
+      this.y = this.scene.map.tileToWorldY(-1);
+    }
 
-  //   if (this.tilePositionY < 0 && this.body.velocity.y < 0) {
-  //     this.y = this.scene.map.tileToWorldY(15);
-  //   }
-  // }
+    if (this.tilePositionY < 0 && this.body.velocity.y < 0) {
+      this.y = this.scene.map.tileToWorldY(15);
+    }
+  }
 
   move(direction) {
     this.moving = true;
