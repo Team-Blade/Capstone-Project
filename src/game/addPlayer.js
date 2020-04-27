@@ -20,6 +20,8 @@ export default function addPlayer(scene, player) {
 
   scene.playersAlive[playerNumber] = scene.pac;
 
+  scene.physics.world.wrap(scene.pac);
+
   scene.physics.add.collider(scene.pac, scene.collisionLayer, (pac, layer) => {
     pac.setVelocity(0, 0);
     pac.direction = "";
@@ -72,7 +74,8 @@ export default function addPlayer(scene, player) {
   scene.physics.add.overlap(scene.pac, scene.og, () => {
     if (!scene.pac.big && scene.og.vulnerable === false) {
       scene.pac.dead = true;
-    } else {
+    } 
+    else if (scene.pac.big) {
       scene.og.dead = true;
       scene.time.delayedCall(
         30000,
