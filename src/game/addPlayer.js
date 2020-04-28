@@ -199,12 +199,14 @@ export default function addPlayer(scene, player) {
     scene.og.vulnerable = true;
     pac.big = true;
     pac.vulnerable = false;
+    pac.speed = 230;
     scene.time.delayedCall(
       5000,
       () => {
         scene.og.vulnerable = false;
         scene.pac.big = false;
         scene.pac.vulnerable = true;
+        scene.pac.speed = 200
       },
       [],
       scene
