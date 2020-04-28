@@ -119,31 +119,53 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   changePacDirection() {
-    if (this.scene.cursors.up.isDown && this.checkDirection("up")) {
-      this.move("up");
-      this.direction = "up";
+    if (this.scene.cursors.up.isDown) {
+      if (this.direction === "down") {
+        this.move("up");
+        this.direction = "up";
+      }
+      else if (this.checkDirection("up")) {
+        this.move("up");
+        this.direction = "up";
+      }
     }
-    if (this.scene.cursors.down.isDown && this.checkDirection("down")) {
-      this.move("down");
-      this.direction = "down";
+    if (this.scene.cursors.down.isDown) {
+      if(this.direction === "up"){
+        this.move("down");
+        this.direction = "down";
+      }
+      else if (this.checkDirection("down")) {
+        this.move("down");
+        this.direction = "down";
+      }
     }
     if (
       this.scene.cursors.left.isDown &&
-      this.checkDirection("left") &&
       this.tilePositionY > 0 &&
       this.tilePositionY < 14
     ) {
-      this.move("left");
-      this.direction = "left";
+      if (this.direction === "right"){
+        this.move("left");
+        this.direction = "left";
+      }
+      else if (this.checkDirection("left")) {
+        this.move("left");
+        this.direction = "left";
+      }
     }
     if (
       this.scene.cursors.right.isDown &&
-      this.checkDirection("right") &&
       this.tilePositionY > 0 &&
       this.tilePositionY < 14
     ) {
-      this.move("right");
-      this.direction = "right";
+      if (this.direction === "left"){
+        this.move("right");
+        this.direction = "right";
+      }
+      else if (this.checkDirection("right")) {
+        this.move("right");
+        this.direction = "right";
+      }
     }
   }
 
