@@ -46,6 +46,25 @@ class App extends React.Component {
   }
   componentDidMount() {
     this.eventListener();
+    socket.on("invalidRoom", (roomId) => {
+      alert(`Sorry, game room: ${roomId} not found`);
+      this.setState({ buttonClickedName: "join" });
+    });
+    socket.on("gameAlreadyStarted", (roomId) => {
+      alert(`Sorry, the game for code ${roomId} has already started...`);
+      window.location.reload(false);
+    });
+    socket.on("newPlayers", (allPlayers) => {
+      games.doc(code).set({ players: allPlayers }, { merge: true });
+    });
+    socket.on("newPlayers", (allPlayers) => {
+      games.doc(code).set({ players: allPlayers }, { merge: true });
+      this.setState({
+        name: "",
+        players: allPlayers,
+      });
+    });
+    //listening for new players
   }
   handleNameChange(event) {
     this.setState({ name: event.target.value });
@@ -61,14 +80,7 @@ class App extends React.Component {
 
     socket.emit("createRoom", code, name);
     //sending player to database & updating state
-    socket.on("newPlayers", (allPlayers) => {
-      games.doc(code).set({ players: allPlayers }, { merge: true });
-      this.setState({
-        name: "",
-        players: allPlayers,
-      });
-    });
-    //listening for new players
+
     games.doc(code).onSnapshot((doc) => {
       const players = doc.data().players;
       this.setState({ players });
@@ -82,17 +94,6 @@ class App extends React.Component {
     let code = this.state.code.toUpperCase();
 
     socket.emit("joinRoom", code, name);
-    socket.on("invalidRoom", (roomId) => {
-      alert(`Sorry, game room: ${roomId} not found`);
-      this.setState({ buttonClickedName: "join" });
-    });
-    socket.on("gameAlreadyStarted", (roomId) => {
-      alert(`Sorry, the game for code ${roomId} has already started...`);
-      window.location.reload(false);
-    });
-    socket.on("newPlayers", (allPlayers) => {
-      games.doc(code).set({ players: allPlayers }, { merge: true });
-    });
 
     //listening for new players
     games.doc(code).onSnapshot((doc) => {
@@ -388,6 +389,10 @@ class App extends React.Component {
                     type="submit"
                     disabled={!this.state.code}
                     className="join-enter-button"
+                    onClick={() => {
+                      this.joinGame();
+                      this.setState({ buttonClickedName: "", waitingRoom: true });
+                    }}
                   >
                     ENTER GAME
                   </button>
