@@ -267,12 +267,13 @@ h3 {
 .share-code {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   margin: 10px;
 }
 .big-enter {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
   margin: 20px;
 }
 .init-game > .join-enter {
