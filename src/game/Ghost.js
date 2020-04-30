@@ -313,15 +313,16 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   }
 
   pace() {
+
     this.updateTilePosition();
     this.speed = 100;
     if (!this.direction) {
       this.go("left");
     }
-    if (this.tilePositionX === 14) {
+    if (Phaser.Math.Fuzzy.Equal(this.x, this.scene.map.tileToWorldX(14.5), 3)) {
       this.go("right");
     }
-    if (this.tilePositionX === 16) {
+    if (Phaser.Math.Fuzzy.Equal(this.x, this.scene.map.tileToWorldX(16.57), 3)) {
       this.go("left");
     }
     else{
