@@ -290,9 +290,9 @@ class App extends React.Component {
                 <div className="init-game-create">
                   <div id="creator-p-text">
                     <p>
-                      You <br /> <br/>
-                      **MUST ENTER** <br /> <br/>
-                      Game Room <br/><br/>
+                      You<br /> <br/>
+                      **<br/>MUST ENTER<br/>**<br /> <br/>
+                      Game Room<br/><br/>
                       before friends can join
                     </p>
                   </div>
