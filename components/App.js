@@ -293,7 +293,7 @@ class App extends React.Component {
                   <div id="creator-p-text">
                     <p>
                       You <br /> <br/>
-                      **MUST ENTER** <br /> <br/>
+                      **<br/>MUST ENTER<br/>** <br /> <br/>
                       Game Room <br/><br/>
                       before friends can join
                     </p>
