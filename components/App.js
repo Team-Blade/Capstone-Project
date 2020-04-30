@@ -25,6 +25,7 @@ class App extends React.Component {
       beginGameButtonClicked: false,
       buttonClicked: false,
       name: "",
+      placeholderName: "Player Name",
       buttonClickedName: "",
       code: "",
       players: {},
@@ -207,21 +208,23 @@ class App extends React.Component {
             {!state.beginGameButtonClicked ? (
               <Popup defaultOpen closeOnDocumentClick={false}>
                 <div id="container-start">
-                  <div></div>
-                  <img className="logo" src="/public/assets/DotEaterLogo.png" />
-                  <button
-                    className="begin-button"
-                    onClick={() =>
-                      this.setState({
-                        beginGameButtonClicked: true,
-                        buttonClicked: true,
-                        waitingRoom: false,
-                      })
-                    }
-                  >
-                    CLICK TO BEGIN
-                  </button>
-                  <div></div>
+                  <div>
+                    <img className="logo" src="/public/assets/DotEaterLogo.png" />
+                  </div>
+                  <div>
+                      <button
+                      className="begin-button"
+                      onClick={() =>
+                        this.setState({
+                          beginGameButtonClicked: true,
+                          buttonClicked: true,
+                          waitingRoom: false,
+                        })
+                      }
+                    >
+                      CLICK TO BEGIN
+                    </button>
+                  </div>
                 </div>
               </Popup>
             ) : null}
@@ -237,7 +240,7 @@ class App extends React.Component {
                     <input
                       type="text"
                       name="name"
-                      placeholder="Player Name"
+                      placeholder={this.state.name ? this.state.name : this.state.placeholderName}
                       maxLength="8"
                       onChange={this.handleNameChange}
                       required={(true, "Name is required")}
@@ -286,23 +289,35 @@ class App extends React.Component {
             <Popup open closeOnDocumentClick={false}>
               {(close) => (
                 <div className="init-game-create">
+                  <div id="creator-p-text">
+                    <p>
+                      You <br /> <br/>
+                      **MUST ENTER** <br /> <br/>
+                      Game Room <br/><br/>
+                      before friends can join
+                    </p>
+                  </div>
                   <div className="creator-text" style={{ textAlign: "center" }}>
-                    <div>Share this code with friends: </div>
 
-                    <div>
-                      <h2>
-                        <CopyToClipboard
-                          text={this.state.code}
-                          onCopy={this.copied}
-                        >
-                          <span className="gameCode">{state.code}</span>
-                        </CopyToClipboard>
-                      </h2>
+                    <div className="share-code">
+                      <div>
+                        <h3>Share Game Code: </h3>
+                      </div>
+                      <div>
+                        <h1>
+                          <CopyToClipboard
+                            text={this.state.code}
+                            onCopy={this.copied}
+                          >
+                            <span className="gameCode">{state.code}</span>
+                          </CopyToClipboard>
+                        </h1>
+                      </div>
 
                       {this.state.alertCopied ? <span>*COPIED*</span> : null}
                     </div>
                   </div>
-                  <div>
+                  <div className="big-enter">
                     <button
                       type="submit"
                       className="enter-game-button"
@@ -330,13 +345,6 @@ class App extends React.Component {
                       GO BACK
                     </button>
                   </div>
-                  <div id="creator-p-text">
-                    <p>
-                      **You MUST ENTER <br />
-                      the game room for <br />
-                      your friends to join**
-                    </p>
-                  </div>
                 </div>
               )}
             </Popup>
@@ -346,33 +354,44 @@ class App extends React.Component {
           {this.state.buttonClickedName === "join" ? (
             <Popup open closeOnDocumentClick={false}>
               <div className="init-game">
-                <input
-                  type="text"
-                  placeholder="Game Code Here"
-                  maxLength="4"
-                  onChange={() => this.handleCodeChange(event)}
-                />
-                <button
-                  disabled={!this.state.code}
-                  onClick={() => {
+                <div>
+                  <h4>Game Code Please:</h4>
+                </div>
+                <div>
+                  <form onSubmit={() => {
                     this.joinGame();
                     this.setState({ buttonClickedName: "", waitingRoom: true });
-                  }}
-                >
-                  Enter Game
-                </button>
-                <button
-                  type="submit"
-                  onClick={() =>
-                    this.setState({
-                      buttonClicked: true,
-                      buttonClickedName: "",
-                    })
-                  }
-                  open={false}
-                >
-                  GO BACK
-                </button>
+                  }}>
+                    <input
+                      type="text"
+                      placeholder="Game Code Here"
+                      maxLength="4"
+                      onChange={() => this.handleCodeChange(event)}
+                    />
+                  </form>
+                </div>
+                <div className="join-enter">
+                  <button
+                      type="button"
+                      className="join-goback-button"
+                      onClick={() =>
+                        this.setState({
+                          buttonClicked: true,
+                          buttonClickedName: "",
+                        })
+                      }
+                      open={false}
+                    >
+                      Go Back
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={!this.state.code}
+                    className="join-enter-button"
+                  >
+                    ENTER GAME
+                  </button>
+                </div>
               </div>
             </Popup>
           ) : null}
