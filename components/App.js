@@ -292,15 +292,15 @@ class App extends React.Component {
                     <p>
                       You<br /> <br/>
                       **<br/>MUST ENTER<br/>**<br /> <br/>
-                      Game Room<br/><br/>
-                      before friends can join
+                      Game Room<br/>
+                      for your friends to join
                     </p>
                   </div>
                   <div className="creator-text" style={{ textAlign: "center" }}>
 
                     <div className="share-code">
                       <div>
-                        <h3>Share Game Code: </h3>
+                        <h3>Share this code with friends:</h3>
                       </div>
                       <div>
                         <h1>
