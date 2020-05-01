@@ -315,6 +315,12 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   pace() {
 
     this.updateTilePosition();
+    // console.log(this.scene.map.getTileAt(
+    //   this.tilePositionX,
+    //   this.tilePositionY,
+    //   false,
+    //   "mapBaseLayer"
+    // ))
     this.speed = 100;
     if (!this.direction) {
       this.go("left");

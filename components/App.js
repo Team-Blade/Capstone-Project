@@ -3,6 +3,7 @@ import Popup from "reactjs-popup";
 import ScoreBoard from "./ScoreBoard";
 import db from "../src/firebase";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { Dot } from 'react-animated-dots';
 
 export const socket = io();
 const games = db.collection("games");
@@ -179,7 +180,10 @@ class App extends React.Component {
                 <p>
                   Wait for all
                   <br />
-                  players...
+                  players
+                  <Dot>.</Dot>
+                  <Dot>.</Dot>
+                  <Dot>.</Dot>
                 </p>
                 <button
                   className="start-game-button"
@@ -199,7 +203,10 @@ class App extends React.Component {
             ) : null}
             {state.waitingRoom && state.buttonClickedName !== "create" ? (
               <p className="waiting-room">
-                Waiting for <br /> game to start...
+                Waiting for <br /> game to start
+                <Dot>.</Dot>
+                <Dot>.</Dot>
+                <Dot>.</Dot>
               </p>
             ) : null}
           </nav>
