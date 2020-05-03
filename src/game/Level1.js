@@ -59,6 +59,110 @@ export default class Level1 extends Phaser.Scene {
 
     const scene = this;
 
+    const NumberOfTilesAcross = 15;
+    const NumberOfTilesInAColumn = 31;
+    const matrix = []
+    for (let Ycounter = 0; Ycounter < NumberOfTilesAcross; Ycounter++) {
+      const newRow = [];
+      for (let Xcounter = 0; Xcounter < NumberOfTilesInAColumn; Xcounter++) {
+        newRow.append(this.scene.map.getTileAt(
+          this.scene.map.tileToWorldX(Xcounter),
+          this.scene.map.tileToWorldY(Ycounter),
+          false,
+          "mapBaseLayer"
+        ));
+      }
+      matrix.append(newRow)
+    }
+
+
+    function populateNeighborsList(candidateXIndex, candidateYIndex, direction, neighborsList) {
+      const candidateRow = matrix[candidateYIndex];
+      if (candidateRow) {
+        const candidateTile = candidateRow[candidateXIndex];
+        if (candidateTile && candidateTile.collides === false) {
+          neighborsList.append(buildNeighborObject(candidateYIndex, candidateXIndex, direction, candidateTile));
+        }
+      }
+      return neighborsList;
+    }
+
+    function buildKey(y, x) {
+      return String(y) + ':' + String(x);
+    }
+
+    function buildNeighborObject(y, x, direction, tile) {
+      return {
+        key: buildKey(y, x),
+        direction: direction,
+        tile: tile
+      }
+    }
+
+    // build graph
+    /*
+    {
+      'Ycounter1:Xcounter1': [
+        {
+          key: 'Ycounter1:Xouncter2',
+          direction: direction
+          tile: currentTile
+        },
+      ]
+    }
+    */
+    export const adjacencyGraph = {};
+    for (let Ycounter = 0; Ycounter < matrix.length; Ycounter++) {
+      for (let Xcounter = 0; Xcounter < matrix[0].length; Xcounter++) {
+        const currentTile = matrix[Ycounter][Xcounter]
+        if (currentTile.collides == true) {
+          continue;
+        }
+        const neighborsList = [];
+        // check neighbor to the right
+        let neighborX = Xcounter + 1;
+        let neighborY = Ycounter;
+        neighborsList = populateNeighborsList(neighborX, neighborY, 'right', neighborsList);
+
+        // check neighbor to the left
+        neighborX = Xcounter -1;
+        neighborY = Ycounter;
+        neighborsList = populateNeighborsList(neighborX, neighborY, 'left', neighborsList);
+
+        // check neighbor down
+        neighborX = Xcounter;
+        neighborY = Ycounter - 1;
+        neighborsList = populateNeighborsList(neighborX, neighborY, 'down', neighborsList);
+
+        // check neighbor up
+        neighborX = Xcounter;
+        neighborY = Ycounter + 1;
+        neighborsList = populateNeighborsList(neighborX, neighborY, 'up', neighborsList);
+
+        adjacencyGraph[key] = neighborsList;
+      }
+    }
+
+    // stored x, y
+    const TILES_THAT_WRAP_UP = [[0, 12], [0, 19]];
+    const TILES_THAT_WRAP_DOWN = [[14, 12], [14, 19]];
+
+    TILES_THAT_WRAP_UP.forEach((wrappingTileCords) => {
+      wrapptingTileCordY = wrappingTileCords[1];
+      wrapptingTileCordX = wrappingTileCords[0];
+      adjacencyGraph[buildKey(wrapptingTileCordY, wrapptingTileCordX)].append(
+        buildNeighborObject(14, wrapptingTileCordX, 'up', matrix[14][wrapptingTileCordX])
+      );
+    });
+
+    TILES_THAT_WRAP_DOWN.forEach((wrappingTileCords) => {
+      wrapptingTileCordY = wrappingTileCords[1];
+      wrapptingTileCordX = wrappingTileCords[0];
+      adjacencyGraph[buildKey(wrapptingTileCordY, wrapptingTileCordX)].append(
+        buildNeighborObject(0, wrapptingTileCordX, 'down', matrix[0][wrapptingTileCordX])
+      );
+    });
+
     this.otherPlayers = this.physics.add.group();
     this.ghosts = this.physics.add.group();
 
