@@ -27,9 +27,7 @@ export default function addPlayer(scene, player) {
     pac.direction = "";
     pac.setTurnPoint();
     pac.snapToTurnPoint();
-    // pac.moving = false;
-    //had to take it cause because it was throwing an error on player2, could not read frames
-    // pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
+    pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
   });
 
   scene.physics.add.overlap(scene.pac, scene.otherPlayers, (pac, other) => {
@@ -37,6 +35,7 @@ export default function addPlayer(scene, player) {
       pac.dead = true;
     }
     if (pac.big === other.big) {
+      pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
       pac.direction === "left" ? (pac.collisionDirection = "right") : null;
       pac.direction === "right" ? (pac.collisionDirection = "left") : null;
       pac.direction === "up" ? (pac.collisionDirection = "down") : null;

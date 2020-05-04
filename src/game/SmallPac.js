@@ -11,7 +11,6 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.playerNumber = config.playerNumber;
     this.color = this.key.slice(0, 2);
     this.bigColor = `${this.key.slice(0, 1)}b`;
-    this.moving = true;
     this.big = false;
     this.vulnerable = true;
     this.direction = "";
@@ -187,7 +186,6 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   move(direction) {
-    this.moving = true;
     if (this.big) {
       this.color = this.bigColor;
     }
