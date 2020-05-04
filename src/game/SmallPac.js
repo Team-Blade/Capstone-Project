@@ -14,6 +14,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.big = false;
     this.vulnerable = true;
     this.direction = "";
+    this.moving = false;
     this.dead = false;
     this.turnPoint = {};
     this.turnTo = "";
@@ -28,7 +29,6 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       this.setOffset(21, 21);
     } else {
       this.color = this.key.slice(0, 2);
-
       this.setOffset(7, 7);
       this.vulnerable = true;
     }
@@ -76,7 +76,13 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
 
   trajectory() {
     if (this.colliding) {
-      this.collisionWithPlayers();
+      this.anims.stopOnFrame(this.anims.currentAnim.frames[1]);
+      if (this.collisionDirection){
+        this.collisionWithPlayers();
+      }
+      else{
+        this.colliding = false;
+      }
     }
 
     this.setTurnPoint();
@@ -87,6 +93,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
 
       //animate pac-man consistently
       if (this.direction) {
+        if(!this.moving) {this.moving = true};
         this.move(this.direction);
       }
       //change the direction pac man is facing in animation
@@ -120,52 +127,46 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
 
   changePacDirection() {
     const mapPath = this.scene.path.adjacencyGraph;
-    if (this.scene.cursors.up.isDown) {
-      if (this.direction === "down") {
-        this.move("up");
-        this.direction = "up";
+    if(this.tilePositionY >= 0 && this.tilePositionY <= 14){
+      if (this.scene.cursors.up.isDown) {
+        if (this.direction === "down") {
+          this.move("up");
+          this.direction = "up";
+        }
+        else if (mapPath[`${this.tilePositionY}:${this.tilePositionX}`]["up"]) {
+          this.move("up");
+          this.direction = "up";
+        }
       }
-      else if (mapPath[`${this.tilePositionY}:${this.tilePositionX}`]["up"]) {
-        this.move("up");
-        this.direction = "up";
+      if (this.scene.cursors.down.isDown) {
+        if(this.direction === "up"){
+          this.move("down");
+          this.direction = "down";
+        }
+        else if (mapPath[`${this.tilePositionY}:${this.tilePositionX}`]["down"]) {
+          this.move("down");
+          this.direction = "down";
+        }
       }
-    }
-    if (this.scene.cursors.down.isDown) {
-      if(this.direction === "up"){
-        this.move("down");
-        this.direction = "down";
+      if (this.scene.cursors.left.isDown) {
+        if (this.direction === "right"){
+          this.move("left");
+          this.direction = "left";
+        }
+        else if (mapPath[`${this.tilePositionY}:${this.tilePositionX}`]["left"]) {
+          this.move("left");
+          this.direction = "left";
+        }
       }
-      else if (mapPath[`${this.tilePositionY}:${this.tilePositionX}`]["down"]) {
-        this.move("down");
-        this.direction = "down";
-      }
-    }
-    if (
-      this.scene.cursors.left.isDown &&
-      this.tilePositionY > 0 &&
-      this.tilePositionY < 14
-    ) {
-      if (this.direction === "right"){
-        this.move("left");
-        this.direction = "left";
-      }
-      else if (mapPath[`${this.tilePositionY}:${this.tilePositionX}`]["left"]) {
-        this.move("left");
-        this.direction = "left";
-      }
-    }
-    if (
-      this.scene.cursors.right.isDown &&
-      this.tilePositionY > 0 &&
-      this.tilePositionY < 14
-    ) {
-      if (this.direction === "left"){
-        this.move("right");
-        this.direction = "right";
-      }
-      else if (mapPath[`${this.tilePositionY}:${this.tilePositionX}`]["right"]) {
-        this.move("right");
-        this.direction = "right";
+      if (this.scene.cursors.right.isDown) {
+        if (this.direction === "left"){
+          this.move("right");
+          this.direction = "right";
+        }
+        else if (mapPath[`${this.tilePositionY}:${this.tilePositionX}`]["right"]) {
+          this.move("right");
+          this.direction = "right";
+        }
       }
     }
   }

@@ -23,11 +23,12 @@ export default function addPlayer(scene, player) {
   scene.physics.world.wrap(scene.pac);
 
   scene.physics.add.collider(scene.pac, scene.collisionLayer, (pac, layer) => {
+    pac.colliding = true;
     pac.setVelocity(0, 0);
     pac.direction = "";
+    pac.moving = false;
     pac.setTurnPoint();
     pac.snapToTurnPoint();
-    pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
   });
 
   scene.physics.add.overlap(scene.pac, scene.otherPlayers, (pac, other) => {
@@ -35,7 +36,6 @@ export default function addPlayer(scene, player) {
       pac.dead = true;
     }
     if (pac.big === other.big) {
-      pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
       pac.direction === "left" ? (pac.collisionDirection = "right") : null;
       pac.direction === "right" ? (pac.collisionDirection = "left") : null;
       pac.direction === "up" ? (pac.collisionDirection = "down") : null;
@@ -58,6 +58,7 @@ export default function addPlayer(scene, player) {
 
       pac.colliding = true;
       pac.direction = "";
+      pac.moving = false;
       scene.time.delayedCall(
         320,
         () => {
@@ -206,6 +207,11 @@ export default function addPlayer(scene, player) {
         scene.pac.big = false;
         scene.pac.vulnerable = true;
         scene.pac.speed = 200
+        if(!scene.pac.moving){
+          scene.pac.createAnimations();
+          scene.pac.anims.play(`${scene.pac.color}${scene.pac.anims.currentAnim.key.slice(2)}`);
+          scene.pac.anims.stopOnFrame(scene.pac.anims.currentAnim.frames[1]);
+        }
       },
       [],
       scene
