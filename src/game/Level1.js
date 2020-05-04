@@ -14,6 +14,7 @@ import {
 import { sendMovementInfo, sendGhostMovement } from "./socketEmiters";
 import checkWin from "./checkWin";
 import { displayInstructions } from "./instructions";
+import { PathGraph } from "./turnNodes"
 
 export default class Level1 extends Phaser.Scene {
   constructor() {
@@ -79,6 +80,16 @@ export default class Level1 extends Phaser.Scene {
     //adds the tileset to the map
 
     setUpMapLayer(this);
+
+    scene.path = new PathGraph;
+
+    const path = scene.path;
+
+    path.constructMatrix(scene);
+
+    path.constructAdjacencyGraph();
+
+    path.addWrapToGraph();
 
     window.addEventListener("resize", resizeCanvas);
 

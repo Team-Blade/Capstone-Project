@@ -79,10 +79,11 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     if (this.colliding) {
       this.collisionWithPlayers();
     }
+
+    this.setTurnPoint();
+    // this.checkSurroundingTiles();
+
     if (!this.colliding) {
-      
-      this.checkSurroundingTiles();
-      this.setTurnPoint();
       this.centerPac();
 
       //animate pac-man consistently
@@ -119,12 +120,13 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   changePacDirection() {
+    const mapPath = this.scene.path.adjacencyGraph;
     if (this.scene.cursors.up.isDown) {
       if (this.direction === "down") {
         this.move("up");
         this.direction = "up";
       }
-      else if (this.checkDirection("up")) {
+      else if (mapPath[`${this.tilePositionY}:${this.tilePositionX}`]["up"]) {
         this.move("up");
         this.direction = "up";
       }
@@ -134,7 +136,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
         this.move("down");
         this.direction = "down";
       }
-      else if (this.checkDirection("down")) {
+      else if (mapPath[`${this.tilePositionY}:${this.tilePositionX}`]["down"]) {
         this.move("down");
         this.direction = "down";
       }
@@ -148,7 +150,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
         this.move("left");
         this.direction = "left";
       }
-      else if (this.checkDirection("left")) {
+      else if (mapPath[`${this.tilePositionY}:${this.tilePositionX}`]["left"]) {
         this.move("left");
         this.direction = "left";
       }
@@ -162,7 +164,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
         this.move("right");
         this.direction = "right";
       }
-      else if (this.checkDirection("right")) {
+      else if (mapPath[`${this.tilePositionY}:${this.tilePositionX}`]["right"]) {
         this.move("right");
         this.direction = "right";
       }
@@ -209,23 +211,23 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  checkDirection(turnTo) {
-    if (
-      this[`tile${turnTo}`] &&
-      !this[`tile${turnTo}`].collides &&
-      this.direction !== turnTo
-    ) {
-      if (this.fuzzyEqualXY(11)) {
-        this.snapToTurnPoint();
-        return true;
-      }
-      if (!this.direction) {
-        return true;
-      }
-    } else {
-      return false;
-    }
-  }
+  // checkDirection(turnTo) {
+  //   if (
+  //     this[`tile${turnTo}`] &&
+  //     !this[`tile${turnTo}`].collides &&
+  //     this.direction !== turnTo
+  //   ) {
+  //     if (this.fuzzyEqualXY(11)) {
+  //       this.snapToTurnPoint();
+  //       return true;
+  //     }
+  //     if (!this.direction) {
+  //       return true;
+  //     }
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
   setTurnPoint() {
     this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
@@ -260,43 +262,47 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  checkSurroundingTiles() {
-    this["tileup"] = this.scene.map.getTileAt(
-      this.tilePositionX,
-      this.tilePositionY - 1,
-      false,
-      "mapBaseLayer"
-    );
-    this["tiledown"] = this.scene.map.getTileAt(
-      this.tilePositionX,
-      this.tilePositionY + 1,
-      false,
-      "mapBaseLayer"
-    );
-    this["tileleft"] = this.scene.map.getTileAt(
-      this.tilePositionX - 1,
-      this.tilePositionY,
-      false,
-      "mapBaseLayer"
-    );
-    this["tileright"] = this.scene.map.getTileAt(
-      this.tilePositionX + 1,
-      this.tilePositionY,
-      false,
-      "mapBaseLayer"
-    );
+  // checkSurroundingTiles() {
+  //   this["tileup"] = this.scene.map.getTileAt(
+  //     this.tilePositionX,
+  //     this.tilePositionY - 1,
+  //     false,
+  //     "mapBaseLayer"
+  //   );
+  //   this["tiledown"] = this.scene.map.getTileAt(
+  //     this.tilePositionX,
+  //     this.tilePositionY + 1,
+  //     false,
+  //     "mapBaseLayer"
+  //   );
+  //   this["tileleft"] = this.scene.map.getTileAt(
+  //     this.tilePositionX - 1,
+  //     this.tilePositionY,
+  //     false,
+  //     "mapBaseLayer"
+  //   );
+  //   this["tileright"] = this.scene.map.getTileAt(
+  //     this.tilePositionX + 1,
+  //     this.tilePositionY,
+  //     false,
+  //     "mapBaseLayer"
+  //   );
 
-    if (
-      this.direction &&
-      this[`tile${this.direction}`] &&
-      this[`tile${this.direction}`].collides
-    ) {
-      setTimeout(() => {
-        this.snapToTurnPoint();
-        this.direction = "";
-      }, 33);
-    }
-  }
+  //   let direction;
+    
+  //   this.direction ? direction = this.direction : direction = this.collisionDirection;
+
+  //   if (
+  //     direction &&
+  //     this[`tile${direction}`] &&
+  //     this[`tile${direction}`].collides &&
+  //     this.fuzzyEqualXY(3)
+  //   ) {
+  //     console.log('boomp')
+  //     this.snapToTurnPoint();
+  //     this.direction = "";
+  //   }
+  // }
 
   collisionWithPlayers() {
     this.collisionDirection === "left" ? this.setVelocityX(-600) : null;
