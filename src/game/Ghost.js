@@ -198,15 +198,45 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
 
     const ghostY = this.tilePositionY;
 
-    targetTileX < ghostX ? directionOptions.push("left") : null;
+    // targetTileX < ghostX ? directionOptions.push("left") : null;
 
-    targetTileX > ghostX ? directionOptions.push("right") : null;
+    // targetTileX > ghostX ? directionOptions.push("right") : null;
 
-    targetTileY < ghostY ? directionOptions.push("up") : null;
-
-    targetTileY > ghostY ? directionOptions.push("down") : null;
-
-    return directionOptions
+    if (ghostX > targetTileX) {
+      if (ghostY > 14 || ghostY < 0) {
+        this.setVelocityX(0);
+      } else {
+        this.vulnerable ? directionOptions.push("right") : directionOptions.push("left");
+      }
+    }
+    if (ghostX < targetTileX) {
+      if (ghostY > 14 || ghostY < 0) {
+        this.setVelocityX(0);
+      } else {
+        this.vulnerable ? directionOptions.push("left") : directionOptions.push("right");
+      }
+    }
+    if (ghostY < targetTileY) {
+      if (
+        ghostY + (15 - targetTileY) <
+        targetTileY - ghostY
+      ) {
+        this.vulnerable ? directionOptions.push("down") : directionOptions.push("up");
+      } else {
+        this.vulnerable ? directionOptions.push("up") : directionOptions.push("down");
+      }
+    }
+    if (ghostY > targetTileY) {
+      if (
+        (15 - ghostY) + targetTileY <
+        ghostY - targetTileY
+      ) {
+        this.vulnerable ? directionOptions.push("up") : directionOptions.push("down");
+      } else {
+        this.vulnerable ? directionOptions.push("down") : directionOptions.push("up");
+      }
+    }
+    return directionOptions;
   }
 
   chasePac() {
@@ -236,9 +266,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
 
         //if the direction im currently moving in is not available, remove it as well
         if(!mapPath[key][this.direction]) {
-          console.log('direction optionsbefore ', this.tilePositionX, this.tilePositionY, directionOptions)
           const indexOfCurrent = directionOptions.findIndex((direction)=> direction === this.direction);
-          console.log('index of current', indexOfCurrent)
           if (indexOfCurrent >= 0) {
             if(indexOfCurrent === 0) {
               directionOptions.shift();
@@ -247,10 +275,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
               directionOptions.pop();
             }
           }
-          console.log('direction options after', this.tilePositionX, this.tilePositionY, directionOptions)
         }
-        // direction options 18 7 ["left"]
-        console.log('direction options', this.tilePositionX, this.tilePositionY, directionOptions)
 
         //if theres more than one direction option
         if (directionOptions.length > 1) {
@@ -283,7 +308,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
               directionOptions.push(direction);
             }
           }
-          console.log('direction options is empty, newly pushed options:', directionOptions);
           let newDirection = directionOptions[Math.round(Math.random())];
           this.snapToTurnPoint();
           this.go(newDirection);
@@ -302,47 +326,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
 
     }
 
-    // if (this.tilePositionX === this.chaseTarget.tilePositionX) {
-    //   this.vulnerable ? null : this.setVelocityY(0);
-    // }
-    // if (this.tilePositionY === this.chaseTarget.tilePositionY) {
-    //   this.vulnerable ? null : this.setVelocityX(0);
-    // }
-
-    // if (this.tilePositionX > this.chaseTarget.tilePositionX) {
-    //   if (this.tilePositionY > 14 || this.tilePositionY < 0) {
-    //     this.setVelocityX(0);
-    //   } else {
-    //     this.vulnerable ? this.go("right") : this.go("left");
-    //   }
-    // }
-    // if (this.tilePositionX < this.chaseTarget.tilePositionX) {
-    //   if (this.tilePositionY > 14 || this.tilePositionY < 0) {
-    //     this.setVelocityX(0);
-    //   } else {
-    //     this.vulnerable ? this.go("left") : this.go("right");
-    //   }
-    // }
-    // if (this.tilePositionY < this.chaseTarget.tilePositionY) {
-    //   if (
-    //     this.tilePositionY + 1 + (15 - this.chaseTarget.tilePositionY) <
-    //     this.chaseTarget.tilePositionY - this.tilePositionY + 1
-    //   ) {
-    //     this.vulnerable ? this.go("down") : this.go("up");
-    //   } else {
-    //     this.vulnerable ? this.go("up") : this.go("down");
-    //   }
-    // }
-    // if (this.tilePositionY > this.chaseTarget.tilePositionY + 1) {
-    //   if (
-    //     15 - this.tilePositionY + this.chaseTarget.tilePositionY + 1 <
-    //     this.tilePositionY - this.chaseTarget.tilePositionY + 1
-    //   ) {
-    //     this.vulnerable ? this.go("up") : this.go("down");
-    //   } else {
-    //     this.vulnerable ? this.go("down") : this.go("up");
-    //   }
-    // }
   }
 
   centerGhost() {
