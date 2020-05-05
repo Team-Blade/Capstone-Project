@@ -236,16 +236,21 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
 
         //if the direction im currently moving in is not available, remove it as well
         if(!mapPath[key][this.direction]) {
+          console.log('direction optionsbefore ', this.tilePositionX, this.tilePositionY, directionOptions)
           const indexOfCurrent = directionOptions.findIndex((direction)=> direction === this.direction);
+          console.log('index of current', indexOfCurrent)
           if (indexOfCurrent >= 0) {
-            if(index === 0) {
+            if(indexOfCurrent === 0) {
               directionOptions.shift();
             }
-            if(index === 1) {
+            if(indexOfCurrent === 1) {
               directionOptions.pop();
             }
           }
+          console.log('direction options after', this.tilePositionX, this.tilePositionY, directionOptions)
         }
+        // direction options 18 7 ["left"]
+        console.log('direction options', this.tilePositionX, this.tilePositionY, directionOptions)
 
         //if theres more than one direction option
         if (directionOptions.length > 1) {
@@ -272,11 +277,13 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
         //if i hit a turn node and the direction i want to go in not available
         //pick a random direction that is not the direction i came
         if (directionOptions.length === 0) {
-          for (let key in mapPath[key]){
-            if (key !== "isTurnNode" && key !== this.opposite(this.direction)) {
-              directionOptions.push(key);
+
+          for (let direction in mapPath[key]){
+            if (direction !== "isTurnNode" && direction !== this.opposite(this.direction)) {
+              directionOptions.push(direction);
             }
           }
+          console.log('direction options is empty, newly pushed options:', directionOptions);
           let newDirection = directionOptions[Math.round(Math.random())];
           this.snapToTurnPoint();
           this.go(newDirection);

@@ -91,6 +91,8 @@ export default class Level1 extends Phaser.Scene {
 
     path.addWrapToGraph();
 
+    console.log(path.adjacencyGraph['7:18']);
+
     window.addEventListener("resize", resizeCanvas);
 
     resizeCanvas();
