@@ -21,9 +21,13 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.turnTo = "";
     this.turnPoint = {};
     this.speed = 130;
+    this.previousTile = "";
   }
 
   createAnimation() {
+
+    this.setOffset(7, 7);
+
     this.scene.anims.create({
       key: `moveUp`,
       frames: [{ key: `${this.key}7` }, { key: `${this.key}8` }],
@@ -61,6 +65,35 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       repeat: -1
     });
   }
+
+  trajectory() {
+
+    if (this.direction) {
+      this.go(this.direction);
+      this.move(this.direction);
+    }
+    if (this.scene.pac) {
+
+      this.setTurnPoint();
+      this.decideTarget();
+
+      this.centerGhost();
+
+      if (this.chaseTarget) {
+        this.chasePac();
+      }
+
+      if (this.vulnerable === true) {
+        this.turnBlue();
+      }
+      //ghost wrap
+      this.wrap();
+
+      //UPDATE TILE POSITION
+      this.updateTilePosition();
+    }
+  }
+
   move(direction) {
     this.createAnimation();
 
@@ -72,30 +105,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       this.anims.play("moveLeft", true);
     } else if (direction === "right") {
       this.anims.play("moveRight", true);
-    }
-  }
-  trajectory() {
-    this.setOffset(7, 7);
-    if (this.direction) {
-      this.move(this.direction);
-    }
-    if (this.scene.pac) {
-      this.checkSurroundingTiles();
-      this.decideTarget();
-      // this.setTurnPoint();
-      // this.centerGhost();
-      if (this.chaseTarget) {
-        this.followPac();
-      }
-
-      if (this.vulnerable === true) {
-        this.turnBlue();
-      }
-      //ghost wrap
-      this.wrap();
-
-      //UPDATE TILE POSITION
-      this.updateTilePosition();
     }
   }
 
@@ -116,26 +125,11 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     return fuzzy;
   }
 
-  centerGhost() {
-    if (this.x !== this.turnPoint.x && this.body.velocity.y !== 0){
-      this.x = this.turnPoint.x;
-    }
-    if (this.y !== this.turnPoint.y && this.body.velocity.x !== 0){
-      this.y = this.turnPoint.y;
-    }
-    else if (this.body.velocity.x === 0 &&
-             this.body.velocity.y === 0 &&
-             !this.fuzzyEqualXY(25) &&
-             (!this.tilePositionY >= 15 || !this.tilePositionY <= -1)) {
-                this.snapToTurnPoint();
-    }
-  }
-
   findPac() {
     let count = 0;
 
     return function() {
-      if (count >= 17) {
+      if (count >= 100) {
         count = 0;
         return this.lockOnTarget();
       } else {
@@ -146,25 +140,25 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
 
   lockOnTarget() {
     const distancesToGhost = {};
-    for (let num in this.scene.playersAlive) {
+    const playersAlive = this.scene.playersAlive;
+    for (let playerNumber in playersAlive) {
       const distance = Phaser.Math.Between(
-        this.scene.playersAlive[num].tilePositionX,
-        this.scene.playersAlive[num].tilePositionY,
+        playersAlive[playerNumber].tilePositionX,
+        playersAlive[playerNumber].tilePositionY,
         this.tilePositionX,
         this.tilePositionY
       );
-      distancesToGhost[distance] = num;
+      distancesToGhost[distance] = playerNumber;
     }
     const shortestDistance = Math.min(...Object.keys(distancesToGhost));
     const closest = distancesToGhost[shortestDistance];
 
     if (
-      this.scene.playersAlive[closest] &&
-      this.scene.playersAlive[closest] !== this.chaseTarget
+      playersAlive[closest] &&
+      playersAlive[closest] !== this.chaseTarget
     ) {
-      this.chaseTarget = this.scene.playersAlive[closest];
+      this.chaseTarget = playersAlive[closest];
     }
-
     return this.chaseTarget;
   }
 
@@ -174,56 +168,190 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
 
     if (direction === "left" || direction === "right") {
       this.setVelocityX(this.speed);
+      this.setVelocityY(0);
     }
     if (direction === "up" || direction === "down") {
       this.setVelocityY(this.speed);
+      this.setVelocityX(0);
     }
 
     this.move(direction);
     this.direction = direction;
   }
 
-  followPac() {
-    if (this.tilePositionX === this.chaseTarget.tilePositionX) {
-      this.vulnerable ? null : this.setVelocityY(0);
-    }
-    if (this.tilePositionY === this.chaseTarget.tilePositionY) {
-      this.vulnerable ? null : this.setVelocityX(0);
+  opposite(direction) {
+    if(direction === "left") return "right";
+    if(direction === "right") return "left";
+    if(direction === "up") return "down";
+    if(direction === "down") return "up";
+  }
+
+  directionsToPac(){
+
+    const directionOptions = [];
+
+    const targetTileX = this.chaseTarget.tilePositionX;
+
+    const targetTileY = this.chaseTarget.tilePositionY;
+
+    const ghostX = this.tilePositionX;
+
+    const ghostY = this.tilePositionY;
+
+    targetTileX < ghostX ? directionOptions.push("left") : null;
+
+    targetTileX > ghostX ? directionOptions.push("right") : null;
+
+    targetTileY < ghostY ? directionOptions.push("up") : null;
+
+    targetTileY > ghostY ? directionOptions.push("down") : null;
+
+    return directionOptions
+  }
+
+  chasePac() {
+    //if i am fuzzy 3 from the turnpoint and I am on a new tile
+    if (this.fuzzyEqualXY(3) && this.scene.map.getTileAtWorldXY(this.x,this.y) !== this.previousTile) {
+
+      const mapPath = this.scene.path.adjacencyGraph;
+
+      const key = this.scene.path.buildKey(this.tilePositionY, this.tilePositionX);
+      //if the tile i am on exists on the graph and the tile is a turn node
+      if (mapPath[key] && mapPath[key].isTurnNode) {
+        //find the options i have to move towards pac
+        const directionOptions = this.directionsToPac();
+        //to prevent from moving backwards
+        //find index of the movement thats the opposite of my current direction
+        const index = directionOptions.findIndex((direction)=> direction === this.opposite(this.direction));
+
+        //if the index exists, take it off of the direction options
+        if (index >= 0) {
+          if(index === 0) {
+            directionOptions.shift();
+          }
+          if(index === 1) {
+            directionOptions.pop();
+          }
+        }
+
+        //if the direction im currently moving in is not available, remove it as well
+        if(!mapPath[key][this.direction]) {
+          const indexOfCurrent = directionOptions.findIndex((direction)=> direction === this.direction);
+          if (indexOfCurrent >= 0) {
+            if(index === 0) {
+              directionOptions.shift();
+            }
+            if(index === 1) {
+              directionOptions.pop();
+            }
+          }
+        }
+
+        //if theres more than one direction option
+        if (directionOptions.length > 1) {
+          //and both direction options are available
+          if (mapPath[key][directionOptions[0]] && mapPath[key][directionOptions[1]]) {
+            //pick a direction at random
+            let newDirection = directionOptions[Math.round(Math.random())];
+            this.snapToTurnPoint();
+            this.go(newDirection);
+          }
+          else{
+            //else pick the option that is available.
+            mapPath[key][directionOptions[0]] ? this.go(directionOptions[0]) : null;
+            mapPath[key][directionOptions[1]] ? this.go(directionOptions[1]) : null;
+          }
+        }
+
+        //else if the only direction in the options is available to move into, do so
+        else if(mapPath[key][directionOptions[0]]){
+          this.snapToTurnPoint();
+          this.go(directionOptions[0]);
+        }
+
+        //if i hit a turn node and the direction i want to go in not available
+        //pick a random direction that is not the direction i came
+        if (directionOptions.length === 0) {
+          for (let key in mapPath[key]){
+            if (key !== "isTurnNode" && key !== this.opposite(this.direction)) {
+              directionOptions.push(key);
+            }
+          }
+          let newDirection = directionOptions[Math.round(Math.random())];
+          this.snapToTurnPoint();
+          this.go(newDirection);
+        }
+      }
+
+      //account for corners
+      else if (mapPath[key] && !mapPath[key].turnNode && !mapPath[key][this.direction]) {
+        let newDirection = Object.keys(mapPath[key]).find((direction)=> direction !== this.opposite(this.direction));
+        if (Object.keys(mapPath[key]).length < 2) newDirection = Object.keys(mapPath[key])[0];
+        this.snapToTurnPoint();
+        this.go(newDirection);
+      }
+
+      this.previousTile = this.scene.map.getTileAtWorldXY(this.x,this.y);
+
     }
 
-    if (this.tilePositionX > this.chaseTarget.tilePositionX) {
-      if (this.tilePositionY > 14 || this.tilePositionY < 0) {
-        this.setVelocityX(0);
-      } else {
-        this.vulnerable ? this.go("right") : this.go("left");
-      }
+    // if (this.tilePositionX === this.chaseTarget.tilePositionX) {
+    //   this.vulnerable ? null : this.setVelocityY(0);
+    // }
+    // if (this.tilePositionY === this.chaseTarget.tilePositionY) {
+    //   this.vulnerable ? null : this.setVelocityX(0);
+    // }
+
+    // if (this.tilePositionX > this.chaseTarget.tilePositionX) {
+    //   if (this.tilePositionY > 14 || this.tilePositionY < 0) {
+    //     this.setVelocityX(0);
+    //   } else {
+    //     this.vulnerable ? this.go("right") : this.go("left");
+    //   }
+    // }
+    // if (this.tilePositionX < this.chaseTarget.tilePositionX) {
+    //   if (this.tilePositionY > 14 || this.tilePositionY < 0) {
+    //     this.setVelocityX(0);
+    //   } else {
+    //     this.vulnerable ? this.go("left") : this.go("right");
+    //   }
+    // }
+    // if (this.tilePositionY < this.chaseTarget.tilePositionY) {
+    //   if (
+    //     this.tilePositionY + 1 + (15 - this.chaseTarget.tilePositionY) <
+    //     this.chaseTarget.tilePositionY - this.tilePositionY + 1
+    //   ) {
+    //     this.vulnerable ? this.go("down") : this.go("up");
+    //   } else {
+    //     this.vulnerable ? this.go("up") : this.go("down");
+    //   }
+    // }
+    // if (this.tilePositionY > this.chaseTarget.tilePositionY + 1) {
+    //   if (
+    //     15 - this.tilePositionY + this.chaseTarget.tilePositionY + 1 <
+    //     this.tilePositionY - this.chaseTarget.tilePositionY + 1
+    //   ) {
+    //     this.vulnerable ? this.go("up") : this.go("down");
+    //   } else {
+    //     this.vulnerable ? this.go("down") : this.go("up");
+    //   }
+    // }
+  }
+
+  centerGhost() {
+    if (this.x !== this.turnPoint.x && this.body.velocity.y !== 0) {
+      this.x = this.turnPoint.x;
     }
-    if (this.tilePositionX < this.chaseTarget.tilePositionX) {
-      if (this.tilePositionY > 14 || this.tilePositionY < 0) {
-        this.setVelocityX(0);
-      } else {
-        this.vulnerable ? this.go("left") : this.go("right");
-      }
-    }
-    if (this.tilePositionY < this.chaseTarget.tilePositionY) {
-      if (
-        this.tilePositionY + 1 + (15 - this.chaseTarget.tilePositionY) <
-        this.chaseTarget.tilePositionY - this.tilePositionY + 1
-      ) {
-        this.vulnerable ? this.go("down") : this.go("up");
-      } else {
-        this.vulnerable ? this.go("up") : this.go("down");
-      }
-    }
-    if (this.tilePositionY > this.chaseTarget.tilePositionY + 1) {
-      if (
-        15 - this.tilePositionY + this.chaseTarget.tilePositionY + 1 <
-        this.tilePositionY - this.chaseTarget.tilePositionY + 1
-      ) {
-        this.vulnerable ? this.go("up") : this.go("down");
-      } else {
-        this.vulnerable ? this.go("down") : this.go("up");
-      }
+    if (this.y !== this.turnPoint.y && this.body.velocity.x !== 0) {
+      this.y = this.turnPoint.y;
+    } 
+    else if (
+      this.body.velocity.x === 0 &&
+      this.body.velocity.y === 0 &&
+      !this.fuzzyEqualXY(25) &&
+      (!this.tilePositionY >= 15 || !this.tilePositionY <= -1)
+    ) {
+      this.snapToTurnPoint();
     }
   }
 
@@ -242,65 +370,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.tilePositionY = this.scene.map.worldToTileY(this.y);
   }
 
-  checkDirection(turnTo) {
-    if (
-      this[`tile${turnTo}`] &&
-      !this[`tile${turnTo}`].collides &&
-      this.direction !== turnTo
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  snapToTurnPoint() {
-    this.turnPoint.x = this.scene.map.tileToWorldX(this.tilePositionX + 0.57);
-    this.turnPoint.y = this.scene.map.tileToWorldY(this.tilePositionY + 0.57);
-
-    if (
-      Phaser.Math.Fuzzy.Equal(this.x, this.turnPoint.x, 13.7) &&
-      Phaser.Math.Fuzzy.Equal(this.y, this.turnPoint.y, 13.7)
-    ) {
-      // console.log('passed2');
-      // console.log('x:', 'gh', this.x, this.turnPoint.x);
-      // console.log('y:', 'gh', this.y, this.turnPoint.y);
-      this.x = this.turnPoint.x;
-      this.y = this.turnPoint.y;
-    } else {
-      // console.log('not passed');
-      // console.log('x:', 'gh', this.x, this.turnPoint.x);
-      // console.log('y:', 'gh', this.y, this.turnPoint.y);
-    }
-  }
-
-  checkSurroundingTiles() {
-    this["tileup"] = this.scene.map.getTileAt(
-      this.tilePositionX,
-      this.tilePositionY - 1,
-      false,
-      "mapBaseLayer"
-    );
-    this["tiledown"] = this.scene.map.getTileAt(
-      this.tilePositionX,
-      this.tilePositionY + 1,
-      false,
-      "mapBaseLayer"
-    );
-    this["tileleft"] = this.scene.map.getTileAt(
-      this.tilePositionX - 1,
-      this.tilePositionY,
-      false,
-      "mapBaseLayer"
-    );
-    this["tileright"] = this.scene.map.getTileAt(
-      this.tilePositionX + 1,
-      this.tilePositionY,
-      false,
-      "mapBaseLayer"
-    );
-  }
-
   turnBlue() {
     this.createAnimation();
     this.anims.play("turnBlue", true);
@@ -315,12 +384,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   pace() {
 
     this.updateTilePosition();
-    // console.log(this.scene.map.getTileAt(
-    //   this.tilePositionX,
-    //   this.tilePositionY,
-    //   false,
-    //   "mapBaseLayer"
-    // ))
+
     this.speed = 100;
     if (!this.direction) {
       this.go("left");

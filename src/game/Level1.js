@@ -101,7 +101,7 @@ export default class Level1 extends Phaser.Scene {
       // x: scene.map.tileToWorldX(15),
       // y: scene.map.tileToWorldY(8),
       x: scene.map.tileToWorldX(15.571),
-      y: scene.map.tileToWorldY(7.56),
+      y: scene.map.tileToWorldY(5.56),
       game: this.game
     });
 
@@ -120,7 +120,11 @@ export default class Level1 extends Phaser.Scene {
     this.ghosts.add(this.og);
     this.og.setBounce(0, 1);
 
-    this.physics.add.collider(this.ghosts, this.collisionLayer);
+    this.physics.add.collider(this.ghosts, this.collisionLayer, (ghost, layer)=>{
+      ghost.setVelocity(0, 0);
+      ghost.setTurnPoint();
+      ghost.snapToTurnPoint();
+    });
 
     //processes DOM input events if true
     this.input.enabled = true;
@@ -136,7 +140,7 @@ export default class Level1 extends Phaser.Scene {
         // if(true){
         if (!this.og.dead) {
           this.og.setOffset(7, 7);
-          this.og.pace();
+          // this.og.pace();
         }
         //IF GHOST IS DEAD TELL EVERYONE AND DISABLE GHOST;
         if (this.og.dead && this.og.body.enable) {

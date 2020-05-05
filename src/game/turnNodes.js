@@ -50,7 +50,10 @@ export class PathGraph {
         neighborX = xCounter;
         neighborY = yCounter - 1;
         neighborsList = this.populateNeighborsList(neighborX, neighborY, 'up', neighborsList);
-  
+
+        if (Object.keys(neighborsList).length > 2) {
+          neighborsList.isTurnNode = true;
+        }
         this.adjacencyGraph[this.buildKey(yCounter, xCounter)] = neighborsList;
       }
     }
