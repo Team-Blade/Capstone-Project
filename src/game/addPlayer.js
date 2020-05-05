@@ -31,6 +31,15 @@ export default function addPlayer(scene, player) {
     pac.snapToTurnPoint();
   });
 
+  scene.physics.add.collider(scene.pac, scene.cageDoorLayer, (pac, layer) => {
+    pac.colliding = true;
+    pac.setVelocity(0, 0);
+    pac.direction = "";
+    pac.moving = false;
+    pac.setTurnPoint();
+    pac.snapToTurnPoint();
+  })
+
   scene.physics.add.overlap(scene.pac, scene.otherPlayers, (pac, other) => {
     if (!pac.big && other.big) {
       pac.dead = true;

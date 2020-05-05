@@ -12,11 +12,17 @@ export function setUpMapLayer(scene) {
     0
   );
 
+  scene.cageDoorLayer = map.createStaticLayer("cageDoorLayer", pinkTileset, 0, 0);
+
   scene.collisionLayer.setCollisionByProperty({
     collision: true
   });
 
+  scene.cageDoorLayer.setCollisionByProperty({collision: true});
+
   scene.collisionLayer.setScale(0.7);
+
+  scene.cageDoorLayer.setScale(0.7);
 
 }
 
