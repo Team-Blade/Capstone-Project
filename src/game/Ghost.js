@@ -22,6 +22,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.turnPoint = {};
     this.speed = 130;
     this.previousTile = "";
+    this.ghostRelease = false;
   }
 
   createAnimation() {
@@ -371,22 +372,32 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.anims.play("turnWhite", true);
   }
 
+  releaseGhost() {
+    console.log('unleashed!')
+    this.ghostRelease = true;
+    if (this.speed <= 100) {
+      this.speed = 130;
+    }
+  }
+
   pace() {
 
-    this.updateTilePosition();
+    if(!this.ghostRelease){
+      this.updateTilePosition();
 
-    this.speed = 100;
-    if (!this.direction) {
-      this.go("left");
-    }
-    if (Phaser.Math.Fuzzy.Equal(this.x, this.scene.map.tileToWorldX(14.5), 3)) {
-      this.go("right");
-    }
-    if (Phaser.Math.Fuzzy.Equal(this.x, this.scene.map.tileToWorldX(16.57), 3)) {
-      this.go("left");
-    }
-    else{
-      this.go(this.direction)
+      this.speed = 100;
+      if (!this.direction) {
+        this.go("left");
+      }
+      if (Phaser.Math.Fuzzy.Equal(this.x, this.scene.map.tileToWorldX(14.5), 3)) {
+        this.go("right");
+      }
+      if (Phaser.Math.Fuzzy.Equal(this.x, this.scene.map.tileToWorldX(16.57), 3)) {
+        this.go("left");
+      }
+      else{
+        this.go(this.direction)
+      }
     }
   }
 
