@@ -101,7 +101,7 @@ export default class Level1 extends Phaser.Scene {
       // x: scene.map.tileToWorldX(15),
       // y: scene.map.tileToWorldY(8),
       x: scene.map.tileToWorldX(15.571),
-      y: scene.map.tileToWorldY(7.56),
+      y: scene.map.tileToWorldY(5.56),
       game: this.game
     });
 
@@ -140,7 +140,7 @@ export default class Level1 extends Phaser.Scene {
         // if(true){
         if (!this.og.dead) {
           this.og.setOffset(7, 7);
-          this.og.pace();
+          // this.og.pace();
         }
         //IF GHOST IS DEAD TELL EVERYONE AND DISABLE GHOST;
         if (this.og.dead && this.og.body.enable) {
@@ -178,10 +178,11 @@ export default class Level1 extends Phaser.Scene {
           //IF YOU ARE PLAYER 1 AND GHOST IS ALIVE
           if (this.pac.playerNumber === 1 && !this.og.dead) {
             //ELSE LET EVERYONE KNOW WHERE GHOST SHOULD BE
-            if (this.og.ghostRelease){
-              this.og.trajectory();
-            }
+            this.og.trajectory();
             sendGhostMovement(this);
+            if (this.og.speed <= 100) {
+              this.og.speed = 130;
+            }
           }
           //IF YOU ARE DEAD TELL EVERYONE AND DELETE YOURSELF
           if (this.pac.dead && this.playersAlive[this.pac.playerNumber]) {

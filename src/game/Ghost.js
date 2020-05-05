@@ -188,7 +188,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   }
 
   directionsToPac(){
-
     const directionOptions = [];
 
     const targetTileX = this.chaseTarget.tilePositionX;
