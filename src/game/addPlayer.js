@@ -31,14 +31,9 @@ export default function addPlayer(scene, player) {
     pac.snapToTurnPoint();
   });
 
-  scene.physics.add.collider(scene.pac, scene.cageDoorLayer, (pac, layer) => {
-    pac.colliding = true;
-    pac.setVelocity(0, 0);
-    pac.direction = "";
-    pac.moving = false;
-    pac.setTurnPoint();
-    pac.snapToTurnPoint();
-  })
+  // scene.physics.add.collider(scene.pac, scene.cageDoorLayer, (pac, layer) => {
+    
+  // })
 
   scene.physics.add.overlap(scene.pac, scene.otherPlayers, (pac, other) => {
     if (!pac.big && other.big) {
@@ -214,7 +209,7 @@ export default function addPlayer(scene, player) {
       5000,
       () => {
         scene.og.vulnerable = false;
-        scene.og.releaseGhost();
+        scene.og.go(scene.og.opposite(scene.og.direction));
         scene.pac.big = false;
         scene.pac.vulnerable = true;
         scene.pac.speed = 200

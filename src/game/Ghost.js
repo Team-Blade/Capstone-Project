@@ -188,6 +188,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   }
 
   directionsToPac(){
+
     const directionOptions = [];
 
     const targetTileX = this.chaseTarget.tilePositionX;
@@ -197,10 +198,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     const ghostX = this.tilePositionX;
 
     const ghostY = this.tilePositionY;
-
-    // targetTileX < ghostX ? directionOptions.push("left") : null;
-
-    // targetTileX > ghostX ? directionOptions.push("right") : null;
 
     if (ghostX > targetTileX) {
       if (ghostY > 14 || ghostY < 0) {
@@ -369,14 +366,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.createAnimation();
     this.anims.play("turnBlue", true);
     this.anims.play("turnWhite", true);
-  }
-
-  releaseGhost() {
-    console.log('unleashed!')
-    this.ghostRelease = true;
-    if (this.speed <= 100) {
-      this.speed = 130;
-    }
   }
 
   pace() {
