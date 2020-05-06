@@ -99,6 +99,7 @@ export default function addPlayer(scene, player) {
             true
           );
           scene.og.dead = false;
+          scene.og.ghostReleased = false;
           scene.chaseTarget = "";
         },
         [],
