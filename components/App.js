@@ -89,8 +89,9 @@ class App extends React.Component {
       code,
     });
     this.createGame(code);
-    socket.emit("startGame", code);
 
+    setTimeout(()=>{socket.emit("startGame", code)}, 1500);
+    
   }
 
   joinGame() {

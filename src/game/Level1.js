@@ -142,7 +142,7 @@ export default class Level1 extends Phaser.Scene {
         if (!this.og.dead) {
           this.og.setOffset(7, 7);
           if (!this.og.unleashed && !this.og.ghostReleased) {
-            // this.og.pace();
+            this.og.pace();
           }
         }
         //IF GHOST IS DEAD TELL EVERYONE AND DISABLE GHOST;

@@ -71,7 +71,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   trajectory() {
 
     if (this.direction) {
-      this.go(this.direction);
       this.move(this.direction);
     }
 
@@ -88,7 +87,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
         }
       }
 
-      if (this.unleashed && !this.ghostReleased) {
+      if (!this.ghostReleased && this.unleashed) {
         this.speed = 30;
         this.releaseGhost();
       }
@@ -382,6 +381,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   }
 
   releaseGhost() {
+    //when ghost has exited cage door
     if (this.tilePositionX === 15 && this.tilePositionY === 5 && this.fuzzyEqualXY(3)) {
       console.log('oh shit')
       this.direction = "";
@@ -389,12 +389,19 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       this.setVelocity(0,0);
       return this.ghostReleased = true;
     }
+
+    else if (!Phaser.Math.Fuzzy.Equal(this.x, this.scene.map.tileToWorldX(15.571), 3)) {
+      if(this.x > this.scene.map.tileToWorldX(15.571)) {
+        return this.go("left");
+      }
+      if(this.x < this.scene.map.tileToWorldX(15.571)) {
+        return this.go("right");
+      }
+    }
+
     else {
-      // this.speed = 30;
       this.go("up");
     }
-    // this.updateTilePosition();
-    // this.setTurnPoint();
 
     // if (this.tilePositionX === 15 && this.tilePositionY === 5 && this.fuzzyEqualXY(3)) {
     //   console.log('oh shit')
