@@ -44,6 +44,7 @@ class App extends React.Component {
     this.eventListener = this.eventListener.bind(this);
     this.copied = this.copied.bind(this);
     this.toggleSound = this.toggleSound.bind(this);
+    this.startDemo = this.startDemo.bind(this);
   }
   componentDidMount() {
     this.eventListener();
@@ -55,9 +56,9 @@ class App extends React.Component {
   handleCodeChange(event) {
     this.setState({ code: event.target.value });
   }
-  createGame() {
+  createGame(code = this.state.code) {
     //generate a game code
-    const code = this.state.code;
+    // const code = this.state.code;
     let name = this.state.name;
 
     socket.emit("createRoom", code, name);
@@ -76,6 +77,20 @@ class App extends React.Component {
     });
     // store the room id in the socket for future use
     socket.roomId = code;
+  }
+
+  startDemo() {
+    const code = randomString().concat("DEMO");
+    this.setState({
+      buttonClicked: false,
+      buttonClickedName: "",
+      gameOver: false,
+      gameStarted: true,
+      code,
+    });
+    this.createGame(code);
+    socket.emit("startGame", code);
+
   }
 
   joinGame() {
@@ -286,7 +301,7 @@ class App extends React.Component {
                     </button>
                   </div>
                   <div className="demo-button">
-                    <button id="demo">Play Demo</button>
+                    <button id="demo" disabled={!state.name} onClick={this.startDemo}>Play Demo</button>
                   </div>
                 </div>
               </Popup>

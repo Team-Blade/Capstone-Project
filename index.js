@@ -66,7 +66,6 @@ io.on("connection", socket => {
 
   socket.on("createRoom", (roomId, name) => {
     room = new Room(roomId);
-
     rooms[roomId] = room;
     // have the socket join the room they've just created.
     joinRoom(socket, room, name);
@@ -83,7 +82,8 @@ io.on("connection", socket => {
   });
 
   socket.on("startGame", roomId => {
-    if (rooms[roomId].numberOfPlayers > 1) {
+    console.log(roomId)
+    if (rooms[roomId].numberOfPlayers > 1 || roomId.slice(-4) === "DEMO") {
       rooms[roomId].started = true;
       // io.in(roomId).emit("startCountdown");
       io.in(roomId).emit("currentPlayers", rooms[roomId].players);
