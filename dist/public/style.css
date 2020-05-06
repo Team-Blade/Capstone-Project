@@ -71,6 +71,11 @@ nav > div {
 .exit-room-button {
   height: 60px;
 }
+
+.play-again-button {
+  height: 80px;
+}
+
 main {
   font-family: "Press Start 2P", cursive;
 }
@@ -287,6 +292,6 @@ form {
   width: 150px;
 }
 
-.join-enter > .join-goback-button {
-  width: 150px;
+#demo {
+  width: 250px;
 }

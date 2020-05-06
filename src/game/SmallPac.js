@@ -14,6 +14,8 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.big = false;
     this.vulnerable = true;
     this.direction = "";
+    this.tilePositionX = this.scene.map.worldToTileX(this.x);
+    this.tilePositionY = this.scene.map.worldToTileY(this.y);
     this.moving = false;
     this.dead = false;
     this.turnPoint = {};

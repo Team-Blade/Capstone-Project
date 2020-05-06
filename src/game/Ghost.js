@@ -22,7 +22,8 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.turnPoint = {};
     this.speed = 130;
     this.previousTile = "";
-    this.ghostRelease = false;
+    this.ghostReleased = false;
+    this.unleashed = false;
   }
 
   createAnimation() {
@@ -73,15 +74,23 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       this.go(this.direction);
       this.move(this.direction);
     }
+
     if (this.scene.pac) {
 
       this.setTurnPoint();
-      this.decideTarget();
-
       this.centerGhost();
+      
+      if (this.ghostReleased === true) {
+        this.decideTarget();
 
-      if (this.chaseTarget) {
-        this.chasePac();
+        if (this.chaseTarget) {
+          this.chasePac();
+        }
+      }
+
+      if (this.unleashed && !this.ghostReleased) {
+        this.speed = 30;
+        this.releaseGhost();
       }
 
       if (this.vulnerable === true) {
@@ -198,6 +207,10 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     const ghostX = this.tilePositionX;
 
     const ghostY = this.tilePositionY;
+
+    // targetTileX < ghostX ? directionOptions.push("left") : null;
+
+    // targetTileX > ghostX ? directionOptions.push("right") : null;
 
     if (ghostX > targetTileX) {
       if (ghostY > 14 || ghostY < 0) {
@@ -368,24 +381,60 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.anims.play("turnWhite", true);
   }
 
+  releaseGhost() {
+    if (this.tilePositionX === 15 && this.tilePositionY === 5 && this.fuzzyEqualXY(3)) {
+      console.log('oh shit')
+      this.direction = "";
+      this.snapToTurnPoint();
+      this.setVelocity(0,0);
+      return this.ghostReleased = true;
+    }
+    else {
+      // this.speed = 30;
+      this.go("up");
+    }
+    // this.updateTilePosition();
+    // this.setTurnPoint();
+
+    // if (this.tilePositionX === 15 && this.tilePositionY === 5 && this.fuzzyEqualXY(3)) {
+    //   console.log('oh shit')
+    //   this.direction = "";
+    //   this.setVelocity(0,0);
+    //   this.snapToTurnPoint();
+    //   this.speed = 130;
+    //   return this.ghostReleased = true;
+    // }
+    
+    // else if (this.scene.map.getTileAtWorldXY(this.x,this.y) !== this.previousTile) {
+    //   this.previousTile = this.scene.map.getTileAtWorldXY(this.x,this.y);
+    //     if(this.x > this.scene.map.tileToWorldX(15.571)) {
+    //       return this.go("left");
+    //     }
+    //     if(this.x < this.scene.map.tileToWorldX(15.571)) {
+    //       return this.go("right");
+    //     }
+    // }
+    // else if (this.tilePositionX === 15 && this.fuzzyEqualXY(3)) {
+    //   this.go("up");
+    // }
+  }
+
   pace() {
 
-    if(!this.ghostRelease){
-      this.updateTilePosition();
+    // this.updateTilePosition();
 
-      this.speed = 100;
-      if (!this.direction) {
-        this.go("left");
-      }
-      if (Phaser.Math.Fuzzy.Equal(this.x, this.scene.map.tileToWorldX(14.5), 3)) {
-        this.go("right");
-      }
-      if (Phaser.Math.Fuzzy.Equal(this.x, this.scene.map.tileToWorldX(16.57), 3)) {
-        this.go("left");
-      }
-      else{
-        this.go(this.direction)
-      }
+    this.speed = 100;
+    if (!this.direction) {
+      this.go("left");
+    }
+    if (Phaser.Math.Fuzzy.Equal(this.x, this.scene.map.tileToWorldX(14.5), 3)) {
+      this.go("right");
+    }
+    if (Phaser.Math.Fuzzy.Equal(this.x, this.scene.map.tileToWorldX(16.57), 3)) {
+      this.go("left");
+    }
+    else{
+      this.go(this.direction)
     }
   }
 

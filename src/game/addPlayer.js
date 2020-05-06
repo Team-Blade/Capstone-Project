@@ -206,7 +206,6 @@ export default function addPlayer(scene, player) {
     }
 
     scene.og.vulnerable = true;
-    scene.og.go(scene.og.opposite(scene.og.direction));
     pac.big = true;
     pac.vulnerable = false;
     pac.speed = 230;
@@ -214,7 +213,7 @@ export default function addPlayer(scene, player) {
       5000,
       () => {
         scene.og.vulnerable = false;
-        scene.og.go(scene.og.opposite(scene.og.direction));
+        scene.og.unleashed = true;
         scene.pac.big = false;
         scene.pac.vulnerable = true;
         scene.pac.speed = 200

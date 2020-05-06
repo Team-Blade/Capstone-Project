@@ -285,6 +285,9 @@ class App extends React.Component {
                       Join A Game
                     </button>
                   </div>
+                  <div className="demo-button">
+                    <button id="demo">Play Demo</button>
+                  </div>
                 </div>
               </Popup>
             ) : null}

@@ -101,7 +101,7 @@ export default class Level1 extends Phaser.Scene {
       // x: scene.map.tileToWorldX(15),
       // y: scene.map.tileToWorldY(8),
       x: scene.map.tileToWorldX(15.571),
-      y: scene.map.tileToWorldY(5.56),
+      y: scene.map.tileToWorldY(7.56),
       game: this.game
     });
 
@@ -140,7 +140,9 @@ export default class Level1 extends Phaser.Scene {
         // if(true){
         if (!this.og.dead) {
           this.og.setOffset(7, 7);
-          // this.og.pace();
+          if (!this.og.unleashed && !this.og.ghostReleased) {
+            // this.og.pace();
+          }
         }
         //IF GHOST IS DEAD TELL EVERYONE AND DISABLE GHOST;
         if (this.og.dead && this.og.body.enable) {
