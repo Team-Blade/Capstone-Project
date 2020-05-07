@@ -391,7 +391,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   turnBlue() {
     this.createAnimation();
     this.anims.play("turnBlue", true);
-    this.scene.dangerZone = true;
     this.vulnerable = true;
   }
   flash() {
