@@ -81,30 +81,39 @@ export default function addPlayer(scene, player) {
     }
   });
   scene.physics.add.overlap(scene.pac, scene.og, () => {
-    if (!scene.pac.big && scene.og.vulnerable === false) {
-      scene.pac.dead = true;
-    } 
-    else if (scene.pac.big) {
-      scene.og.dead = true;
-      scene.time.delayedCall(
-        30000,
-        () => {
-          scene.og.x = scene.map.tileToWorldX(15.571);
-          scene.og.y = scene.map.tileToWorldY(7.56);
-          scene.og.enableBody(
-            true,
-            scene.map.tileToWorldX(15.571),
-            scene.map.tileToWorldY(7.56),
-            true,
-            true
-          );
-          scene.og.dead = false;
-          scene.og.ghostReleased = false;
-          scene.chaseTarget = "";
-        },
-        [],
-        scene
-      );
+    if(!scene.og.dead) {  
+      if (!scene.pac.big && scene.og.vulnerable === false) {
+        scene.pac.dead = true;
+      } 
+      else if (scene.pac.big) {
+        scene.og.dead = true;
+        scene.og.findFinalPath();
+        //IF GHOST IS DEAD
+        scene.socket.emit("ghostDeath", socket.roomId);
+        if (toggleSound) {
+          let eatGhostSound = scene.sound.add("eat_ghost");
+          eatGhostSound.play();
+        }
+        scene.time.delayedCall(
+          30000,
+          () => {
+            // scene.og.x = scene.map.tileToWorldX(15.571);
+            // scene.og.y = scene.map.tileToWorldY(7.56);
+            // scene.og.enableBody(
+            //   true,
+            //   scene.map.tileToWorldX(15.571),
+            //   scene.map.tileToWorldY(7.56),
+            //   true,
+            //   true
+            // );
+            scene.og.dead = false;
+            scene.og.ghostReleased = false;
+            scene.og.chaseTarget = "";
+          },
+          [],
+          scene
+        );
+      }
     }
   });
   scene.physics.add.overlap(scene.pac, scene.dots, (pac, dots) => {

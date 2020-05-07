@@ -78,7 +78,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
 
   trajectory() {
     if (this.colliding) {
-      this.anims.stopOnFrame(this.anims.currentAnim.frames[1]);
+      // this.anims.stopOnFrame(this.anims.currentAnim.frames[1]);
       if (this.collisionDirection){
         this.collisionWithPlayers();
       }
@@ -128,7 +128,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   changePacDirection() {
-    const mapPath = this.scene.path.adjacencyGraph;
+
     if(this.tilePositionY >= 0 && this.tilePositionY <= 14){
       if (this.scene.cursors.up.isDown) {
         if (this.direction === "down") {

@@ -1,6 +1,6 @@
 export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   constructor(config) {
-    super(config.scene, config.x, config.y, config.key);
+    super(config.scene, config.x, config.y, config.buildKey);
     config.scene.add.existing(this);
     config.scene.physics.world.enable(this);
     this.scene = config.scene;
@@ -24,6 +24,11 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.previousTile = "";
     this.ghostReleased = false;
     this.unleashed = false;
+    this.homeTileX = 15;
+    this.homeTileY = 7;
+    this.startTileX = "";
+    this.startTileY = "";
+    this.finalPath = "";
   }
 
   createAnimation() {
@@ -72,6 +77,10 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
 
     if (this.direction) {
       this.move(this.direction);
+    }
+
+    if (this.dead) {
+      this.returnToCage();
     }
 
     if (this.scene.pac) {
@@ -250,13 +259,14 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
 
   chasePac() {
     //if i am fuzzy 3 from the turnpoint and I am on a new tile
-    if (this.fuzzyEqualXY(3) && this.scene.map.getTileAtWorldXY(this.x,this.y) !== this.previousTile) {
+    const key = this.scene.path.buildKey(this.tilePositionY, this.tilePositionX);
+    const mapPath = this.scene.path.adjacencyGraph[key];
 
-      const mapPath = this.scene.path.adjacencyGraph;
+    if (mapPath && this.fuzzyEqualXY(3) && this.scene.map.getTileAtWorldXY(this.x,this.y) !== this.previousTile) {
 
-      const key = this.scene.path.buildKey(this.tilePositionY, this.tilePositionX);
+      const neighbors = mapPath.neighborsList;
       //if the tile i am on exists on the graph and the tile is a turn node
-      if (mapPath[key] && mapPath[key].isTurnNode) {
+      if (mapPath.isTurnNode) {
         //find the options i have to move towards pac
         const directionOptions = this.directionsToPac();
         //to prevent from moving backwards
@@ -274,7 +284,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
         }
 
         //if the direction im currently moving in is not available, remove it as well
-        if(!mapPath[key][this.direction]) {
+        if(!neighbors[this.direction]) {
           const indexOfCurrent = directionOptions.findIndex((direction)=> direction === this.direction);
           if (indexOfCurrent >= 0) {
             if(indexOfCurrent === 0) {
@@ -289,7 +299,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
         //if theres more than one direction option
         if (directionOptions.length > 1) {
           //and both direction options are available
-          if (mapPath[key][directionOptions[0]] && mapPath[key][directionOptions[1]]) {
+          if (neighbors[directionOptions[0]] && neighbors[directionOptions[1]]) {
             //pick a direction at random
             let newDirection = directionOptions[Math.round(Math.random())];
             this.snapToTurnPoint();
@@ -297,13 +307,13 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
           }
           else{
             //else pick the option that is available.
-            mapPath[key][directionOptions[0]] ? this.go(directionOptions[0]) : null;
-            mapPath[key][directionOptions[1]] ? this.go(directionOptions[1]) : null;
+            neighbors[directionOptions[0]] ? this.go(directionOptions[0]) : null;
+            neighbors[directionOptions[1]] ? this.go(directionOptions[1]) : null;
           }
         }
 
         //else if the only direction in the options is available to move into, do so
-        else if(mapPath[key][directionOptions[0]]){
+        else if(neighbors[directionOptions[0]]){
           this.snapToTurnPoint();
           this.go(directionOptions[0]);
         }
@@ -312,8 +322,8 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
         //pick a random direction that is not the direction i came
         if (directionOptions.length === 0) {
 
-          for (let direction in mapPath[key]){
-            if (direction !== "isTurnNode" && direction !== this.opposite(this.direction)) {
+          for (let direction in neighbors){
+            if (direction !== this.opposite(this.direction)) {
               directionOptions.push(direction);
             }
           }
@@ -324,9 +334,9 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       }
 
       //account for corners
-      else if (mapPath[key] && !mapPath[key].turnNode && !mapPath[key][this.direction]) {
-        let newDirection = Object.keys(mapPath[key]).find((direction)=> direction !== this.opposite(this.direction));
-        if (Object.keys(mapPath[key]).length < 2) newDirection = Object.keys(mapPath[key])[0];
+      else if (!mapPath.turnNode && !neighbors[this.direction]) {
+        let newDirection = Object.keys(neighbors).find((direction)=> direction !== this.opposite(this.direction));
+        if (Object.keys(neighbors).length < 2) newDirection = Object.keys(mapPath.neighborsList)[0];
         this.snapToTurnPoint();
         this.go(newDirection);
       }
@@ -402,33 +412,9 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     else {
       this.go("up");
     }
-
-    // if (this.tilePositionX === 15 && this.tilePositionY === 5 && this.fuzzyEqualXY(3)) {
-    //   console.log('oh shit')
-    //   this.direction = "";
-    //   this.setVelocity(0,0);
-    //   this.snapToTurnPoint();
-    //   this.speed = 130;
-    //   return this.ghostReleased = true;
-    // }
-    
-    // else if (this.scene.map.getTileAtWorldXY(this.x,this.y) !== this.previousTile) {
-    //   this.previousTile = this.scene.map.getTileAtWorldXY(this.x,this.y);
-    //     if(this.x > this.scene.map.tileToWorldX(15.571)) {
-    //       return this.go("left");
-    //     }
-    //     if(this.x < this.scene.map.tileToWorldX(15.571)) {
-    //       return this.go("right");
-    //     }
-    // }
-    // else if (this.tilePositionX === 15 && this.fuzzyEqualXY(3)) {
-    //   this.go("up");
-    // }
   }
 
   pace() {
-
-    // this.updateTilePosition();
 
     this.speed = 100;
     if (!this.direction) {
@@ -443,6 +429,100 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     else{
       this.go(this.direction)
     }
+  }
+
+  findFinalPath() {
+    // A* search algorithm for shortest path
+    // will be using Manhattan distance
+    // G cost = distance from starting node
+    // H cost = distance from target node
+    // F cost = G + H;
+
+    const open = [];
+    const closed = [];
+
+    this.updateTilePosition();
+
+    this.startTileX = this.tilePositionX
+    this.startTileY = this.tilePositionY
+
+    const buildKey = this.scene.path.buildKey;
+    const mapNodes = this.scene.path.adjacencyGraph;
+
+    const startNode = mapNodes[buildKey(this.startTileY, this.startTileX)];
+
+    open.push(startNode);
+
+    const targetNode = mapNodes[buildKey(this.homeTileY, this.homeTileX)];
+
+    let currentNode;
+    while (currentNode !== targetNode) {
+
+      // find node in open with lowest fcost
+      let indexOfLowest = 0;
+      for (let i = 1; i < open.length; ++i) {
+        if (open[i].fCost < open[indexOfLowest].fCost) {
+          indexOfLowest = i;
+        }
+      }
+
+      currentNode = open[indexOfLowest];
+
+      open.splice(indexOfLowest, 1);
+      closed.push(currentNode);
+
+      if (currentNode === targetNode) {
+        break;
+      }
+
+      for(let key in currentNode.neighborsList){
+        const neighbor = currentNode.neighborsList[key];
+        const neighborNode = mapNodes[buildKey(neighbor.y, neighbor.x)];
+        const fCost = this.fCost(neighborNode);
+        if (closed.includes(neighborNode)) {
+          continue;
+        }
+        const inOpen = open.includes(neighborNode);
+        if (!inOpen || fCost < neighborNode.fCost) {
+          neighborNode.prev = currentNode;
+          neighborNode.fCost = fCost;
+          !inOpen ? open.push(neighborNode) : null;
+        }
+      }
+    }
+
+    const finalPath = [];
+
+    let node = closed[closed.length - 1];
+ 
+    while (node.prev) {
+      finalPath.unshift(node);
+      node = node.prev;
+    }
+    console.log(finalPath);
+    return this.finalPath = finalPath;
+  }
+
+  fCost(node){
+    const {x, y} = node;
+    const fCost = this.gCost(x, y, node) + this.hCost(x, y, node);
+    return fCost;
+  }
+
+  gCost(x, y){
+    const gCost = Math.abs(x - this.startTileX) + Math.abs(y - this.startTileY);
+    return gCost;
+  }
+  hCost(x, y){
+    const hCost = Math.abs(this.homeTileX - x) + Math.abs(this.homeTileY - y);
+    return hCost;
+  }
+
+  returnToCage() {
+    //journey home ^^ yay
+
+    this.go("up");
+
   }
 
 }

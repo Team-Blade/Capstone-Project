@@ -99,8 +99,6 @@ export default class Level1 extends Phaser.Scene {
     this.og = new Ghost({
       scene: scene,
       key: "og1",
-      // x: scene.map.tileToWorldX(15),
-      // y: scene.map.tileToWorldY(8),
       x: scene.map.tileToWorldX(15.571),
       y: scene.map.tileToWorldY(7.56),
       game: this.game
@@ -139,25 +137,19 @@ export default class Level1 extends Phaser.Scene {
     if (!this.winner) {
       if (!checkWin(this)) {
         // if(true){
-        if (!this.og.dead) {
+        if (this.og) {
           this.og.setOffset(7, 7);
           if (!this.og.unleashed && !this.og.ghostReleased) {
             this.og.pace();
           }
         }
-        //IF GHOST IS DEAD TELL EVERYONE AND DISABLE GHOST;
-        if (this.og.dead && this.og.body.enable) {
-          this.socket.emit("ghostDeath", socket.roomId);
-          this.og.disableBody(true, true);
-          if (toggleSound) {
-            let eatGhostSound = this.sound.add("eat_ghost");
-            eatGhostSound.play();
-          }
-        }
+        // //IF GHOST IS DEAD 
+        // if (this.og.dead) {
+        //   this.og.returnToCage();
+        // }
         //IF GHOST IS VULNERABLE, TURN BLUE
         //IF YOU ARE SMALL AND OTHER PLAYERS ARE ALSO SMALL, MAKE GHOST NOT VULERABLE
         if (this.og.vulnerable) {
-          this.og.turnBlue();
           const playersAreSmall = this.otherPlayersArray.every(
             player => !player.big
           );
@@ -178,14 +170,18 @@ export default class Level1 extends Phaser.Scene {
               : this.pac.setOffset(7, 7);
           }
 
-          //IF YOU ARE PLAYER 1 AND GHOST IS ALIVE
-          if (this.pac.playerNumber === 1 && !this.og.dead) {
+          //IF YOU ARE PLAYER 1
+          if (this.pac.playerNumber === 1) {
             //ELSE LET EVERYONE KNOW WHERE GHOST SHOULD BE
             this.og.trajectory();
             sendGhostMovement(this);
             if (this.og.speed <= 100) {
               this.og.speed = 130;
             }
+          }
+          if (this.pac.playerNumber !== 1) {
+            this.og.direction ? this.og.move(this.og.direction) : null;
+            this.og.vulnerable ? this.og.turnBlue() : null;
           }
           //IF YOU ARE DEAD TELL EVERYONE AND DELETE YOURSELF
           if (this.pac.dead && this.playersAlive[this.pac.playerNumber]) {

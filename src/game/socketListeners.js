@@ -25,7 +25,7 @@ export function listenForGhostMovement(scene) {
   scene.socket.on("ghostMove", (ghost) => {
     scene.og.vulnerable = ghost.vulnerable;
     scene.og.setPosition(ghost.x, ghost.y);
-    scene.og.move(ghost.direction);
+    scene.og.direction = ghost.direction;
     scene.og.wrap();
   });
   }
@@ -35,18 +35,21 @@ export function listenForGhostDeath(scene) {
   if (firstGame) {
   scene.socket.on("ghostDied", () => {
     scene.og.dead = true;
+    if (toggleSound) {
+      let eatGhostSound = this.sound.add("eat_ghost");
+      eatGhostSound.play();
+    }
     setTimeout(() => {
-      scene.og.x = scene.map.tileToWorldX(15.571);
-      scene.og.y = scene.map.tileToWorldY(7.56);
-      scene.og.enableBody(
-        true,
-        scene.map.tileToWorldX(15.571),
-        scene.map.tileToWorldY(7.56),
-        true,
-        true
-      );
+      // scene.og.x = scene.map.tileToWorldX(15.571);
+      // scene.og.y = scene.map.tileToWorldY(7.56);
+      // scene.og.enableBody(
+      //   true,
+      //   scene.map.tileToWorldX(15.571),
+      //   scene.map.tileToWorldY(7.56),
+      //   true,
+      //   true
+      // );
       scene.og.dead = false;
-      scene.chaseTarget = "";
     }, 30000);
   });
   }

@@ -31,6 +31,8 @@ export class PathGraph {
           continue;
         }
         const neighborsList = {};
+        this.adjacencyGraph[this.buildKey(yCounter, xCounter)] = {x: xCounter, y: yCounter};
+        
         // check neighbor to the right
         let neighborX = xCounter + 1;
         let neighborY = yCounter;
@@ -52,9 +54,9 @@ export class PathGraph {
         neighborsList = this.populateNeighborsList(neighborX, neighborY, 'up', neighborsList);
 
         if (Object.keys(neighborsList).length > 2) {
-          neighborsList.isTurnNode = true;
+          this.adjacencyGraph[this.buildKey(yCounter, xCounter)].isTurnNode = true;
         }
-        this.adjacencyGraph[this.buildKey(yCounter, xCounter)] = neighborsList;
+        this.adjacencyGraph[this.buildKey(yCounter, xCounter)].neighborsList = neighborsList;
       }
     }
   }
@@ -66,14 +68,14 @@ export class PathGraph {
     TILES_THAT_WRAP_UP.forEach((wrappingTileCords) => {
       const wrappingTileCordY = wrappingTileCords[1];
       const wrappingTileCordX = wrappingTileCords[0];
-      this.adjacencyGraph[this.buildKey(wrappingTileCordY, wrappingTileCordX)]["up"] =
+      this.adjacencyGraph[this.buildKey(wrappingTileCordY, wrappingTileCordX)].neighborsList["up"] =
         this.buildNeighborObject(14, wrappingTileCordX, 'up', this.matrix[14][wrappingTileCordX])
     });
 
     TILES_THAT_WRAP_DOWN.forEach((wrappingTileCords) => {
       const wrappingTileCordY = wrappingTileCords[1];
       const wrappingTileCordX = wrappingTileCords[0];
-      this.adjacencyGraph[this.buildKey(wrappingTileCordY, wrappingTileCordX)]["down"] =
+      this.adjacencyGraph[this.buildKey(wrappingTileCordY, wrappingTileCordX)].neighborsList["down"] =
         this.buildNeighborObject(0, wrappingTileCordX, 'down', this.matrix[0][wrappingTileCordX])
     });
   }
@@ -92,8 +94,8 @@ export class PathGraph {
 
   buildNeighborObject(y, x, direction, tile) {
     return {
-      key: this.buildKey(y, x),
-      direction: direction,
+      x: x,
+      y: y,
       tile: tile
     }
   }
