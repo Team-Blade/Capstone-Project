@@ -87,6 +87,8 @@ export default function addPlayer(scene, player) {
       } 
       else if (scene.pac.big) {
         scene.og.dead = true;
+        scene.og.setVelocity(0,0);
+        scene.og.snapToTurnPoint();
         scene.og.findFinalPath();
         //IF GHOST IS DEAD
         scene.socket.emit("ghostDeath", socket.roomId);
@@ -106,9 +108,9 @@ export default function addPlayer(scene, player) {
             //   true,
             //   true
             // );
-            scene.og.dead = false;
-            scene.og.ghostReleased = false;
-            scene.og.chaseTarget = "";
+            // scene.og.dead = false;
+            // scene.og.ghostReleased = false;
+            // scene.og.chaseTarget = "";
           },
           [],
           scene

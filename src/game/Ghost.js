@@ -71,6 +71,12 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       frameRate: 4,
       repeat: -1
     });
+    this.scene.anims.create({
+      key: "onlyEyes",
+      frames: [{key: "ghostEyesUp"}],
+      frameRate: 1,
+      repeat: 1
+    })
   }
 
   trajectory() {
@@ -79,31 +85,34 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       this.move(this.direction);
     }
 
-    if (this.dead) {
-      this.returnToCage();
-    }
-
     if (this.scene.pac) {
 
       this.setTurnPoint();
       this.centerGhost();
       
-      if (this.ghostReleased === true) {
-        this.decideTarget();
-
-        if (this.chaseTarget) {
-          this.chasePac();
+      if (!this.dead) {
+        if (this.ghostReleased === true) {
+          this.decideTarget();
+  
+          if (this.chaseTarget) {
+            this.chasePac();
+          }
+        }
+  
+        if (!this.ghostReleased && this.unleashed) {
+          this.speed = 30;
+          this.releaseGhost();
+        }
+  
+        if (this.vulnerable === true) {
+          this.turnBlue();
         }
       }
 
-      if (!this.ghostReleased && this.unleashed) {
-        this.speed = 30;
-        this.releaseGhost();
+      if (this.dead) {
+        this.returnToCage();
       }
-
-      if (this.vulnerable === true) {
-        this.turnBlue();
-      }
+  
       //ghost wrap
       this.wrap();
 
@@ -114,6 +123,10 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
 
   move(direction) {
     this.createAnimation();
+
+    if(this.dead){
+      return this.anims.play("onlyEyes", true);
+    }
 
     if (direction === "up") {
       this.anims.play("moveUp", true);
@@ -485,6 +498,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
         const inOpen = open.includes(neighborNode);
         if (!inOpen || fCost < neighborNode.fCost) {
           neighborNode.prev = currentNode;
+          neighborNode.direction = key;
           neighborNode.fCost = fCost;
           !inOpen ? open.push(neighborNode) : null;
         }
@@ -518,11 +532,26 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     return hCost;
   }
 
+  onlyEyes() {
+
+  }
+
   returnToCage() {
     //journey home ^^ yay
-
-    this.go("up");
-
+    if (this.finalPath.length === 0) {
+      this.ghostReleased = false;
+      this.unleashed = false;
+      this.chaseTarget = "";
+      this.setVelocity(0,0);
+      this.direction = "";
+      return this.dead = false;
+    }
+    if (this.tilePositionX === this.finalPath[0].x && this.tilePositionY === this.finalPath[0].y){
+      return this.finalPath.shift();
+    }
+    else {
+      this.go(this.finalPath[0].direction);
+    }
   }
 
 }

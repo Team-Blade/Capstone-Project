@@ -195,7 +195,7 @@ function loadImagesAndAudio(scene) {
   scene.load.image("ghostEyesDown", "/public/assets/ghosts/GameMain266.png");
   scene.load.image("ghostEyesLeft", "/public/assets/ghosts/GameMain267.png");
   scene.load.image("ghostEyesRight", "/public/assets/ghosts/GameMain268.png");
-  scene.load.image("ghostEyesDown", "/public/assets/ghosts/GameMain269.png");
+  scene.load.image("ghostEyesUp", "/public/assets/ghosts/GameMain269.png");
 
   scene.load.audio("game_start", "/public/assets/audio/game_start.mp3");
   scene.load.audio("death", "/public/assets/audio/death.mp3");
