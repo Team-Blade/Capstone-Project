@@ -38,11 +38,13 @@ export default class Level1 extends Phaser.Scene {
     };
 
     this.socket = socket;
+
     this.otherPlayersArray = [];
 
     this.playersAlive = {};
 
     this.winner = "";
+
     this.gameOver = false;
   }
   preload() {
@@ -58,7 +60,6 @@ export default class Level1 extends Phaser.Scene {
 
   create() {
     this.sound.play('fruit');
-
     const scene = this;
 
     this.otherPlayers = this.physics.add.group();
