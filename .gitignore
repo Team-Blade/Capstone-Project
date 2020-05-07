@@ -1,4 +1,5 @@
 node_modules
+extract1
 dist/main.js
 .idea
 dist/bundle.min.js
