@@ -89,6 +89,7 @@ export default function addPlayer(scene, player) {
         scene.og.dead = true;
         scene.og.setVelocity(0,0);
         scene.og.snapToTurnPoint();
+        scene.og.speed = 50;
         scene.og.findFinalPath();
         //IF GHOST IS DEAD
         scene.socket.emit("ghostDeath", socket.roomId);

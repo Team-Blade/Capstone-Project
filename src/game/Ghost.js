@@ -459,6 +459,9 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.startTileX = this.tilePositionX
     this.startTileY = this.tilePositionY
 
+    this.startTileY === -1 ? this.startTileY = 0 : null;
+    this.startTileY === 15 ? this.startTileY = 14 : null;
+
     const buildKey = this.scene.path.buildKey;
     const mapNodes = this.scene.path.adjacencyGraph;
 
