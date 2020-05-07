@@ -20,15 +20,25 @@ export default function addPlayer(scene, player) {
 
   scene.playersAlive[playerNumber] = scene.pac;
 
+  scene.physics.world.wrap(scene.pac);
+
   scene.physics.add.collider(scene.pac, scene.collisionLayer, (pac, layer) => {
+    pac.colliding = true;
     pac.setVelocity(0, 0);
     pac.direction = "";
+    pac.moving = false;
     pac.setTurnPoint();
     pac.snapToTurnPoint();
-    // pac.moving = false;
-    //had to take it cause because it was throwing an error on player2, could not read frames
-    // pac.anims.stopOnFrame(pac.anims.currentAnim.frames[1]);
   });
+
+  scene.physics.add.collider(scene.pac, scene.cageDoorLayer, (pac, layer) => {
+    pac.colliding = true;
+    pac.setVelocity(0, 0);
+    pac.direction = "";
+    pac.moving = false;
+    pac.setTurnPoint();
+    pac.snapToTurnPoint();
+  })
 
   scene.physics.add.overlap(scene.pac, scene.otherPlayers, (pac, other) => {
     if (!pac.big && other.big) {
@@ -57,6 +67,7 @@ export default function addPlayer(scene, player) {
 
       pac.colliding = true;
       pac.direction = "";
+      pac.moving = false;
       scene.time.delayedCall(
         320,
         () => {
@@ -70,28 +81,42 @@ export default function addPlayer(scene, player) {
     }
   });
   scene.physics.add.overlap(scene.pac, scene.og, () => {
-    if (!scene.pac.big && scene.og.vulnerable === false) {
-      scene.pac.dead = true;
-    } else {
-      scene.og.dead = true;
-      scene.time.delayedCall(
-        30000,
-        () => {
-          scene.og.x = scene.map.tileToWorldX(15.571);
-          scene.og.y = scene.map.tileToWorldY(7.56);
-          scene.og.enableBody(
-            true,
-            scene.map.tileToWorldX(15.571),
-            scene.map.tileToWorldY(7.56),
-            true,
-            true
-          );
-          scene.og.dead = false;
-          scene.chaseTarget = "";
-        },
-        [],
-        scene
-      );
+    if(!scene.og.dead) {  
+      if (!scene.pac.big && scene.og.vulnerable === false) {
+        scene.pac.dead = true;
+      } 
+      else if (scene.pac.big) {
+        scene.og.dead = true;
+        scene.og.setVelocity(0,0);
+        scene.og.snapToTurnPoint();
+        scene.og.speed = 50;
+        scene.og.findFinalPath();
+        //IF GHOST IS DEAD
+        scene.socket.emit("ghostDeath", socket.roomId);
+        if (toggleSound) {
+          let eatGhostSound = scene.sound.add("eat_ghost");
+          eatGhostSound.play();
+        }
+        scene.time.delayedCall(
+          30000,
+          () => {
+            // scene.og.x = scene.map.tileToWorldX(15.571);
+            // scene.og.y = scene.map.tileToWorldY(7.56);
+            // scene.og.enableBody(
+            //   true,
+            //   scene.map.tileToWorldX(15.571),
+            //   scene.map.tileToWorldY(7.56),
+            //   true,
+            //   true
+            // );
+            // scene.og.dead = false;
+            // scene.og.ghostReleased = false;
+            // scene.og.chaseTarget = "";
+          },
+          [],
+          scene
+        );
+      }
     }
   });
   scene.physics.add.overlap(scene.pac, scene.dots, (pac, dots) => {
@@ -196,12 +221,20 @@ export default function addPlayer(scene, player) {
     scene.og.vulnerable = true;
     pac.big = true;
     pac.vulnerable = false;
+    pac.speed = 230;
     scene.time.delayedCall(
       5000,
       () => {
         scene.og.vulnerable = false;
+        scene.og.unleashed = true;
         scene.pac.big = false;
         scene.pac.vulnerable = true;
+        scene.pac.speed = 200
+        if(!scene.pac.moving){
+          scene.pac.createAnimations();
+          scene.pac.anims.play(`${scene.pac.color}${scene.pac.anims.currentAnim.key.slice(2)}`);
+          scene.pac.anims.stopOnFrame(scene.pac.anims.currentAnim.frames[1]);
+        }
       },
       [],
       scene

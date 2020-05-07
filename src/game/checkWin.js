@@ -1,6 +1,11 @@
+import { socket } from "../../components/App";
+
 export default function checkWin(scene) {
   const playersAlive = Object.keys(scene.playersAlive);
-  if (playersAlive.length === 1) {
+  if (scene.gameOver && scene.pac.dead) {
+    return true;
+  }
+  if (playersAlive.length === 1 && socket.roomId.slice(-4) !== "DEMO") {
     scene.winner = `player${playersAlive[0]}`;
     console.log("WINNER:", scene.winner);
     scene.add.image(760, 280, `${scene.winner}`);
@@ -20,9 +25,29 @@ export default function checkWin(scene) {
       [],
       scene
     );
-
     return true;
-  } else {
+  }
+
+  if (scene.pac && playersAlive.length === 0 && socket.roomId.slice(-4) === "DEMO") {
+    scene.time.delayedCall(
+      1000,
+      () => {
+        scene.socket.emit("gameOver", scene.socket.roomId);
+        scene.playersAlive = {};
+        scene.otherPlayers.clear(true, true);
+        scene.pac.dead = true;
+        scene.pac.destroy();
+        scene.winner = "";
+        scene.gameOver = true;
+        scene.otherPlayersArray = [];
+        scene.scene.restart();
+      },
+      [],
+      scene
+    );
+    return true;
+  }
+  else {
     return false;
   }
 }

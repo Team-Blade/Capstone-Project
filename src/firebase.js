@@ -1,14 +1,14 @@
 import * as firebase from "firebase";
 
 const firebaseApp = firebase.initializeApp({
-  apiKey: "AIzaSyB1_8QPCdenvQNLeOx8etmkb9Z4RNQ87Ks",
-  authDomain: "pac-man-clone.firebaseapp.com",
-  databaseURL: "https://pac-man-clone.firebaseio.com",
-  projectId: "pac-man-clone",
-  storageBucket: "pac-man-clone.appspot.com",
-  messagingSenderId: "860511261591",
-  appId: "1:860511261591:web:84a347757381be9b922ad2",
-  measurementId: "G-5MEJMS0CHY"
+  apiKey: "AIzaSyBHCzAj1gHnagOKeb3GeOIzizaqFFc9g-g",
+  authDomain: "dot-eater.firebaseapp.com",
+  databaseURL: "https://dot-eater.firebaseio.com",
+  projectId: "dot-eater",
+  storageBucket: "dot-eater.appspot.com",
+  messagingSenderId: "716607656616",
+  appId: "1:716607656616:web:0eaf1ca3f41915f117e89d",
+  measurementId: "G-GTSK7MVGVF"
 });
 
 const db = firebaseApp.firestore();

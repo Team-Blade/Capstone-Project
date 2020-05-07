@@ -17,6 +17,7 @@ export default function addOtherPlayers(scene, player) {
   otherPlayer.tilePositionX = scene.map.worldToTileX(otherPlayer.x);
   otherPlayer.tilePositionY = scene.map.worldToTileY(otherPlayer.y);
   scene.physics.add.collider(otherPlayer, scene.collisionLayer);
+  scene.physics.add.collider(otherPlayer, scene.cageDoorLayer);
 
   scene.physics.add.overlap(
     otherPlayer,

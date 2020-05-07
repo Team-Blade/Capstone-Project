@@ -11,10 +11,12 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     this.playerNumber = config.playerNumber;
     this.color = this.key.slice(0, 2);
     this.bigColor = `${this.key.slice(0, 1)}b`;
-    this.moving = true;
     this.big = false;
     this.vulnerable = true;
     this.direction = "";
+    this.tilePositionX = this.scene.map.worldToTileX(this.x);
+    this.tilePositionY = this.scene.map.worldToTileY(this.y);
+    this.moving = false;
     this.dead = false;
     this.turnPoint = {};
     this.turnTo = "";
@@ -29,7 +31,6 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       this.setOffset(21, 21);
     } else {
       this.color = this.key.slice(0, 2);
-
       this.setOffset(7, 7);
       this.vulnerable = true;
     }
@@ -77,15 +78,24 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
 
   trajectory() {
     if (this.colliding) {
-      this.collisionWithPlayers();
+      // this.anims.stopOnFrame(this.anims.currentAnim.frames[1]);
+      if (this.collisionDirection){
+        this.collisionWithPlayers();
+      }
+      else{
+        this.colliding = false;
+      }
     }
-    if (!this.colliding) {
-      this.checkSurroundingTiles();
 
-      this.setTurnPoint();
+    this.setTurnPoint();
+    this.checkSurroundingTiles();
+
+    if (!this.colliding) {
       this.centerPac();
+
       //animate pac-man consistently
       if (this.direction) {
+        if(!this.moving) {this.moving = true};
         this.move(this.direction);
       }
       //change the direction pac man is facing in animation
@@ -118,31 +128,48 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   changePacDirection() {
-    if (this.scene.cursors.up.isDown && this.checkDirection("up")) {
-      this.move("up");
-      this.direction = "up";
-    }
-    if (this.scene.cursors.down.isDown && this.checkDirection("down")) {
-      this.move("down");
-      this.direction = "down";
-    }
-    if (
-      this.scene.cursors.left.isDown &&
-      this.checkDirection("left") &&
-      this.tilePositionY > 0 &&
-      this.tilePositionY < 14
-    ) {
-      this.move("left");
-      this.direction = "left";
-    }
-    if (
-      this.scene.cursors.right.isDown &&
-      this.checkDirection("right") &&
-      this.tilePositionY > 0 &&
-      this.tilePositionY < 14
-    ) {
-      this.move("right");
-      this.direction = "right";
+
+    if(this.tilePositionY >= 0 && this.tilePositionY <= 14){
+      if (this.scene.cursors.up.isDown) {
+        if (this.direction === "down") {
+          this.move("up");
+          this.direction = "up";
+        }
+        else if (this.checkDirection("up")) {
+          this.move("up");
+          this.direction = "up";
+        }
+      }
+      if (this.scene.cursors.down.isDown) {
+        if(this.direction === "up"){
+          this.move("down");
+          this.direction = "down";
+        }
+        else if (this.checkDirection("down")) {
+          this.move("down");
+          this.direction = "down";
+        }
+      }
+      if (this.scene.cursors.left.isDown) {
+        if (this.direction === "right"){
+          this.move("left");
+          this.direction = "left";
+        }
+        else if (this.checkDirection("left")) {
+          this.move("left");
+          this.direction = "left";
+        }
+      }
+      if (this.scene.cursors.right.isDown) {
+        if (this.direction === "left"){
+          this.move("right");
+          this.direction = "right";
+        }
+        else if (this.checkDirection("right")) {
+          this.move("right");
+          this.direction = "right";
+        }
+      }
     }
   }
 
@@ -162,7 +189,6 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   move(direction) {
-    this.moving = true;
     if (this.big) {
       this.color = this.bigColor;
     }
@@ -263,15 +289,18 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       "mapBaseLayer"
     );
 
+    let direction;
+    
+    this.direction ? direction = this.direction : direction = this.collisionDirection;
+
     if (
-      this.direction &&
-      this[`tile${this.direction}`] &&
-      this[`tile${this.direction}`].collides
+      direction &&
+      this[`tile${direction}`] &&
+      this[`tile${direction}`].collides &&
+      this.fuzzyEqualXY(3)
     ) {
-      setTimeout(() => {
-        this.snapToTurnPoint();
-        this.direction = "";
-      }, 33);
+      this.snapToTurnPoint();
+      this.direction = "";
     }
   }
 
@@ -301,7 +330,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       repeat: 0,
     });
     this.anims.play("death", true);
-    console.log(this.anims);
-    console.log(this.color);
+    // console.log(this.anims);
+    // console.log(this.color);
   }
 }

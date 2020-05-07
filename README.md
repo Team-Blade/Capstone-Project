@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+![DotEaterLogo](https://user-images.githubusercontent.com/24820174/78594022-6b119600-77fc-11ea-8be5-84124da3af20.png)
+=======
 ![DotEaterLogo](https://user-images.githubusercontent.com/24820174/78609628-ea609300-7817-11ea-82bd-45e4202a9481.png)
+>>>>>>> dc63d1803f1ac1b231e41d14884cfb3f1cd6ac5b
 
 # Dot Eater
 

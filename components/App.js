@@ -3,6 +3,7 @@ import Popup from "reactjs-popup";
 import ScoreBoard from "./ScoreBoard";
 import db from "../src/firebase";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { Dot } from 'react-animated-dots';
 
 export const socket = io();
 const games = db.collection("games");
@@ -25,6 +26,7 @@ class App extends React.Component {
       beginGameButtonClicked: false,
       buttonClicked: false,
       name: "",
+      placeholderName: "Player Name",
       buttonClickedName: "",
       code: "",
       players: {},
@@ -42,6 +44,7 @@ class App extends React.Component {
     this.eventListener = this.eventListener.bind(this);
     this.copied = this.copied.bind(this);
     this.toggleSound = this.toggleSound.bind(this);
+    this.startDemo = this.startDemo.bind(this);
   }
   componentDidMount() {
     this.eventListener();
@@ -53,9 +56,9 @@ class App extends React.Component {
   handleCodeChange(event) {
     this.setState({ code: event.target.value });
   }
-  createGame() {
+  createGame(code = this.state.code) {
     //generate a game code
-    const code = this.state.code;
+    // const code = this.state.code;
     let name = this.state.name;
 
     socket.emit("createRoom", code, name);
@@ -76,19 +79,26 @@ class App extends React.Component {
     socket.roomId = code;
   }
 
+  startDemo() {
+    const code = randomString().concat("DEMO");
+    this.setState({
+      buttonClicked: false,
+      buttonClickedName: "",
+      gameOver: false,
+      gameStarted: true,
+      code,
+    });
+    this.createGame(code);
+
+    setTimeout(()=>{socket.emit("startGame", code)}, 1500);
+    
+  }
+
   joinGame() {
     let name = this.state.name;
     let code = this.state.code.toUpperCase();
 
     socket.emit("joinRoom", code, name);
-    socket.on("invalidRoom", (roomId) => {
-      alert(`Sorry, game room: ${roomId} not found`);
-      this.setState({ buttonClickedName: "join" });
-    });
-    socket.on("gameAlreadyStarted", (roomId) => {
-      alert(`Sorry, the game for code ${roomId} has already started...`);
-      window.location.reload(false);
-    });
     socket.on("newPlayers", (allPlayers) => {
       games.doc(code).set({ players: allPlayers }, { merge: true });
     });
@@ -115,11 +125,18 @@ class App extends React.Component {
   }
 
   eventListener() {
+    socket.on("invalidRoom", (roomId) => {
+      alert(`Sorry, game room: ${roomId} not found`);
+      this.setState({ buttonClickedName: "join" });
+    });
+    socket.on("gameAlreadyStarted", (roomId) => {
+      alert(`Sorry, the game for code ${roomId} has already started...`);
+      window.location.reload(false);
+    });
     socket.on("playAgain", () => {
       this.setState({ gameOver: true });
     });
     socket.on("gameStarted", () => {
-      console.log("inside gameStarted");
       this.setState({ waitingRoom: false });
     });
     socket.on("notEnoughPlayers", () => {
@@ -179,7 +196,10 @@ class App extends React.Component {
                 <p>
                   Wait for all
                   <br />
-                  players...
+                  players
+                  <Dot>.</Dot>
+                  <Dot>.</Dot>
+                  <Dot>.</Dot>
                 </p>
                 <button
                   className="start-game-button"
@@ -199,7 +219,10 @@ class App extends React.Component {
             ) : null}
             {state.waitingRoom && state.buttonClickedName !== "create" ? (
               <p className="waiting-room">
-                Waiting for <br /> game to start...
+                Waiting for <br /> game to start
+                <Dot>.</Dot>
+                <Dot>.</Dot>
+                <Dot>.</Dot>
               </p>
             ) : null}
           </nav>
@@ -207,21 +230,23 @@ class App extends React.Component {
             {!state.beginGameButtonClicked ? (
               <Popup defaultOpen closeOnDocumentClick={false}>
                 <div id="container-start">
-                  <div></div>
-                  <img className="logo" src="/public/assets/DotEaterLogo.png" />
-                  <button
-                    className="begin-button"
-                    onClick={() =>
-                      this.setState({
-                        beginGameButtonClicked: true,
-                        buttonClicked: true,
-                        waitingRoom: false,
-                      })
-                    }
-                  >
-                    CLICK TO BEGIN
-                  </button>
-                  <div></div>
+                  <div>
+                    <img className="logo" src="/public/assets/DotEaterLogo.png" />
+                  </div>
+                  <div>
+                      <button
+                      className="begin-button"
+                      onClick={() =>
+                        this.setState({
+                          beginGameButtonClicked: true,
+                          buttonClicked: true,
+                          waitingRoom: false,
+                        })
+                      }
+                    >
+                      CLICK TO BEGIN
+                    </button>
+                  </div>
                 </div>
               </Popup>
             ) : null}
@@ -237,7 +262,7 @@ class App extends React.Component {
                     <input
                       type="text"
                       name="name"
-                      placeholder="Player Name"
+                      placeholder={this.state.name ? this.state.name : this.state.placeholderName}
                       maxLength="8"
                       onChange={this.handleNameChange}
                       required={(true, "Name is required")}
@@ -276,6 +301,9 @@ class App extends React.Component {
                       Join A Game
                     </button>
                   </div>
+                  <div className="demo-button">
+                    <button id="demo" disabled={!state.name} onClick={this.startDemo}>Play Demo</button>
+                  </div>
                 </div>
               </Popup>
             ) : null}
@@ -286,23 +314,35 @@ class App extends React.Component {
             <Popup open closeOnDocumentClick={false}>
               {(close) => (
                 <div className="init-game-create">
+                  <div id="creator-p-text">
+                    <p>
+                      You<br /> <br/>
+                      **<br/>MUST ENTER<br/>**<br /> <br/>
+                      Game Room<br/>
+                      for your friends to join
+                    </p>
+                  </div>
                   <div className="creator-text" style={{ textAlign: "center" }}>
-                    <div>Share this code with friends: </div>
 
-                    <div>
-                      <h2>
-                        <CopyToClipboard
-                          text={this.state.code}
-                          onCopy={this.copied}
-                        >
-                          <span className="gameCode">{state.code}</span>
-                        </CopyToClipboard>
-                      </h2>
+                    <div className="share-code">
+                      <div>
+                        <h3>Share this code with friends:</h3>
+                      </div>
+                      <div>
+                        <h1>
+                          <CopyToClipboard
+                            text={this.state.code}
+                            onCopy={this.copied}
+                          >
+                            <span className="gameCode">{state.code}</span>
+                          </CopyToClipboard>
+                        </h1>
+                      </div>
 
                       {this.state.alertCopied ? <span>*COPIED*</span> : null}
                     </div>
                   </div>
-                  <div>
+                  <div className="big-enter">
                     <button
                       type="submit"
                       className="enter-game-button"
@@ -330,13 +370,6 @@ class App extends React.Component {
                       GO BACK
                     </button>
                   </div>
-                  <div id="creator-p-text">
-                    <p>
-                      **You MUST ENTER <br />
-                      the game room for <br />
-                      your friends to join**
-                    </p>
-                  </div>
                 </div>
               )}
             </Popup>
@@ -346,33 +379,48 @@ class App extends React.Component {
           {this.state.buttonClickedName === "join" ? (
             <Popup open closeOnDocumentClick={false}>
               <div className="init-game">
-                <input
-                  type="text"
-                  placeholder="Game Code Here"
-                  maxLength="4"
-                  onChange={() => this.handleCodeChange(event)}
-                />
-                <button
-                  disabled={!this.state.code}
-                  onClick={() => {
+                <div>
+                  <h4>Game Code Please:</h4>
+                </div>
+                <div>
+                  <form onSubmit={() => {
                     this.joinGame();
                     this.setState({ buttonClickedName: "", waitingRoom: true });
-                  }}
-                >
-                  Enter Game
-                </button>
-                <button
-                  type="submit"
-                  onClick={() =>
-                    this.setState({
-                      buttonClicked: true,
-                      buttonClickedName: "",
-                    })
-                  }
-                  open={false}
-                >
-                  GO BACK
-                </button>
+                  }}>
+                    <input
+                      type="text"
+                      placeholder="Game Code Here"
+                      maxLength="4"
+                      onChange={() => this.handleCodeChange(event)}
+                    />
+                  </form>
+                </div>
+                <div className="join-enter">
+                  <button
+                      type="button"
+                      className="join-goback-button"
+                      onClick={() =>
+                        this.setState({
+                          buttonClicked: true,
+                          buttonClickedName: "",
+                        })
+                      }
+                      open={false}
+                    >
+                      Go Back
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={!this.state.code}
+                    className="join-enter-button"
+                    onClick={() => {
+                      this.joinGame();
+                      this.setState({ buttonClickedName: "", waitingRoom: true });
+                    }}
+                  >
+                    ENTER GAME
+                  </button>
+                </div>
               </div>
             </Popup>
           ) : null}
