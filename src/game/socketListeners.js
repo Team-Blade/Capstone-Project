@@ -33,25 +33,24 @@ export function listenForGhostMovement(scene) {
 
 export function listenForGhostDeath(scene) {
   if (firstGame) {
-  scene.socket.on("ghostDied", () => {
-    scene.og.dead = true;
-    if (toggleSound) {
-      let eatGhostSound = this.sound.add("eat_ghost");
-      eatGhostSound.play();
-    }
-    setTimeout(() => {
-      // scene.og.x = scene.map.tileToWorldX(15.571);
-      // scene.og.y = scene.map.tileToWorldY(7.56);
-      // scene.og.enableBody(
-      //   true,
-      //   scene.map.tileToWorldX(15.571),
-      //   scene.map.tileToWorldY(7.56),
-      //   true,
-      //   true
-      // );
+    scene.socket.on("ghostDied", () => {
+      scene.og.dead = true;
+      if (toggleSound) {
+        let eatGhostSound = scene.sound.add("eat_ghost");
+        eatGhostSound.play();
+      }
+    });
+  }
+}
+
+export function listenForVarious(scene) {
+  if (firstGame) {
+    scene.socket.on("ghostUnleashed", () => {
+      scene.og.unleashed = true;
+    });
+    scene.socket.on("ghostAlive", ()=>{
       scene.og.dead = false;
-    }, 30000);
-  });
+    })
   }
 }
 

@@ -133,12 +133,17 @@ io.on("connection", socket => {
     socket.in(roomId).emit("makeNewBigDot", dot);
   });
   socket.on("newFood", (food, roomId) => {
-    console.log("inside newFood listener");
     socket.in(roomId).emit("makeNewFood", food);
   });
   socket.on("ghostDeath", roomId => {
     socket.in(roomId).emit("ghostDied");
   });
+  socket.on("ghostRevival", roomId => {
+    socket.in(roomId).emit("ghostAlive");
+  });
+  socket.on("unleashed", roomId => {
+    socket.in(roomId).emit("ghostUnleashed");
+  })
   socket.on("selfDeath", (roomId, playerNumber) => {
     socket.in(roomId).emit("someoneDied", playerNumber);
   });

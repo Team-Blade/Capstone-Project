@@ -97,25 +97,6 @@ export default function addPlayer(scene, player) {
           let eatGhostSound = scene.sound.add("eat_ghost");
           eatGhostSound.play();
         }
-        scene.time.delayedCall(
-          30000,
-          () => {
-            // scene.og.x = scene.map.tileToWorldX(15.571);
-            // scene.og.y = scene.map.tileToWorldY(7.56);
-            // scene.og.enableBody(
-            //   true,
-            //   scene.map.tileToWorldX(15.571),
-            //   scene.map.tileToWorldY(7.56),
-            //   true,
-            //   true
-            // );
-            // scene.og.dead = false;
-            // scene.og.ghostReleased = false;
-            // scene.og.chaseTarget = "";
-          },
-          [],
-          scene
-        );
       }
     }
   });
@@ -227,6 +208,7 @@ export default function addPlayer(scene, player) {
       () => {
         scene.og.vulnerable = false;
         scene.og.unleashed = true;
+        scene.socket.emit("unleashed", socket.roomId);
         scene.pac.big = false;
         scene.pac.vulnerable = true;
         scene.pac.speed = 200
