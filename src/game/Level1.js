@@ -231,7 +231,7 @@ export default class Level1 extends Phaser.Scene {
               }
 
               if (!player.dead && this.scene.gameOver === false) {
-                // player.createAnimations();
+                player.createAnimations();
                 player.wrap();
                 player.updateTilePosition();
               }

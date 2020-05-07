@@ -125,7 +125,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.createAnimation();
 
     if(this.dead){
-      console.log('eyes only')
       return this.anims.play("onlyEyes", true);
     }
 
