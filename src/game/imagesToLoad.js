@@ -48,6 +48,16 @@ function loadImagesAndAudio(scene) {
   scene.load.image("ysdeath6", "/public/assets/yellowSmall/GameMain119.png");
   scene.load.image("ysdeath7", "/public/assets/yellowSmall/GameMain120.png");
   scene.load.image("ysdeath8", "/public/assets/yellowSmall/GameMain121.png");
+  scene.load.image("vysclosed", "/public/assets/yellowSmall/GameMain078.png");
+  scene.load.image("vysdown1", "/public/assets/yellowSmall/GameMain079.png");
+  scene.load.image("vysdown2", "/public/assets/yellowSmall/GameMain080.png");
+  scene.load.image("vysleft1", "/public/assets/yellowSmall/GameMain081.png");
+  scene.load.image("vysleft2", "/public/assets/yellowSmall/GameMain082.png");
+  scene.load.image("vysright1", "/public/assets/yellowSmall/GameMain083.png");
+  scene.load.image("vysright2", "/public/assets/yellowSmall/GameMain084.png");
+  scene.load.image("vysup1", "/public/assets/yellowSmall/GameMain085.png");
+  scene.load.image("vysup2", "/public/assets/yellowSmall/GameMain086.png");
+  
 
   //pacman yellow big preload images
   scene.load.image("ybclosed", "/public/assets/yellowBig/GameMain230.png");
@@ -78,6 +88,15 @@ function loadImagesAndAudio(scene) {
   scene.load.image("bsdeath6", "/public/assets/blueSmall/GameMain135.png");
   scene.load.image("bsdeath7", "/public/assets/blueSmall/GameMain136.png");
   scene.load.image("bsdeath8", "/public/assets/blueSmall/GameMain137.png");
+  scene.load.image("vbsclosed", "/public/assets/blueSmall/GameMain096.png");
+  scene.load.image("vbsdown1", "/public/assets/blueSmall/GameMain097.png");
+  scene.load.image("vbsdown2", "/public/assets/blueSmall/GameMain098.png");
+  scene.load.image("vbsleft1", "/public/assets/blueSmall/GameMain099.png");
+  scene.load.image("vbsleft2", "/public/assets/blueSmall/GameMain100.png");
+  scene.load.image("vbsright1", "/public/assets/blueSmall/GameMain101.png");
+  scene.load.image("vbsright2", "/public/assets/blueSmall/GameMain102.png");
+  scene.load.image("vbsup1", "/public/assets/blueSmall/GameMain103.png");
+  scene.load.image("vbsup2", "/public/assets/blueSmall/GameMain104.png");
 
   //pacman blue big preload images
 
@@ -109,6 +128,16 @@ function loadImagesAndAudio(scene) {
   scene.load.image("psdeath6", "/public/assets/pinkSmall/GameMain127.png");
   scene.load.image("psdeath7", "/public/assets/pinkSmall/GameMain128.png");
   scene.load.image("psdeath8", "/public/assets/pinkSmall/GameMain129.png");
+  scene.load.image("vpsclosed", "/public/assets/pinkSmall/GameMain087.png");
+  scene.load.image("vpsdown1", "/public/assets/pinkSmall/GameMain088.png");
+  scene.load.image("vpsdown2", "/public/assets/pinkSmall/GameMain089.png");
+  scene.load.image("vpsleft1", "/public/assets/pinkSmall/GameMain090.png");
+  scene.load.image("vpsleft2", "/public/assets/pinkSmall/GameMain091.png");
+  scene.load.image("vpsright1", "/public/assets/pinkSmall/GameMain092.png");
+  scene.load.image("vpsright2", "/public/assets/pinkSmall/GameMain093.png");
+  scene.load.image("vpsup1", "/public/assets/pinkSmall/GameMain094.png");
+  scene.load.image("vpsup2", "/public/assets/pinkSmall/GameMain095.png");
+
 
   //pacman pink big preload images
   scene.load.image("pbclosed", "/public/assets/pinkBig/GameMain239.png");
@@ -139,6 +168,15 @@ function loadImagesAndAudio(scene) {
   scene.load.image("rsdeath6", "/public/assets/redSmall/GameMain143.png");
   scene.load.image("rsdeath7", "/public/assets/redSmall/GameMain144.png");
   scene.load.image("rsdeath8", "/public/assets/redSmall/GameMain145.png");
+  scene.load.image("vrsclosed", "/public/assets/redSmall/GameMain105.png");
+  scene.load.image("vrsdown1", "/public/assets/redSmall/GameMain106.png");
+  scene.load.image("vrsdown2", "/public/assets/redSmall/GameMain107.png");
+  scene.load.image("vrsleft1", "/public/assets/redSmall/GameMain108.png");
+  scene.load.image("vrsleft2", "/public/assets/redSmall/GameMain109.png");
+  scene.load.image("vrsright1", "/public/assets/redSmall/GameMain110.png");
+  scene.load.image("vrsright2", "/public/assets/redSmall/GameMain111.png");
+  scene.load.image("vrsup1", "/public/assets/redSmall/GameMain112.png");
+  scene.load.image("vrsup2", "/public/assets/redSmall/GameMain113.png");
 
   //pacman red big preload images
   scene.load.image("rbclosed", "/public/assets/redBig/GameMain257.png");

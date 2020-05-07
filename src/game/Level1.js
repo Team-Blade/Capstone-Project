@@ -46,6 +46,7 @@ export default class Level1 extends Phaser.Scene {
     this.winner = "";
 
     this.gameOver = false;
+
   }
   preload() {
     //loads image for tileset
