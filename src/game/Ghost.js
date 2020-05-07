@@ -1,3 +1,5 @@
+import { socket } from "../../components/App";
+
 export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   constructor(config) {
     super(config.scene, config.x, config.y, config.buildKey);
@@ -5,8 +7,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     config.scene.physics.world.enable(this);
     this.scene = config.scene;
     this.setSize(28, 28, true);
-    // .setOrigin(0,0)
-    // .setOffset(-0.05,-0.05)
     this.setCircle(7, 7, 7).setScale(this.scene.collisionLayer.scale * 2.1);
     this.key = config.key.slice(0, -1);
     this.game = config.game;
@@ -125,6 +125,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.createAnimation();
 
     if(this.dead){
+      console.log('eyes only')
       return this.anims.play("onlyEyes", true);
     }
 
@@ -228,10 +229,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     const ghostX = this.tilePositionX;
 
     const ghostY = this.tilePositionY;
-
-    // targetTileX < ghostX ? directionOptions.push("left") : null;
-
-    // targetTileX > ghostX ? directionOptions.push("right") : null;
 
     if (ghostX > targetTileX) {
       if (ghostY > 14 || ghostY < 0) {
@@ -516,7 +513,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       finalPath.unshift(node);
       node = node.prev;
     }
-    console.log(finalPath);
     return this.finalPath = finalPath;
   }
 
@@ -535,10 +531,6 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
     return hCost;
   }
 
-  onlyEyes() {
-
-  }
-
   returnToCage() {
     //journey home ^^ yay
     if (this.finalPath.length === 0) {
@@ -547,6 +539,7 @@ export default class Ghost extends Phaser.Physics.Arcade.Sprite {
       this.chaseTarget = "";
       this.setVelocity(0,0);
       this.direction = "";
+      this.scene.socket.emit("ghostRevival", socket.roomId);
       return this.dead = false;
     }
     if (this.tilePositionX === this.finalPath[0].x && this.tilePositionY === this.finalPath[0].y){

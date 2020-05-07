@@ -9,6 +9,7 @@ import {
   listenForGhostDeath,
   listenForSomeonesDeath,
   listenForGameStart,
+  listenForVarious,
   toggleSound 
 } from "./socketListeners";
 import { sendMovementInfo, sendGhostMovement } from "./socketEmiters";
@@ -114,6 +115,8 @@ export default class Level1 extends Phaser.Scene {
 
     listenForSomeonesDeath(this);
 
+    listenForVarious(this);
+
     listenForGameStart(this);
 
     this.ghosts.add(this.og);
@@ -143,10 +146,7 @@ export default class Level1 extends Phaser.Scene {
             this.og.pace();
           }
         }
-        // //IF GHOST IS DEAD 
-        // if (this.og.dead) {
-        //   this.og.returnToCage();
-        // }
+
         //IF GHOST IS VULNERABLE, TURN BLUE
         //IF YOU ARE SMALL AND OTHER PLAYERS ARE ALSO SMALL, MAKE GHOST NOT VULERABLE
         if (this.og.vulnerable) {
@@ -181,7 +181,7 @@ export default class Level1 extends Phaser.Scene {
           }
           if (this.pac.playerNumber !== 1) {
             this.og.direction ? this.og.move(this.og.direction) : null;
-            this.og.vulnerable ? this.og.turnBlue() : null;
+            this.og.vulnerable && !this.og.dead ? this.og.turnBlue() : null ;
           }
           //IF YOU ARE DEAD TELL EVERYONE AND DELETE YOURSELF
           if (this.pac.dead && this.playersAlive[this.pac.playerNumber]) {
@@ -230,7 +230,7 @@ export default class Level1 extends Phaser.Scene {
               }
 
               if (!player.dead && this.scene.gameOver === false) {
-                player.big ? player.setOffset(21, 21) : player.setOffset(7, 7);
+                // player.createAnimations();
                 player.wrap();
                 player.updateTilePosition();
               }

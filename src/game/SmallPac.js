@@ -3,9 +3,7 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
     super(config.scene, config.x, config.y, config.key, config.playerNumber);
     config.scene.add.existing(this);
     config.scene.physics.world.enable(this);
-    // this.setSize(60, 60, true)
     this.setCircle(7, 7, 7);
-    // this.setOrigin(0.5, 0.5);
     this.scene = config.scene;
     this.key = config.key;
     this.playerNumber = config.playerNumber;
@@ -312,8 +310,6 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
   }
 
   death() {
-    console.log("top of func", this.color);
-
     this.scene.anims.create({
       key: "death",
       frames: [
@@ -330,7 +326,5 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       repeat: 0,
     });
     this.anims.play("death", true);
-    // console.log(this.anims);
-    // console.log(this.color);
   }
 }
