@@ -14,11 +14,11 @@ export function listenForPlayerMovement(scene) {
         otherPlayer.big = playerInfo.big;
         otherPlayer.move(playerInfo.direction);
         otherPlayer.vulnerable = playerInfo.vulnerable;
-        if(!otherPlayer.moving){
-          otherPlayer.createAnimations();
-          otherPlayer.anims.play(`${otherPlayer.color}${otherPlayer.anims.currentAnim.key.slice(2)}`);
-          // otherPlayer.anims.stopOnFrame(otherPlayer.anims.currentAnim.frames[1]);
-        }
+        // if(!otherPlayer.moving){
+        //   otherPlayer.createAnimations();
+        //   otherPlayer.anims.play(`${otherPlayer.color}${otherPlayer.anims.currentAnim.key.slice(2)}`);
+        //   // otherPlayer.anims.stopOnFrame(otherPlayer.anims.currentAnim.frames[1]);
+        // }
       }
     });
   });
