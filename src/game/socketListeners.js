@@ -17,7 +17,7 @@ export function listenForPlayerMovement(scene) {
         if(!otherPlayer.moving){
           otherPlayer.createAnimations();
           otherPlayer.anims.play(`${otherPlayer.color}${otherPlayer.anims.currentAnim.key.slice(2)}`);
-          otherPlayer.anims.stopOnFrame(otherPlayer.anims.currentAnim.frames[1]);
+          // otherPlayer.anims.stopOnFrame(otherPlayer.anims.currentAnim.frames[1]);
         }
       }
     });
