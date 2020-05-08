@@ -29,9 +29,9 @@ export default class SmallPac extends Phaser.Physics.Arcade.Sprite {
       this.vulnerable = false;
       this.setOffset(21, 21);
     } 
-    else if (!this.big && this.scene.og.vulnerable) {
-      this.color = this.vulnerableColor;
-    }
+    // else if (!this.big && this.scene.og.vulnerable) {
+    //   this.color = this.vulnerableColor;
+    // }
     else {
       this.color = this.key.slice(0, 2);
       this.setOffset(7, 7);
