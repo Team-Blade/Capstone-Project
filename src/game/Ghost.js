@@ -2,7 +2,7 @@ import { socket } from "../../components/App";
 
 export default class Ghost extends Phaser.Physics.Arcade.Sprite {
   constructor(config) {
-    super(config.scene, config.x, config.y, config.buildKey);
+    super(config.scene, config.x, config.y, config.key);
     config.scene.add.existing(this);
     config.scene.physics.world.enable(this);
     this.scene = config.scene;
